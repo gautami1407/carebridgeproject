@@ -90,6 +90,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "CareBridge — Care, Connected" },
+      { name: "description", content: "CareBridge connects communities to orphanages and old-age homes, facilitating donations and volunteerism." },
+      { property: "og:description", content: "CareBridge connects communities to orphanages and old-age homes, facilitating donations and volunteerism." },
+      { name: "twitter:description", content: "CareBridge connects communities to orphanages and old-age homes, facilitating donations and volunteerism." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/712ed822-d1ef-4021-a7a7-222ace1385b6/id-preview-8511d31f--fe3fe083-eeb1-4a7e-ba8b-8710822d4280.lovable.app-1781163428708.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/712ed822-d1ef-4021-a7a7-222ace1385b6/id-preview-8511d31f--fe3fe083-eeb1-4a7e-ba8b-8710822d4280.lovable.app-1781163428708.png" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
