@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Heart, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useStore } from "@/lib/store";
 
 const navItems = [
   { to: "/", label: "Home" },
@@ -13,6 +14,7 @@ const navItems = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const session = useStore((s) => s.session);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-md">
@@ -44,18 +46,14 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <Link
-            to="/login"
-            className="rounded-md px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted"
-          >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft transition-all hover:brightness-110"
-          >
-            Register
-          </Link>
+          {session ? (
+            <Link to="/app" className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft hover:brightness-110">Open app</Link>
+          ) : (
+            <>
+              <Link to="/login" className="rounded-md px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted">Login</Link>
+              <Link to="/register" className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft hover:brightness-110">Register</Link>
+            </>
+          )}
         </div>
 
         <button
