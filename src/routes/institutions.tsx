@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ShieldCheck, Users, MapPin } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
-import { sampleInstitutions } from "@/lib/sample-data";
+import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/institutions")({
   head: () => ({
@@ -16,6 +16,7 @@ export const Route = createFileRoute("/institutions")({
 });
 
 function InstitutionsPage() {
+  const insts = useStore((s) => s.institutions).filter((i) => i.status === "Verified");
   return (
     <SiteLayout>
       <section className="border-b border-border bg-surface">
@@ -32,43 +33,30 @@ function InstitutionsPage() {
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {sampleInstitutions.concat(sampleInstitutions).map((inst, i) => (
-            <article
-              key={i}
+          {insts.map((inst) => (
+            <Link
+              key={inst.id}
+              to="/institutions/$slug"
+              params={{ slug: inst.slug }}
               className="group overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-lift"
             >
               <div className="relative aspect-[4/3] overflow-hidden bg-surface">
-                <img
-                  src={inst.image}
-                  alt={inst.name}
-                  loading="lazy"
-                  width={800}
-                  height={600}
-                  className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+                <img src={inst.image} alt={inst.name} loading="lazy" width={800} height={600} className="size-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-background/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-support">
                   <ShieldCheck className="size-3" /> Verified
                 </span>
               </div>
               <div className="p-5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  {inst.type}
-                </span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{inst.type}</span>
                 <h3 className="mt-1 text-lg font-bold tracking-tight">{inst.name}</h3>
-                <p className="mt-1 inline-flex items-center gap-1 text-sm text-muted-foreground">
-                  <MapPin className="size-3.5" /> {inst.location}
-                </p>
-                <p className="mt-3 text-sm text-muted-foreground">{inst.blurb}</p>
+                <p className="mt-1 inline-flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="size-3.5" /> {inst.city}, {inst.state}</p>
+                <p className="mt-3 text-sm text-muted-foreground">{inst.description}</p>
                 <div className="mt-5 flex items-center justify-between gap-2 border-t border-border pt-4">
-                  <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <Users className="size-3.5" /> {inst.residents} residents
-                  </span>
-                  <Link to="/explore" className="text-sm font-semibold text-primary hover:underline">
-                    View needs →
-                  </Link>
+                  <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground"><Users className="size-3.5" /> {inst.residents} residents</span>
+                  <span className="text-sm font-semibold text-primary">View profile →</span>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
