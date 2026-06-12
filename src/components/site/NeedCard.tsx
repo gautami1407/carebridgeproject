@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { MapPin, Clock } from "lucide-react";
 
 export type Need = {
+  id?: string;
   title: string;
   institution: string;
   location: string;
