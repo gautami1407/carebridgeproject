@@ -10,19 +10,28 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VolunteerRouteImport } from './routes/volunteer'
+import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as StoriesRouteImport } from './routes/stories'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as QrTrackingRouteImport } from './routes/qr-tracking'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MentorAChildRouteImport } from './routes/mentor-a-child'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InstitutionsRouteImport } from './routes/institutions'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FeedRouteImport } from './routes/feed'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as EventsRouteImport } from './routes/events'
+import { Route as CsrRouteImport } from './routes/csr'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as AdoptAGrandparentRouteImport } from './routes/adopt-a-grandparent'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as OnboardingRoleRouteImport } from './routes/onboarding.role'
+import { Route as OnboardingProfileRouteImport } from './routes/onboarding.profile'
 import { Route as NeedsIdRouteImport } from './routes/needs.$id'
 import { Route as InstitutionsSlugRouteImport } from './routes/institutions.$slug'
 import { Route as ImpactReportsIdRouteImport } from './routes/impact-reports.$id'
@@ -32,6 +41,8 @@ import { Route as AppMentorRouteImport } from './routes/app.mentor'
 import { Route as AppInstitutionRouteImport } from './routes/app.institution'
 import { Route as AppDonorRouteImport } from './routes/app.donor'
 import { Route as AppAdminRouteImport } from './routes/app.admin'
+import { Route as AiPredictionsRouteImport } from './routes/ai.predictions'
+import { Route as AiMatchingRouteImport } from './routes/ai.matching'
 import { Route as AppVolunteerUpcomingRouteImport } from './routes/app.volunteer.upcoming'
 import { Route as AppVolunteerCompletedRouteImport } from './routes/app.volunteer.completed'
 import { Route as AppVolunteerCertificatesRouteImport } from './routes/app.volunteer.certificates'
@@ -63,9 +74,19 @@ const VolunteerRoute = VolunteerRouteImport.update({
   path: '/volunteer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerifyEmailRoute = VerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StoriesRoute = StoriesRouteImport.update({
   id: '/stories',
   path: '/stories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -73,9 +94,19 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QrTrackingRoute = QrTrackingRouteImport.update({
+  id: '/qr-tracking',
+  path: '/qr-tracking',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentorAChildRoute = MentorAChildRouteImport.update({
+  id: '/mentor-a-child',
+  path: '/mentor-a-child',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -86,6 +117,11 @@ const LoginRoute = LoginRouteImport.update({
 const InstitutionsRoute = InstitutionsRouteImport.update({
   id: '/institutions',
   path: '/institutions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FeedRoute = FeedRouteImport.update({
@@ -103,6 +139,11 @@ const EventsRoute = EventsRouteImport.update({
   path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CsrRoute = CsrRouteImport.update({
+  id: '/csr',
+  path: '/csr',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -111,6 +152,11 @@ const ContactRoute = ContactRouteImport.update({
 const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdoptAGrandparentRoute = AdoptAGrandparentRouteImport.update({
+  id: '/adopt-a-grandparent',
+  path: '/adopt-a-grandparent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -127,6 +173,16 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const OnboardingRoleRoute = OnboardingRoleRouteImport.update({
+  id: '/onboarding/role',
+  path: '/onboarding/role',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingProfileRoute = OnboardingProfileRouteImport.update({
+  id: '/onboarding/profile',
+  path: '/onboarding/profile',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const NeedsIdRoute = NeedsIdRouteImport.update({
   id: '/needs/$id',
@@ -172,6 +228,16 @@ const AppAdminRoute = AppAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AppRoute,
+} as any)
+const AiPredictionsRoute = AiPredictionsRouteImport.update({
+  id: '/ai/predictions',
+  path: '/ai/predictions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiMatchingRoute = AiMatchingRouteImport.update({
+  id: '/ai/matching',
+  path: '/ai/matching',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppVolunteerUpcomingRoute = AppVolunteerUpcomingRouteImport.update({
   id: '/upcoming',
@@ -306,17 +372,26 @@ const AppInstitutionEventsNewRoute = AppInstitutionEventsNewRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/adopt-a-grandparent': typeof AdoptAGrandparentRoute
   '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
+  '/csr': typeof CsrRoute
   '/events': typeof EventsRouteWithChildren
   '/explore': typeof ExploreRoute
   '/feed': typeof FeedRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
+  '/mentor-a-child': typeof MentorAChildRoute
   '/notifications': typeof NotificationsRoute
+  '/qr-tracking': typeof QrTrackingRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/volunteer': typeof VolunteerRoute
+  '/ai/matching': typeof AiMatchingRoute
+  '/ai/predictions': typeof AiPredictionsRoute
   '/app/admin': typeof AppAdminRouteWithChildren
   '/app/donor': typeof AppDonorRouteWithChildren
   '/app/institution': typeof AppInstitutionRouteWithChildren
@@ -326,6 +401,8 @@ export interface FileRoutesByFullPath {
   '/impact-reports/$id': typeof ImpactReportsIdRoute
   '/institutions/$slug': typeof InstitutionsSlugRoute
   '/needs/$id': typeof NeedsIdRoute
+  '/onboarding/profile': typeof OnboardingProfileRoute
+  '/onboarding/role': typeof OnboardingRoleRoute
   '/app/': typeof AppIndexRoute
   '/app/admin/analytics': typeof AppAdminAnalyticsRoute
   '/app/admin/audit': typeof AppAdminAuditRoute
@@ -356,16 +433,25 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/adopt-a-grandparent': typeof AdoptAGrandparentRoute
   '/contact': typeof ContactRoute
+  '/csr': typeof CsrRoute
   '/events': typeof EventsRouteWithChildren
   '/explore': typeof ExploreRoute
   '/feed': typeof FeedRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
+  '/mentor-a-child': typeof MentorAChildRoute
   '/notifications': typeof NotificationsRoute
+  '/qr-tracking': typeof QrTrackingRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/volunteer': typeof VolunteerRoute
+  '/ai/matching': typeof AiMatchingRoute
+  '/ai/predictions': typeof AiPredictionsRoute
   '/app/admin': typeof AppAdminRouteWithChildren
   '/app/donor': typeof AppDonorRouteWithChildren
   '/app/institution': typeof AppInstitutionRouteWithChildren
@@ -375,6 +461,8 @@ export interface FileRoutesByTo {
   '/impact-reports/$id': typeof ImpactReportsIdRoute
   '/institutions/$slug': typeof InstitutionsSlugRoute
   '/needs/$id': typeof NeedsIdRoute
+  '/onboarding/profile': typeof OnboardingProfileRoute
+  '/onboarding/role': typeof OnboardingRoleRoute
   '/app': typeof AppIndexRoute
   '/app/admin/analytics': typeof AppAdminAnalyticsRoute
   '/app/admin/audit': typeof AppAdminAuditRoute
@@ -406,17 +494,26 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/adopt-a-grandparent': typeof AdoptAGrandparentRoute
   '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
+  '/csr': typeof CsrRoute
   '/events': typeof EventsRouteWithChildren
   '/explore': typeof ExploreRoute
   '/feed': typeof FeedRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
+  '/mentor-a-child': typeof MentorAChildRoute
   '/notifications': typeof NotificationsRoute
+  '/qr-tracking': typeof QrTrackingRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/volunteer': typeof VolunteerRoute
+  '/ai/matching': typeof AiMatchingRoute
+  '/ai/predictions': typeof AiPredictionsRoute
   '/app/admin': typeof AppAdminRouteWithChildren
   '/app/donor': typeof AppDonorRouteWithChildren
   '/app/institution': typeof AppInstitutionRouteWithChildren
@@ -426,6 +523,8 @@ export interface FileRoutesById {
   '/impact-reports/$id': typeof ImpactReportsIdRoute
   '/institutions/$slug': typeof InstitutionsSlugRoute
   '/needs/$id': typeof NeedsIdRoute
+  '/onboarding/profile': typeof OnboardingProfileRoute
+  '/onboarding/role': typeof OnboardingRoleRoute
   '/app/': typeof AppIndexRoute
   '/app/admin/analytics': typeof AppAdminAnalyticsRoute
   '/app/admin/audit': typeof AppAdminAuditRoute
@@ -458,17 +557,26 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/adopt-a-grandparent'
     | '/app'
     | '/contact'
+    | '/csr'
     | '/events'
     | '/explore'
     | '/feed'
+    | '/forgot-password'
     | '/institutions'
     | '/login'
+    | '/mentor-a-child'
     | '/notifications'
+    | '/qr-tracking'
     | '/register'
+    | '/reset-password'
     | '/stories'
+    | '/verify-email'
     | '/volunteer'
+    | '/ai/matching'
+    | '/ai/predictions'
     | '/app/admin'
     | '/app/donor'
     | '/app/institution'
@@ -478,6 +586,8 @@ export interface FileRouteTypes {
     | '/impact-reports/$id'
     | '/institutions/$slug'
     | '/needs/$id'
+    | '/onboarding/profile'
+    | '/onboarding/role'
     | '/app/'
     | '/app/admin/analytics'
     | '/app/admin/audit'
@@ -508,16 +618,25 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/adopt-a-grandparent'
     | '/contact'
+    | '/csr'
     | '/events'
     | '/explore'
     | '/feed'
+    | '/forgot-password'
     | '/institutions'
     | '/login'
+    | '/mentor-a-child'
     | '/notifications'
+    | '/qr-tracking'
     | '/register'
+    | '/reset-password'
     | '/stories'
+    | '/verify-email'
     | '/volunteer'
+    | '/ai/matching'
+    | '/ai/predictions'
     | '/app/admin'
     | '/app/donor'
     | '/app/institution'
@@ -527,6 +646,8 @@ export interface FileRouteTypes {
     | '/impact-reports/$id'
     | '/institutions/$slug'
     | '/needs/$id'
+    | '/onboarding/profile'
+    | '/onboarding/role'
     | '/app'
     | '/app/admin/analytics'
     | '/app/admin/audit'
@@ -557,17 +678,26 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/adopt-a-grandparent'
     | '/app'
     | '/contact'
+    | '/csr'
     | '/events'
     | '/explore'
     | '/feed'
+    | '/forgot-password'
     | '/institutions'
     | '/login'
+    | '/mentor-a-child'
     | '/notifications'
+    | '/qr-tracking'
     | '/register'
+    | '/reset-password'
     | '/stories'
+    | '/verify-email'
     | '/volunteer'
+    | '/ai/matching'
+    | '/ai/predictions'
     | '/app/admin'
     | '/app/donor'
     | '/app/institution'
@@ -577,6 +707,8 @@ export interface FileRouteTypes {
     | '/impact-reports/$id'
     | '/institutions/$slug'
     | '/needs/$id'
+    | '/onboarding/profile'
+    | '/onboarding/role'
     | '/app/'
     | '/app/admin/analytics'
     | '/app/admin/audit'
@@ -608,19 +740,30 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdoptAGrandparentRoute: typeof AdoptAGrandparentRoute
   AppRoute: typeof AppRouteWithChildren
   ContactRoute: typeof ContactRoute
+  CsrRoute: typeof CsrRoute
   EventsRoute: typeof EventsRouteWithChildren
   ExploreRoute: typeof ExploreRoute
   FeedRoute: typeof FeedRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   InstitutionsRoute: typeof InstitutionsRouteWithChildren
   LoginRoute: typeof LoginRoute
+  MentorAChildRoute: typeof MentorAChildRoute
   NotificationsRoute: typeof NotificationsRoute
+  QrTrackingRoute: typeof QrTrackingRoute
   RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   StoriesRoute: typeof StoriesRoute
+  VerifyEmailRoute: typeof VerifyEmailRoute
   VolunteerRoute: typeof VolunteerRoute
+  AiMatchingRoute: typeof AiMatchingRoute
+  AiPredictionsRoute: typeof AiPredictionsRoute
   ImpactReportsIdRoute: typeof ImpactReportsIdRoute
   NeedsIdRoute: typeof NeedsIdRoute
+  OnboardingProfileRoute: typeof OnboardingProfileRoute
+  OnboardingRoleRoute: typeof OnboardingRoleRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -632,11 +775,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VolunteerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verify-email': {
+      id: '/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof VerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stories': {
       id: '/stories'
       path: '/stories'
       fullPath: '/stories'
       preLoaderRoute: typeof StoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -646,11 +803,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/qr-tracking': {
+      id: '/qr-tracking'
+      path: '/qr-tracking'
+      fullPath: '/qr-tracking'
+      preLoaderRoute: typeof QrTrackingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/notifications': {
       id: '/notifications'
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentor-a-child': {
+      id: '/mentor-a-child'
+      path: '/mentor-a-child'
+      fullPath: '/mentor-a-child'
+      preLoaderRoute: typeof MentorAChildRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -665,6 +836,13 @@ declare module '@tanstack/react-router' {
       path: '/institutions'
       fullPath: '/institutions'
       preLoaderRoute: typeof InstitutionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/feed': {
@@ -688,6 +866,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/csr': {
+      id: '/csr'
+      path: '/csr'
+      fullPath: '/csr'
+      preLoaderRoute: typeof CsrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
@@ -700,6 +885,13 @@ declare module '@tanstack/react-router' {
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/adopt-a-grandparent': {
+      id: '/adopt-a-grandparent'
+      path: '/adopt-a-grandparent'
+      fullPath: '/adopt-a-grandparent'
+      preLoaderRoute: typeof AdoptAGrandparentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -722,6 +914,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/onboarding/role': {
+      id: '/onboarding/role'
+      path: '/onboarding/role'
+      fullPath: '/onboarding/role'
+      preLoaderRoute: typeof OnboardingRoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding/profile': {
+      id: '/onboarding/profile'
+      path: '/onboarding/profile'
+      fullPath: '/onboarding/profile'
+      preLoaderRoute: typeof OnboardingProfileRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/needs/$id': {
       id: '/needs/$id'
@@ -785,6 +991,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/admin'
       preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/ai/predictions': {
+      id: '/ai/predictions'
+      path: '/ai/predictions'
+      fullPath: '/ai/predictions'
+      preLoaderRoute: typeof AiPredictionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai/matching': {
+      id: '/ai/matching'
+      path: '/ai/matching'
+      fullPath: '/ai/matching'
+      preLoaderRoute: typeof AiMatchingRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/app/volunteer/upcoming': {
       id: '/app/volunteer/upcoming'
@@ -1128,19 +1348,30 @@ const InstitutionsRouteWithChildren = InstitutionsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdoptAGrandparentRoute: AdoptAGrandparentRoute,
   AppRoute: AppRouteWithChildren,
   ContactRoute: ContactRoute,
+  CsrRoute: CsrRoute,
   EventsRoute: EventsRouteWithChildren,
   ExploreRoute: ExploreRoute,
   FeedRoute: FeedRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   InstitutionsRoute: InstitutionsRouteWithChildren,
   LoginRoute: LoginRoute,
+  MentorAChildRoute: MentorAChildRoute,
   NotificationsRoute: NotificationsRoute,
+  QrTrackingRoute: QrTrackingRoute,
   RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   StoriesRoute: StoriesRoute,
+  VerifyEmailRoute: VerifyEmailRoute,
   VolunteerRoute: VolunteerRoute,
+  AiMatchingRoute: AiMatchingRoute,
+  AiPredictionsRoute: AiPredictionsRoute,
   ImpactReportsIdRoute: ImpactReportsIdRoute,
   NeedsIdRoute: NeedsIdRoute,
+  OnboardingProfileRoute: OnboardingProfileRoute,
+  OnboardingRoleRoute: OnboardingRoleRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
