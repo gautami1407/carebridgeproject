@@ -3,7 +3,7 @@ import { HeartHandshake, Heart, Building2, Activity, ArrowRight } from "lucide-r
 import { MetricCard, PageHeader, StatusBadge } from "@/components/app/AppShell";
 import { useStore } from "@/lib/store";
 
-export const Route = createFileRoute("/app/donor")({
+export const Route = createFileRoute("/app/donor/")({
   component: DonorDashboard,
 });
 

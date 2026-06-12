@@ -3,7 +3,7 @@ import { Clock, Calendar, Building2, Award, ArrowRight } from "lucide-react";
 import { MetricCard, PageHeader, StatusBadge } from "@/components/app/AppShell";
 import { useStore } from "@/lib/store";
 
-export const Route = createFileRoute("/app/volunteer")({
+export const Route = createFileRoute("/app/volunteer/")({
   component: VolunteerDashboard,
 });
 
