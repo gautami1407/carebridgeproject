@@ -16,8 +16,15 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as InstitutionsRouteImport } from './routes/institutions'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppDonorRouteImport } from './routes/app.donor'
+import { Route as AppDonorSavedRouteImport } from './routes/app.donor.saved'
+import { Route as AppDonorImpactRouteImport } from './routes/app.donor.impact'
+import { Route as AppDonorFollowingRouteImport } from './routes/app.donor.following'
+import { Route as AppDonorDonationsRouteImport } from './routes/app.donor.donations'
 
 const VolunteerRoute = VolunteerRouteImport.update({
   id: '/volunteer',
@@ -54,6 +61,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -64,10 +76,41 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDonorRoute = AppDonorRouteImport.update({
+  id: '/donor',
+  path: '/donor',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDonorSavedRoute = AppDonorSavedRouteImport.update({
+  id: '/saved',
+  path: '/saved',
+  getParentRoute: () => AppDonorRoute,
+} as any)
+const AppDonorImpactRoute = AppDonorImpactRouteImport.update({
+  id: '/impact',
+  path: '/impact',
+  getParentRoute: () => AppDonorRoute,
+} as any)
+const AppDonorFollowingRoute = AppDonorFollowingRouteImport.update({
+  id: '/following',
+  path: '/following',
+  getParentRoute: () => AppDonorRoute,
+} as any)
+const AppDonorDonationsRoute = AppDonorDonationsRouteImport.update({
+  id: '/donations',
+  path: '/donations',
+  getParentRoute: () => AppDonorRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
   '/explore': typeof ExploreRoute
   '/institutions': typeof InstitutionsRoute
@@ -75,6 +118,12 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
+  '/app/donor': typeof AppDonorRouteWithChildren
+  '/app/': typeof AppIndexRoute
+  '/app/donor/donations': typeof AppDonorDonationsRoute
+  '/app/donor/following': typeof AppDonorFollowingRoute
+  '/app/donor/impact': typeof AppDonorImpactRoute
+  '/app/donor/saved': typeof AppDonorSavedRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,11 +135,18 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
+  '/app/donor': typeof AppDonorRouteWithChildren
+  '/app': typeof AppIndexRoute
+  '/app/donor/donations': typeof AppDonorDonationsRoute
+  '/app/donor/following': typeof AppDonorFollowingRoute
+  '/app/donor/impact': typeof AppDonorImpactRoute
+  '/app/donor/saved': typeof AppDonorSavedRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
   '/explore': typeof ExploreRoute
   '/institutions': typeof InstitutionsRoute
@@ -98,12 +154,19 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
+  '/app/donor': typeof AppDonorRouteWithChildren
+  '/app/': typeof AppIndexRoute
+  '/app/donor/donations': typeof AppDonorDonationsRoute
+  '/app/donor/following': typeof AppDonorFollowingRoute
+  '/app/donor/impact': typeof AppDonorImpactRoute
+  '/app/donor/saved': typeof AppDonorSavedRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/app'
     | '/contact'
     | '/explore'
     | '/institutions'
@@ -111,6 +174,12 @@ export interface FileRouteTypes {
     | '/register'
     | '/stories'
     | '/volunteer'
+    | '/app/donor'
+    | '/app/'
+    | '/app/donor/donations'
+    | '/app/donor/following'
+    | '/app/donor/impact'
+    | '/app/donor/saved'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,10 +191,17 @@ export interface FileRouteTypes {
     | '/register'
     | '/stories'
     | '/volunteer'
+    | '/app/donor'
+    | '/app'
+    | '/app/donor/donations'
+    | '/app/donor/following'
+    | '/app/donor/impact'
+    | '/app/donor/saved'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/app'
     | '/contact'
     | '/explore'
     | '/institutions'
@@ -133,11 +209,18 @@ export interface FileRouteTypes {
     | '/register'
     | '/stories'
     | '/volunteer'
+    | '/app/donor'
+    | '/app/'
+    | '/app/donor/donations'
+    | '/app/donor/following'
+    | '/app/donor/impact'
+    | '/app/donor/saved'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AppRoute: typeof AppRouteWithChildren
   ContactRoute: typeof ContactRoute
   ExploreRoute: typeof ExploreRoute
   InstitutionsRoute: typeof InstitutionsRoute
@@ -198,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -212,12 +302,85 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/donor': {
+      id: '/app/donor'
+      path: '/donor'
+      fullPath: '/app/donor'
+      preLoaderRoute: typeof AppDonorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/donor/saved': {
+      id: '/app/donor/saved'
+      path: '/saved'
+      fullPath: '/app/donor/saved'
+      preLoaderRoute: typeof AppDonorSavedRouteImport
+      parentRoute: typeof AppDonorRoute
+    }
+    '/app/donor/impact': {
+      id: '/app/donor/impact'
+      path: '/impact'
+      fullPath: '/app/donor/impact'
+      preLoaderRoute: typeof AppDonorImpactRouteImport
+      parentRoute: typeof AppDonorRoute
+    }
+    '/app/donor/following': {
+      id: '/app/donor/following'
+      path: '/following'
+      fullPath: '/app/donor/following'
+      preLoaderRoute: typeof AppDonorFollowingRouteImport
+      parentRoute: typeof AppDonorRoute
+    }
+    '/app/donor/donations': {
+      id: '/app/donor/donations'
+      path: '/donations'
+      fullPath: '/app/donor/donations'
+      preLoaderRoute: typeof AppDonorDonationsRouteImport
+      parentRoute: typeof AppDonorRoute
+    }
   }
 }
+
+interface AppDonorRouteChildren {
+  AppDonorDonationsRoute: typeof AppDonorDonationsRoute
+  AppDonorFollowingRoute: typeof AppDonorFollowingRoute
+  AppDonorImpactRoute: typeof AppDonorImpactRoute
+  AppDonorSavedRoute: typeof AppDonorSavedRoute
+}
+
+const AppDonorRouteChildren: AppDonorRouteChildren = {
+  AppDonorDonationsRoute: AppDonorDonationsRoute,
+  AppDonorFollowingRoute: AppDonorFollowingRoute,
+  AppDonorImpactRoute: AppDonorImpactRoute,
+  AppDonorSavedRoute: AppDonorSavedRoute,
+}
+
+const AppDonorRouteWithChildren = AppDonorRoute._addFileChildren(
+  AppDonorRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppDonorRoute: typeof AppDonorRouteWithChildren
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDonorRoute: AppDonorRouteWithChildren,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AppRoute: AppRouteWithChildren,
   ContactRoute: ContactRoute,
   ExploreRoute: ExploreRoute,
   InstitutionsRoute: InstitutionsRoute,
@@ -229,3 +392,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
