@@ -21,7 +21,7 @@ function SavedNeeds() {
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {needs.map((n) => {
             const inst = insts.find((i) => i.id === n.institutionId)!;
-            return <NeedCard key={n.id} need={{ ...n, institution: inst.name, location: `${inst.city}, ${inst.state}`, impact: n.description }} />;
+            return <NeedCard key={n.id} need={{ ...n, urgency: n.priority, institution: inst.name, location: `${inst.city}, ${inst.state}`, impact: n.description }} />;
           })}
         </div>
       )}
