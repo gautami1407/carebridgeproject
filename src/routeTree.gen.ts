@@ -24,6 +24,7 @@ import { Route as AppVolunteerRouteImport } from './routes/app.volunteer'
 import { Route as AppMentorRouteImport } from './routes/app.mentor'
 import { Route as AppInstitutionRouteImport } from './routes/app.institution'
 import { Route as AppDonorRouteImport } from './routes/app.donor'
+import { Route as AppAdminRouteImport } from './routes/app.admin'
 import { Route as AppVolunteerUpcomingRouteImport } from './routes/app.volunteer.upcoming'
 import { Route as AppVolunteerCompletedRouteImport } from './routes/app.volunteer.completed'
 import { Route as AppVolunteerCertificatesRouteImport } from './routes/app.volunteer.certificates'
@@ -40,6 +41,12 @@ import { Route as AppDonorSavedRouteImport } from './routes/app.donor.saved'
 import { Route as AppDonorImpactRouteImport } from './routes/app.donor.impact'
 import { Route as AppDonorFollowingRouteImport } from './routes/app.donor.following'
 import { Route as AppDonorDonationsRouteImport } from './routes/app.donor.donations'
+import { Route as AppAdminUsersRouteImport } from './routes/app.admin.users'
+import { Route as AppAdminReportsRouteImport } from './routes/app.admin.reports'
+import { Route as AppAdminNeedsRouteImport } from './routes/app.admin.needs'
+import { Route as AppAdminInstitutionsRouteImport } from './routes/app.admin.institutions'
+import { Route as AppAdminAuditRouteImport } from './routes/app.admin.audit'
+import { Route as AppAdminAnalyticsRouteImport } from './routes/app.admin.analytics'
 import { Route as AppInstitutionNeedsNewRouteImport } from './routes/app.institution.needs.new'
 import { Route as AppInstitutionNeedsIdRouteImport } from './routes/app.institution.needs.$id'
 import { Route as AppInstitutionEventsNewRouteImport } from './routes/app.institution.events.new'
@@ -117,6 +124,11 @@ const AppInstitutionRoute = AppInstitutionRouteImport.update({
 const AppDonorRoute = AppDonorRouteImport.update({
   id: '/donor',
   path: '/donor',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AppRoute,
 } as any)
 const AppVolunteerUpcomingRoute = AppVolunteerUpcomingRouteImport.update({
@@ -203,6 +215,36 @@ const AppDonorDonationsRoute = AppDonorDonationsRouteImport.update({
   path: '/donations',
   getParentRoute: () => AppDonorRoute,
 } as any)
+const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminReportsRoute = AppAdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminNeedsRoute = AppAdminNeedsRouteImport.update({
+  id: '/needs',
+  path: '/needs',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminInstitutionsRoute = AppAdminInstitutionsRouteImport.update({
+  id: '/institutions',
+  path: '/institutions',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminAuditRoute = AppAdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminAnalyticsRoute = AppAdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppAdminRoute,
+} as any)
 const AppInstitutionNeedsNewRoute = AppInstitutionNeedsNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -230,11 +272,18 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
   '/app/donor': typeof AppDonorRouteWithChildren
   '/app/institution': typeof AppInstitutionRouteWithChildren
   '/app/mentor': typeof AppMentorRouteWithChildren
   '/app/volunteer': typeof AppVolunteerRouteWithChildren
   '/app/': typeof AppIndexRoute
+  '/app/admin/analytics': typeof AppAdminAnalyticsRoute
+  '/app/admin/audit': typeof AppAdminAuditRoute
+  '/app/admin/institutions': typeof AppAdminInstitutionsRoute
+  '/app/admin/needs': typeof AppAdminNeedsRoute
+  '/app/admin/reports': typeof AppAdminReportsRoute
+  '/app/admin/users': typeof AppAdminUsersRoute
   '/app/donor/donations': typeof AppDonorDonationsRoute
   '/app/donor/following': typeof AppDonorFollowingRoute
   '/app/donor/impact': typeof AppDonorImpactRoute
@@ -265,11 +314,18 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
   '/app/donor': typeof AppDonorRouteWithChildren
   '/app/institution': typeof AppInstitutionRouteWithChildren
   '/app/mentor': typeof AppMentorRouteWithChildren
   '/app/volunteer': typeof AppVolunteerRouteWithChildren
   '/app': typeof AppIndexRoute
+  '/app/admin/analytics': typeof AppAdminAnalyticsRoute
+  '/app/admin/audit': typeof AppAdminAuditRoute
+  '/app/admin/institutions': typeof AppAdminInstitutionsRoute
+  '/app/admin/needs': typeof AppAdminNeedsRoute
+  '/app/admin/reports': typeof AppAdminReportsRoute
+  '/app/admin/users': typeof AppAdminUsersRoute
   '/app/donor/donations': typeof AppDonorDonationsRoute
   '/app/donor/following': typeof AppDonorFollowingRoute
   '/app/donor/impact': typeof AppDonorImpactRoute
@@ -302,11 +358,18 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
   '/app/donor': typeof AppDonorRouteWithChildren
   '/app/institution': typeof AppInstitutionRouteWithChildren
   '/app/mentor': typeof AppMentorRouteWithChildren
   '/app/volunteer': typeof AppVolunteerRouteWithChildren
   '/app/': typeof AppIndexRoute
+  '/app/admin/analytics': typeof AppAdminAnalyticsRoute
+  '/app/admin/audit': typeof AppAdminAuditRoute
+  '/app/admin/institutions': typeof AppAdminInstitutionsRoute
+  '/app/admin/needs': typeof AppAdminNeedsRoute
+  '/app/admin/reports': typeof AppAdminReportsRoute
+  '/app/admin/users': typeof AppAdminUsersRoute
   '/app/donor/donations': typeof AppDonorDonationsRoute
   '/app/donor/following': typeof AppDonorFollowingRoute
   '/app/donor/impact': typeof AppDonorImpactRoute
@@ -340,11 +403,18 @@ export interface FileRouteTypes {
     | '/register'
     | '/stories'
     | '/volunteer'
+    | '/app/admin'
     | '/app/donor'
     | '/app/institution'
     | '/app/mentor'
     | '/app/volunteer'
     | '/app/'
+    | '/app/admin/analytics'
+    | '/app/admin/audit'
+    | '/app/admin/institutions'
+    | '/app/admin/needs'
+    | '/app/admin/reports'
+    | '/app/admin/users'
     | '/app/donor/donations'
     | '/app/donor/following'
     | '/app/donor/impact'
@@ -375,11 +445,18 @@ export interface FileRouteTypes {
     | '/register'
     | '/stories'
     | '/volunteer'
+    | '/app/admin'
     | '/app/donor'
     | '/app/institution'
     | '/app/mentor'
     | '/app/volunteer'
     | '/app'
+    | '/app/admin/analytics'
+    | '/app/admin/audit'
+    | '/app/admin/institutions'
+    | '/app/admin/needs'
+    | '/app/admin/reports'
+    | '/app/admin/users'
     | '/app/donor/donations'
     | '/app/donor/following'
     | '/app/donor/impact'
@@ -411,11 +488,18 @@ export interface FileRouteTypes {
     | '/register'
     | '/stories'
     | '/volunteer'
+    | '/app/admin'
     | '/app/donor'
     | '/app/institution'
     | '/app/mentor'
     | '/app/volunteer'
     | '/app/'
+    | '/app/admin/analytics'
+    | '/app/admin/audit'
+    | '/app/admin/institutions'
+    | '/app/admin/needs'
+    | '/app/admin/reports'
+    | '/app/admin/users'
     | '/app/donor/donations'
     | '/app/donor/following'
     | '/app/donor/impact'
@@ -557,6 +641,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDonorRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/volunteer/upcoming': {
       id: '/app/volunteer/upcoming'
       path: '/upcoming'
@@ -669,6 +760,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDonorDonationsRouteImport
       parentRoute: typeof AppDonorRoute
     }
+    '/app/admin/users': {
+      id: '/app/admin/users'
+      path: '/users'
+      fullPath: '/app/admin/users'
+      preLoaderRoute: typeof AppAdminUsersRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/reports': {
+      id: '/app/admin/reports'
+      path: '/reports'
+      fullPath: '/app/admin/reports'
+      preLoaderRoute: typeof AppAdminReportsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/needs': {
+      id: '/app/admin/needs'
+      path: '/needs'
+      fullPath: '/app/admin/needs'
+      preLoaderRoute: typeof AppAdminNeedsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/institutions': {
+      id: '/app/admin/institutions'
+      path: '/institutions'
+      fullPath: '/app/admin/institutions'
+      preLoaderRoute: typeof AppAdminInstitutionsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/audit': {
+      id: '/app/admin/audit'
+      path: '/audit'
+      fullPath: '/app/admin/audit'
+      preLoaderRoute: typeof AppAdminAuditRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/analytics': {
+      id: '/app/admin/analytics'
+      path: '/analytics'
+      fullPath: '/app/admin/analytics'
+      preLoaderRoute: typeof AppAdminAnalyticsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
     '/app/institution/needs/new': {
       id: '/app/institution/needs/new'
       path: '/new'
@@ -692,6 +825,28 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AppAdminRouteChildren {
+  AppAdminAnalyticsRoute: typeof AppAdminAnalyticsRoute
+  AppAdminAuditRoute: typeof AppAdminAuditRoute
+  AppAdminInstitutionsRoute: typeof AppAdminInstitutionsRoute
+  AppAdminNeedsRoute: typeof AppAdminNeedsRoute
+  AppAdminReportsRoute: typeof AppAdminReportsRoute
+  AppAdminUsersRoute: typeof AppAdminUsersRoute
+}
+
+const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminAnalyticsRoute: AppAdminAnalyticsRoute,
+  AppAdminAuditRoute: AppAdminAuditRoute,
+  AppAdminInstitutionsRoute: AppAdminInstitutionsRoute,
+  AppAdminNeedsRoute: AppAdminNeedsRoute,
+  AppAdminReportsRoute: AppAdminReportsRoute,
+  AppAdminUsersRoute: AppAdminUsersRoute,
+}
+
+const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(
+  AppAdminRouteChildren,
+)
 
 interface AppDonorRouteChildren {
   AppDonorDonationsRoute: typeof AppDonorDonationsRoute
@@ -790,6 +945,7 @@ const AppVolunteerRouteWithChildren = AppVolunteerRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRouteWithChildren
   AppDonorRoute: typeof AppDonorRouteWithChildren
   AppInstitutionRoute: typeof AppInstitutionRouteWithChildren
   AppMentorRoute: typeof AppMentorRouteWithChildren
@@ -798,6 +954,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRouteWithChildren,
   AppDonorRoute: AppDonorRouteWithChildren,
   AppInstitutionRoute: AppInstitutionRouteWithChildren,
   AppMentorRoute: AppMentorRouteWithChildren,
