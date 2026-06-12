@@ -10,18 +10,82 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VolunteerRouteImport } from './routes/volunteer'
+import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as StoriesRouteImport } from './routes/stories'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as QrTrackingRouteImport } from './routes/qr-tracking'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as MentorAChildRouteImport } from './routes/mentor-a-child'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InstitutionsRouteImport } from './routes/institutions'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as FeedRouteImport } from './routes/feed'
 import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as EventsRouteImport } from './routes/events'
+import { Route as CsrRouteImport } from './routes/csr'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as AdoptAGrandparentRouteImport } from './routes/adopt-a-grandparent'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InstitutionsIndexRouteImport } from './routes/institutions.index'
+import { Route as EventsIndexRouteImport } from './routes/events.index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as OnboardingRoleRouteImport } from './routes/onboarding.role'
+import { Route as OnboardingProfileRouteImport } from './routes/onboarding.profile'
+import { Route as NeedsIdRouteImport } from './routes/needs.$id'
+import { Route as InstitutionsSlugRouteImport } from './routes/institutions.$slug'
+import { Route as ImpactReportsIdRouteImport } from './routes/impact-reports.$id'
+import { Route as EventsIdRouteImport } from './routes/events.$id'
+import { Route as AppVolunteerRouteImport } from './routes/app.volunteer'
+import { Route as AppMentorRouteImport } from './routes/app.mentor'
+import { Route as AppInstitutionRouteImport } from './routes/app.institution'
+import { Route as AppDonorRouteImport } from './routes/app.donor'
+import { Route as AppAdminRouteImport } from './routes/app.admin'
+import { Route as AiPredictionsRouteImport } from './routes/ai.predictions'
+import { Route as AiMatchingRouteImport } from './routes/ai.matching'
+import { Route as AppVolunteerIndexRouteImport } from './routes/app.volunteer.index'
+import { Route as AppMentorIndexRouteImport } from './routes/app.mentor.index'
+import { Route as AppInstitutionIndexRouteImport } from './routes/app.institution.index'
+import { Route as AppDonorIndexRouteImport } from './routes/app.donor.index'
+import { Route as AppAdminIndexRouteImport } from './routes/app.admin.index'
+import { Route as AppVolunteerUpcomingRouteImport } from './routes/app.volunteer.upcoming'
+import { Route as AppVolunteerCompletedRouteImport } from './routes/app.volunteer.completed'
+import { Route as AppVolunteerCertificatesRouteImport } from './routes/app.volunteer.certificates'
+import { Route as AppVolunteerApplicationsRouteImport } from './routes/app.volunteer.applications'
+import { Route as AppMentorSessionsRouteImport } from './routes/app.mentor.sessions'
+import { Route as AppMentorMenteesRouteImport } from './routes/app.mentor.mentees'
+import { Route as AppInstitutionVolunteersRouteImport } from './routes/app.institution.volunteers'
+import { Route as AppInstitutionProfileRouteImport } from './routes/app.institution.profile'
+import { Route as AppInstitutionNeedsRouteImport } from './routes/app.institution.needs'
+import { Route as AppInstitutionImpactReportsRouteImport } from './routes/app.institution.impact-reports'
+import { Route as AppInstitutionEventsRouteImport } from './routes/app.institution.events'
+import { Route as AppInstitutionDonationsRouteImport } from './routes/app.institution.donations'
+import { Route as AppDonorSavedRouteImport } from './routes/app.donor.saved'
+import { Route as AppDonorImpactRouteImport } from './routes/app.donor.impact'
+import { Route as AppDonorFollowingRouteImport } from './routes/app.donor.following'
+import { Route as AppDonorDonationsRouteImport } from './routes/app.donor.donations'
+import { Route as AppAdminUsersRouteImport } from './routes/app.admin.users'
+import { Route as AppAdminReportsRouteImport } from './routes/app.admin.reports'
+import { Route as AppAdminNeedsRouteImport } from './routes/app.admin.needs'
+import { Route as AppAdminInstitutionsRouteImport } from './routes/app.admin.institutions'
+import { Route as AppAdminAuditRouteImport } from './routes/app.admin.audit'
+import { Route as AppAdminAnalyticsRouteImport } from './routes/app.admin.analytics'
+import { Route as AppInstitutionNeedsIndexRouteImport } from './routes/app.institution.needs.index'
+import { Route as AppInstitutionEventsIndexRouteImport } from './routes/app.institution.events.index'
+import { Route as AppInstitutionNeedsNewRouteImport } from './routes/app.institution.needs.new'
+import { Route as AppInstitutionNeedsIdRouteImport } from './routes/app.institution.needs.$id'
+import { Route as AppInstitutionEventsNewRouteImport } from './routes/app.institution.events.new'
 
 const VolunteerRoute = VolunteerRouteImport.update({
   id: '/volunteer',
   path: '/volunteer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyEmailRoute = VerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StoriesRoute = StoriesRouteImport.update({
@@ -29,9 +93,29 @@ const StoriesRoute = StoriesRouteImport.update({
   path: '/stories',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QrTrackingRoute = QrTrackingRouteImport.update({
+  id: '/qr-tracking',
+  path: '/qr-tracking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentorAChildRoute = MentorAChildRouteImport.update({
+  id: '/mentor-a-child',
+  path: '/mentor-a-child',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -44,14 +128,44 @@ const InstitutionsRoute = InstitutionsRouteImport.update({
   path: '/institutions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeedRoute = FeedRouteImport.update({
+  id: '/feed',
+  path: '/feed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExploreRoute = ExploreRouteImport.update({
   id: '/explore',
   path: '/explore',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CsrRoute = CsrRouteImport.update({
+  id: '/csr',
+  path: '/csr',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdoptAGrandparentRoute = AdoptAGrandparentRouteImport.update({
+  id: '/adopt-a-grandparent',
+  path: '/adopt-a-grandparent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -64,87 +178,684 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InstitutionsIndexRoute = InstitutionsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => InstitutionsRoute,
+} as any)
+const EventsIndexRoute = EventsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EventsRoute,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const OnboardingRoleRoute = OnboardingRoleRouteImport.update({
+  id: '/onboarding/role',
+  path: '/onboarding/role',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingProfileRoute = OnboardingProfileRouteImport.update({
+  id: '/onboarding/profile',
+  path: '/onboarding/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NeedsIdRoute = NeedsIdRouteImport.update({
+  id: '/needs/$id',
+  path: '/needs/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InstitutionsSlugRoute = InstitutionsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => InstitutionsRoute,
+} as any)
+const ImpactReportsIdRoute = ImpactReportsIdRouteImport.update({
+  id: '/impact-reports/$id',
+  path: '/impact-reports/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsIdRoute = EventsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => EventsRoute,
+} as any)
+const AppVolunteerRoute = AppVolunteerRouteImport.update({
+  id: '/volunteer',
+  path: '/volunteer',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMentorRoute = AppMentorRouteImport.update({
+  id: '/mentor',
+  path: '/mentor',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInstitutionRoute = AppInstitutionRouteImport.update({
+  id: '/institution',
+  path: '/institution',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDonorRoute = AppDonorRouteImport.update({
+  id: '/donor',
+  path: '/donor',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
+const AiPredictionsRoute = AiPredictionsRouteImport.update({
+  id: '/ai/predictions',
+  path: '/ai/predictions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiMatchingRoute = AiMatchingRouteImport.update({
+  id: '/ai/matching',
+  path: '/ai/matching',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppVolunteerIndexRoute = AppVolunteerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppVolunteerRoute,
+} as any)
+const AppMentorIndexRoute = AppMentorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppMentorRoute,
+} as any)
+const AppInstitutionIndexRoute = AppInstitutionIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppInstitutionRoute,
+} as any)
+const AppDonorIndexRoute = AppDonorIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppDonorRoute,
+} as any)
+const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppVolunteerUpcomingRoute = AppVolunteerUpcomingRouteImport.update({
+  id: '/upcoming',
+  path: '/upcoming',
+  getParentRoute: () => AppVolunteerRoute,
+} as any)
+const AppVolunteerCompletedRoute = AppVolunteerCompletedRouteImport.update({
+  id: '/completed',
+  path: '/completed',
+  getParentRoute: () => AppVolunteerRoute,
+} as any)
+const AppVolunteerCertificatesRoute =
+  AppVolunteerCertificatesRouteImport.update({
+    id: '/certificates',
+    path: '/certificates',
+    getParentRoute: () => AppVolunteerRoute,
+  } as any)
+const AppVolunteerApplicationsRoute =
+  AppVolunteerApplicationsRouteImport.update({
+    id: '/applications',
+    path: '/applications',
+    getParentRoute: () => AppVolunteerRoute,
+  } as any)
+const AppMentorSessionsRoute = AppMentorSessionsRouteImport.update({
+  id: '/sessions',
+  path: '/sessions',
+  getParentRoute: () => AppMentorRoute,
+} as any)
+const AppMentorMenteesRoute = AppMentorMenteesRouteImport.update({
+  id: '/mentees',
+  path: '/mentees',
+  getParentRoute: () => AppMentorRoute,
+} as any)
+const AppInstitutionVolunteersRoute =
+  AppInstitutionVolunteersRouteImport.update({
+    id: '/volunteers',
+    path: '/volunteers',
+    getParentRoute: () => AppInstitutionRoute,
+  } as any)
+const AppInstitutionProfileRoute = AppInstitutionProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppInstitutionRoute,
+} as any)
+const AppInstitutionNeedsRoute = AppInstitutionNeedsRouteImport.update({
+  id: '/needs',
+  path: '/needs',
+  getParentRoute: () => AppInstitutionRoute,
+} as any)
+const AppInstitutionImpactReportsRoute =
+  AppInstitutionImpactReportsRouteImport.update({
+    id: '/impact-reports',
+    path: '/impact-reports',
+    getParentRoute: () => AppInstitutionRoute,
+  } as any)
+const AppInstitutionEventsRoute = AppInstitutionEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => AppInstitutionRoute,
+} as any)
+const AppInstitutionDonationsRoute = AppInstitutionDonationsRouteImport.update({
+  id: '/donations',
+  path: '/donations',
+  getParentRoute: () => AppInstitutionRoute,
+} as any)
+const AppDonorSavedRoute = AppDonorSavedRouteImport.update({
+  id: '/saved',
+  path: '/saved',
+  getParentRoute: () => AppDonorRoute,
+} as any)
+const AppDonorImpactRoute = AppDonorImpactRouteImport.update({
+  id: '/impact',
+  path: '/impact',
+  getParentRoute: () => AppDonorRoute,
+} as any)
+const AppDonorFollowingRoute = AppDonorFollowingRouteImport.update({
+  id: '/following',
+  path: '/following',
+  getParentRoute: () => AppDonorRoute,
+} as any)
+const AppDonorDonationsRoute = AppDonorDonationsRouteImport.update({
+  id: '/donations',
+  path: '/donations',
+  getParentRoute: () => AppDonorRoute,
+} as any)
+const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminReportsRoute = AppAdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminNeedsRoute = AppAdminNeedsRouteImport.update({
+  id: '/needs',
+  path: '/needs',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminInstitutionsRoute = AppAdminInstitutionsRouteImport.update({
+  id: '/institutions',
+  path: '/institutions',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminAuditRoute = AppAdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminAnalyticsRoute = AppAdminAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppInstitutionNeedsIndexRoute =
+  AppInstitutionNeedsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AppInstitutionNeedsRoute,
+  } as any)
+const AppInstitutionEventsIndexRoute =
+  AppInstitutionEventsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AppInstitutionEventsRoute,
+  } as any)
+const AppInstitutionNeedsNewRoute = AppInstitutionNeedsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppInstitutionNeedsRoute,
+} as any)
+const AppInstitutionNeedsIdRoute = AppInstitutionNeedsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppInstitutionNeedsRoute,
+} as any)
+const AppInstitutionEventsNewRoute = AppInstitutionEventsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppInstitutionEventsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/adopt-a-grandparent': typeof AdoptAGrandparentRoute
+  '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
+  '/csr': typeof CsrRoute
+  '/events': typeof EventsRouteWithChildren
   '/explore': typeof ExploreRoute
-  '/institutions': typeof InstitutionsRoute
+  '/feed': typeof FeedRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
+  '/mentor-a-child': typeof MentorAChildRoute
+  '/notifications': typeof NotificationsRoute
+  '/qr-tracking': typeof QrTrackingRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/volunteer': typeof VolunteerRoute
+  '/ai/matching': typeof AiMatchingRoute
+  '/ai/predictions': typeof AiPredictionsRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
+  '/app/donor': typeof AppDonorRouteWithChildren
+  '/app/institution': typeof AppInstitutionRouteWithChildren
+  '/app/mentor': typeof AppMentorRouteWithChildren
+  '/app/volunteer': typeof AppVolunteerRouteWithChildren
+  '/events/$id': typeof EventsIdRoute
+  '/impact-reports/$id': typeof ImpactReportsIdRoute
+  '/institutions/$slug': typeof InstitutionsSlugRoute
+  '/needs/$id': typeof NeedsIdRoute
+  '/onboarding/profile': typeof OnboardingProfileRoute
+  '/onboarding/role': typeof OnboardingRoleRoute
+  '/app/': typeof AppIndexRoute
+  '/events/': typeof EventsIndexRoute
+  '/institutions/': typeof InstitutionsIndexRoute
+  '/app/admin/analytics': typeof AppAdminAnalyticsRoute
+  '/app/admin/audit': typeof AppAdminAuditRoute
+  '/app/admin/institutions': typeof AppAdminInstitutionsRoute
+  '/app/admin/needs': typeof AppAdminNeedsRoute
+  '/app/admin/reports': typeof AppAdminReportsRoute
+  '/app/admin/users': typeof AppAdminUsersRoute
+  '/app/donor/donations': typeof AppDonorDonationsRoute
+  '/app/donor/following': typeof AppDonorFollowingRoute
+  '/app/donor/impact': typeof AppDonorImpactRoute
+  '/app/donor/saved': typeof AppDonorSavedRoute
+  '/app/institution/donations': typeof AppInstitutionDonationsRoute
+  '/app/institution/events': typeof AppInstitutionEventsRouteWithChildren
+  '/app/institution/impact-reports': typeof AppInstitutionImpactReportsRoute
+  '/app/institution/needs': typeof AppInstitutionNeedsRouteWithChildren
+  '/app/institution/profile': typeof AppInstitutionProfileRoute
+  '/app/institution/volunteers': typeof AppInstitutionVolunteersRoute
+  '/app/mentor/mentees': typeof AppMentorMenteesRoute
+  '/app/mentor/sessions': typeof AppMentorSessionsRoute
+  '/app/volunteer/applications': typeof AppVolunteerApplicationsRoute
+  '/app/volunteer/certificates': typeof AppVolunteerCertificatesRoute
+  '/app/volunteer/completed': typeof AppVolunteerCompletedRoute
+  '/app/volunteer/upcoming': typeof AppVolunteerUpcomingRoute
+  '/app/admin/': typeof AppAdminIndexRoute
+  '/app/donor/': typeof AppDonorIndexRoute
+  '/app/institution/': typeof AppInstitutionIndexRoute
+  '/app/mentor/': typeof AppMentorIndexRoute
+  '/app/volunteer/': typeof AppVolunteerIndexRoute
+  '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
+  '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
+  '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
+  '/app/institution/events/': typeof AppInstitutionEventsIndexRoute
+  '/app/institution/needs/': typeof AppInstitutionNeedsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/adopt-a-grandparent': typeof AdoptAGrandparentRoute
   '/contact': typeof ContactRoute
+  '/csr': typeof CsrRoute
   '/explore': typeof ExploreRoute
-  '/institutions': typeof InstitutionsRoute
+  '/feed': typeof FeedRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/mentor-a-child': typeof MentorAChildRoute
+  '/notifications': typeof NotificationsRoute
+  '/qr-tracking': typeof QrTrackingRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/volunteer': typeof VolunteerRoute
+  '/ai/matching': typeof AiMatchingRoute
+  '/ai/predictions': typeof AiPredictionsRoute
+  '/events/$id': typeof EventsIdRoute
+  '/impact-reports/$id': typeof ImpactReportsIdRoute
+  '/institutions/$slug': typeof InstitutionsSlugRoute
+  '/needs/$id': typeof NeedsIdRoute
+  '/onboarding/profile': typeof OnboardingProfileRoute
+  '/onboarding/role': typeof OnboardingRoleRoute
+  '/app': typeof AppIndexRoute
+  '/events': typeof EventsIndexRoute
+  '/institutions': typeof InstitutionsIndexRoute
+  '/app/admin/analytics': typeof AppAdminAnalyticsRoute
+  '/app/admin/audit': typeof AppAdminAuditRoute
+  '/app/admin/institutions': typeof AppAdminInstitutionsRoute
+  '/app/admin/needs': typeof AppAdminNeedsRoute
+  '/app/admin/reports': typeof AppAdminReportsRoute
+  '/app/admin/users': typeof AppAdminUsersRoute
+  '/app/donor/donations': typeof AppDonorDonationsRoute
+  '/app/donor/following': typeof AppDonorFollowingRoute
+  '/app/donor/impact': typeof AppDonorImpactRoute
+  '/app/donor/saved': typeof AppDonorSavedRoute
+  '/app/institution/donations': typeof AppInstitutionDonationsRoute
+  '/app/institution/impact-reports': typeof AppInstitutionImpactReportsRoute
+  '/app/institution/profile': typeof AppInstitutionProfileRoute
+  '/app/institution/volunteers': typeof AppInstitutionVolunteersRoute
+  '/app/mentor/mentees': typeof AppMentorMenteesRoute
+  '/app/mentor/sessions': typeof AppMentorSessionsRoute
+  '/app/volunteer/applications': typeof AppVolunteerApplicationsRoute
+  '/app/volunteer/certificates': typeof AppVolunteerCertificatesRoute
+  '/app/volunteer/completed': typeof AppVolunteerCompletedRoute
+  '/app/volunteer/upcoming': typeof AppVolunteerUpcomingRoute
+  '/app/admin': typeof AppAdminIndexRoute
+  '/app/donor': typeof AppDonorIndexRoute
+  '/app/institution': typeof AppInstitutionIndexRoute
+  '/app/mentor': typeof AppMentorIndexRoute
+  '/app/volunteer': typeof AppVolunteerIndexRoute
+  '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
+  '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
+  '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
+  '/app/institution/events': typeof AppInstitutionEventsIndexRoute
+  '/app/institution/needs': typeof AppInstitutionNeedsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/adopt-a-grandparent': typeof AdoptAGrandparentRoute
+  '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
+  '/csr': typeof CsrRoute
+  '/events': typeof EventsRouteWithChildren
   '/explore': typeof ExploreRoute
-  '/institutions': typeof InstitutionsRoute
+  '/feed': typeof FeedRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
+  '/mentor-a-child': typeof MentorAChildRoute
+  '/notifications': typeof NotificationsRoute
+  '/qr-tracking': typeof QrTrackingRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/stories': typeof StoriesRoute
+  '/verify-email': typeof VerifyEmailRoute
   '/volunteer': typeof VolunteerRoute
+  '/ai/matching': typeof AiMatchingRoute
+  '/ai/predictions': typeof AiPredictionsRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
+  '/app/donor': typeof AppDonorRouteWithChildren
+  '/app/institution': typeof AppInstitutionRouteWithChildren
+  '/app/mentor': typeof AppMentorRouteWithChildren
+  '/app/volunteer': typeof AppVolunteerRouteWithChildren
+  '/events/$id': typeof EventsIdRoute
+  '/impact-reports/$id': typeof ImpactReportsIdRoute
+  '/institutions/$slug': typeof InstitutionsSlugRoute
+  '/needs/$id': typeof NeedsIdRoute
+  '/onboarding/profile': typeof OnboardingProfileRoute
+  '/onboarding/role': typeof OnboardingRoleRoute
+  '/app/': typeof AppIndexRoute
+  '/events/': typeof EventsIndexRoute
+  '/institutions/': typeof InstitutionsIndexRoute
+  '/app/admin/analytics': typeof AppAdminAnalyticsRoute
+  '/app/admin/audit': typeof AppAdminAuditRoute
+  '/app/admin/institutions': typeof AppAdminInstitutionsRoute
+  '/app/admin/needs': typeof AppAdminNeedsRoute
+  '/app/admin/reports': typeof AppAdminReportsRoute
+  '/app/admin/users': typeof AppAdminUsersRoute
+  '/app/donor/donations': typeof AppDonorDonationsRoute
+  '/app/donor/following': typeof AppDonorFollowingRoute
+  '/app/donor/impact': typeof AppDonorImpactRoute
+  '/app/donor/saved': typeof AppDonorSavedRoute
+  '/app/institution/donations': typeof AppInstitutionDonationsRoute
+  '/app/institution/events': typeof AppInstitutionEventsRouteWithChildren
+  '/app/institution/impact-reports': typeof AppInstitutionImpactReportsRoute
+  '/app/institution/needs': typeof AppInstitutionNeedsRouteWithChildren
+  '/app/institution/profile': typeof AppInstitutionProfileRoute
+  '/app/institution/volunteers': typeof AppInstitutionVolunteersRoute
+  '/app/mentor/mentees': typeof AppMentorMenteesRoute
+  '/app/mentor/sessions': typeof AppMentorSessionsRoute
+  '/app/volunteer/applications': typeof AppVolunteerApplicationsRoute
+  '/app/volunteer/certificates': typeof AppVolunteerCertificatesRoute
+  '/app/volunteer/completed': typeof AppVolunteerCompletedRoute
+  '/app/volunteer/upcoming': typeof AppVolunteerUpcomingRoute
+  '/app/admin/': typeof AppAdminIndexRoute
+  '/app/donor/': typeof AppDonorIndexRoute
+  '/app/institution/': typeof AppInstitutionIndexRoute
+  '/app/mentor/': typeof AppMentorIndexRoute
+  '/app/volunteer/': typeof AppVolunteerIndexRoute
+  '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
+  '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
+  '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
+  '/app/institution/events/': typeof AppInstitutionEventsIndexRoute
+  '/app/institution/needs/': typeof AppInstitutionNeedsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/adopt-a-grandparent'
+    | '/app'
     | '/contact'
+    | '/csr'
+    | '/events'
     | '/explore'
+    | '/feed'
+    | '/forgot-password'
     | '/institutions'
     | '/login'
+    | '/mentor-a-child'
+    | '/notifications'
+    | '/qr-tracking'
     | '/register'
+    | '/reset-password'
     | '/stories'
+    | '/verify-email'
     | '/volunteer'
+    | '/ai/matching'
+    | '/ai/predictions'
+    | '/app/admin'
+    | '/app/donor'
+    | '/app/institution'
+    | '/app/mentor'
+    | '/app/volunteer'
+    | '/events/$id'
+    | '/impact-reports/$id'
+    | '/institutions/$slug'
+    | '/needs/$id'
+    | '/onboarding/profile'
+    | '/onboarding/role'
+    | '/app/'
+    | '/events/'
+    | '/institutions/'
+    | '/app/admin/analytics'
+    | '/app/admin/audit'
+    | '/app/admin/institutions'
+    | '/app/admin/needs'
+    | '/app/admin/reports'
+    | '/app/admin/users'
+    | '/app/donor/donations'
+    | '/app/donor/following'
+    | '/app/donor/impact'
+    | '/app/donor/saved'
+    | '/app/institution/donations'
+    | '/app/institution/events'
+    | '/app/institution/impact-reports'
+    | '/app/institution/needs'
+    | '/app/institution/profile'
+    | '/app/institution/volunteers'
+    | '/app/mentor/mentees'
+    | '/app/mentor/sessions'
+    | '/app/volunteer/applications'
+    | '/app/volunteer/certificates'
+    | '/app/volunteer/completed'
+    | '/app/volunteer/upcoming'
+    | '/app/admin/'
+    | '/app/donor/'
+    | '/app/institution/'
+    | '/app/mentor/'
+    | '/app/volunteer/'
+    | '/app/institution/events/new'
+    | '/app/institution/needs/$id'
+    | '/app/institution/needs/new'
+    | '/app/institution/events/'
+    | '/app/institution/needs/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/adopt-a-grandparent'
     | '/contact'
+    | '/csr'
     | '/explore'
-    | '/institutions'
+    | '/feed'
+    | '/forgot-password'
     | '/login'
+    | '/mentor-a-child'
+    | '/notifications'
+    | '/qr-tracking'
     | '/register'
+    | '/reset-password'
     | '/stories'
+    | '/verify-email'
     | '/volunteer'
+    | '/ai/matching'
+    | '/ai/predictions'
+    | '/events/$id'
+    | '/impact-reports/$id'
+    | '/institutions/$slug'
+    | '/needs/$id'
+    | '/onboarding/profile'
+    | '/onboarding/role'
+    | '/app'
+    | '/events'
+    | '/institutions'
+    | '/app/admin/analytics'
+    | '/app/admin/audit'
+    | '/app/admin/institutions'
+    | '/app/admin/needs'
+    | '/app/admin/reports'
+    | '/app/admin/users'
+    | '/app/donor/donations'
+    | '/app/donor/following'
+    | '/app/donor/impact'
+    | '/app/donor/saved'
+    | '/app/institution/donations'
+    | '/app/institution/impact-reports'
+    | '/app/institution/profile'
+    | '/app/institution/volunteers'
+    | '/app/mentor/mentees'
+    | '/app/mentor/sessions'
+    | '/app/volunteer/applications'
+    | '/app/volunteer/certificates'
+    | '/app/volunteer/completed'
+    | '/app/volunteer/upcoming'
+    | '/app/admin'
+    | '/app/donor'
+    | '/app/institution'
+    | '/app/mentor'
+    | '/app/volunteer'
+    | '/app/institution/events/new'
+    | '/app/institution/needs/$id'
+    | '/app/institution/needs/new'
+    | '/app/institution/events'
+    | '/app/institution/needs'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/adopt-a-grandparent'
+    | '/app'
     | '/contact'
+    | '/csr'
+    | '/events'
     | '/explore'
+    | '/feed'
+    | '/forgot-password'
     | '/institutions'
     | '/login'
+    | '/mentor-a-child'
+    | '/notifications'
+    | '/qr-tracking'
     | '/register'
+    | '/reset-password'
     | '/stories'
+    | '/verify-email'
     | '/volunteer'
+    | '/ai/matching'
+    | '/ai/predictions'
+    | '/app/admin'
+    | '/app/donor'
+    | '/app/institution'
+    | '/app/mentor'
+    | '/app/volunteer'
+    | '/events/$id'
+    | '/impact-reports/$id'
+    | '/institutions/$slug'
+    | '/needs/$id'
+    | '/onboarding/profile'
+    | '/onboarding/role'
+    | '/app/'
+    | '/events/'
+    | '/institutions/'
+    | '/app/admin/analytics'
+    | '/app/admin/audit'
+    | '/app/admin/institutions'
+    | '/app/admin/needs'
+    | '/app/admin/reports'
+    | '/app/admin/users'
+    | '/app/donor/donations'
+    | '/app/donor/following'
+    | '/app/donor/impact'
+    | '/app/donor/saved'
+    | '/app/institution/donations'
+    | '/app/institution/events'
+    | '/app/institution/impact-reports'
+    | '/app/institution/needs'
+    | '/app/institution/profile'
+    | '/app/institution/volunteers'
+    | '/app/mentor/mentees'
+    | '/app/mentor/sessions'
+    | '/app/volunteer/applications'
+    | '/app/volunteer/certificates'
+    | '/app/volunteer/completed'
+    | '/app/volunteer/upcoming'
+    | '/app/admin/'
+    | '/app/donor/'
+    | '/app/institution/'
+    | '/app/mentor/'
+    | '/app/volunteer/'
+    | '/app/institution/events/new'
+    | '/app/institution/needs/$id'
+    | '/app/institution/needs/new'
+    | '/app/institution/events/'
+    | '/app/institution/needs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdoptAGrandparentRoute: typeof AdoptAGrandparentRoute
+  AppRoute: typeof AppRouteWithChildren
   ContactRoute: typeof ContactRoute
+  CsrRoute: typeof CsrRoute
+  EventsRoute: typeof EventsRouteWithChildren
   ExploreRoute: typeof ExploreRoute
-  InstitutionsRoute: typeof InstitutionsRoute
+  FeedRoute: typeof FeedRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  InstitutionsRoute: typeof InstitutionsRouteWithChildren
   LoginRoute: typeof LoginRoute
+  MentorAChildRoute: typeof MentorAChildRoute
+  NotificationsRoute: typeof NotificationsRoute
+  QrTrackingRoute: typeof QrTrackingRoute
   RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   StoriesRoute: typeof StoriesRoute
+  VerifyEmailRoute: typeof VerifyEmailRoute
   VolunteerRoute: typeof VolunteerRoute
+  AiMatchingRoute: typeof AiMatchingRoute
+  AiPredictionsRoute: typeof AiPredictionsRoute
+  ImpactReportsIdRoute: typeof ImpactReportsIdRoute
+  NeedsIdRoute: typeof NeedsIdRoute
+  OnboardingProfileRoute: typeof OnboardingProfileRoute
+  OnboardingRoleRoute: typeof OnboardingRoleRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -156,6 +867,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VolunteerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verify-email': {
+      id: '/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof VerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stories': {
       id: '/stories'
       path: '/stories'
@@ -163,11 +881,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StoriesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/qr-tracking': {
+      id: '/qr-tracking'
+      path: '/qr-tracking'
+      fullPath: '/qr-tracking'
+      preLoaderRoute: typeof QrTrackingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentor-a-child': {
+      id: '/mentor-a-child'
+      path: '/mentor-a-child'
+      fullPath: '/mentor-a-child'
+      preLoaderRoute: typeof MentorAChildRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -184,6 +930,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InstitutionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feed': {
+      id: '/feed'
+      path: '/feed'
+      fullPath: '/feed'
+      preLoaderRoute: typeof FeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/explore': {
       id: '/explore'
       path: '/explore'
@@ -191,11 +951,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ExploreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/csr': {
+      id: '/csr'
+      path: '/csr'
+      fullPath: '/csr'
+      preLoaderRoute: typeof CsrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/adopt-a-grandparent': {
+      id: '/adopt-a-grandparent'
+      path: '/adopt-a-grandparent'
+      fullPath: '/adopt-a-grandparent'
+      preLoaderRoute: typeof AdoptAGrandparentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -212,30 +1000,552 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/institutions/': {
+      id: '/institutions/'
+      path: '/'
+      fullPath: '/institutions/'
+      preLoaderRoute: typeof InstitutionsIndexRouteImport
+      parentRoute: typeof InstitutionsRoute
+    }
+    '/events/': {
+      id: '/events/'
+      path: '/'
+      fullPath: '/events/'
+      preLoaderRoute: typeof EventsIndexRouteImport
+      parentRoute: typeof EventsRoute
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/onboarding/role': {
+      id: '/onboarding/role'
+      path: '/onboarding/role'
+      fullPath: '/onboarding/role'
+      preLoaderRoute: typeof OnboardingRoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding/profile': {
+      id: '/onboarding/profile'
+      path: '/onboarding/profile'
+      fullPath: '/onboarding/profile'
+      preLoaderRoute: typeof OnboardingProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/needs/$id': {
+      id: '/needs/$id'
+      path: '/needs/$id'
+      fullPath: '/needs/$id'
+      preLoaderRoute: typeof NeedsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/institutions/$slug': {
+      id: '/institutions/$slug'
+      path: '/$slug'
+      fullPath: '/institutions/$slug'
+      preLoaderRoute: typeof InstitutionsSlugRouteImport
+      parentRoute: typeof InstitutionsRoute
+    }
+    '/impact-reports/$id': {
+      id: '/impact-reports/$id'
+      path: '/impact-reports/$id'
+      fullPath: '/impact-reports/$id'
+      preLoaderRoute: typeof ImpactReportsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/$id': {
+      id: '/events/$id'
+      path: '/$id'
+      fullPath: '/events/$id'
+      preLoaderRoute: typeof EventsIdRouteImport
+      parentRoute: typeof EventsRoute
+    }
+    '/app/volunteer': {
+      id: '/app/volunteer'
+      path: '/volunteer'
+      fullPath: '/app/volunteer'
+      preLoaderRoute: typeof AppVolunteerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/mentor': {
+      id: '/app/mentor'
+      path: '/mentor'
+      fullPath: '/app/mentor'
+      preLoaderRoute: typeof AppMentorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/institution': {
+      id: '/app/institution'
+      path: '/institution'
+      fullPath: '/app/institution'
+      preLoaderRoute: typeof AppInstitutionRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/donor': {
+      id: '/app/donor'
+      path: '/donor'
+      fullPath: '/app/donor'
+      preLoaderRoute: typeof AppDonorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/ai/predictions': {
+      id: '/ai/predictions'
+      path: '/ai/predictions'
+      fullPath: '/ai/predictions'
+      preLoaderRoute: typeof AiPredictionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai/matching': {
+      id: '/ai/matching'
+      path: '/ai/matching'
+      fullPath: '/ai/matching'
+      preLoaderRoute: typeof AiMatchingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/volunteer/': {
+      id: '/app/volunteer/'
+      path: '/'
+      fullPath: '/app/volunteer/'
+      preLoaderRoute: typeof AppVolunteerIndexRouteImport
+      parentRoute: typeof AppVolunteerRoute
+    }
+    '/app/mentor/': {
+      id: '/app/mentor/'
+      path: '/'
+      fullPath: '/app/mentor/'
+      preLoaderRoute: typeof AppMentorIndexRouteImport
+      parentRoute: typeof AppMentorRoute
+    }
+    '/app/institution/': {
+      id: '/app/institution/'
+      path: '/'
+      fullPath: '/app/institution/'
+      preLoaderRoute: typeof AppInstitutionIndexRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/donor/': {
+      id: '/app/donor/'
+      path: '/'
+      fullPath: '/app/donor/'
+      preLoaderRoute: typeof AppDonorIndexRouteImport
+      parentRoute: typeof AppDonorRoute
+    }
+    '/app/admin/': {
+      id: '/app/admin/'
+      path: '/'
+      fullPath: '/app/admin/'
+      preLoaderRoute: typeof AppAdminIndexRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/volunteer/upcoming': {
+      id: '/app/volunteer/upcoming'
+      path: '/upcoming'
+      fullPath: '/app/volunteer/upcoming'
+      preLoaderRoute: typeof AppVolunteerUpcomingRouteImport
+      parentRoute: typeof AppVolunteerRoute
+    }
+    '/app/volunteer/completed': {
+      id: '/app/volunteer/completed'
+      path: '/completed'
+      fullPath: '/app/volunteer/completed'
+      preLoaderRoute: typeof AppVolunteerCompletedRouteImport
+      parentRoute: typeof AppVolunteerRoute
+    }
+    '/app/volunteer/certificates': {
+      id: '/app/volunteer/certificates'
+      path: '/certificates'
+      fullPath: '/app/volunteer/certificates'
+      preLoaderRoute: typeof AppVolunteerCertificatesRouteImport
+      parentRoute: typeof AppVolunteerRoute
+    }
+    '/app/volunteer/applications': {
+      id: '/app/volunteer/applications'
+      path: '/applications'
+      fullPath: '/app/volunteer/applications'
+      preLoaderRoute: typeof AppVolunteerApplicationsRouteImport
+      parentRoute: typeof AppVolunteerRoute
+    }
+    '/app/mentor/sessions': {
+      id: '/app/mentor/sessions'
+      path: '/sessions'
+      fullPath: '/app/mentor/sessions'
+      preLoaderRoute: typeof AppMentorSessionsRouteImport
+      parentRoute: typeof AppMentorRoute
+    }
+    '/app/mentor/mentees': {
+      id: '/app/mentor/mentees'
+      path: '/mentees'
+      fullPath: '/app/mentor/mentees'
+      preLoaderRoute: typeof AppMentorMenteesRouteImport
+      parentRoute: typeof AppMentorRoute
+    }
+    '/app/institution/volunteers': {
+      id: '/app/institution/volunteers'
+      path: '/volunteers'
+      fullPath: '/app/institution/volunteers'
+      preLoaderRoute: typeof AppInstitutionVolunteersRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/institution/profile': {
+      id: '/app/institution/profile'
+      path: '/profile'
+      fullPath: '/app/institution/profile'
+      preLoaderRoute: typeof AppInstitutionProfileRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/institution/needs': {
+      id: '/app/institution/needs'
+      path: '/needs'
+      fullPath: '/app/institution/needs'
+      preLoaderRoute: typeof AppInstitutionNeedsRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/institution/impact-reports': {
+      id: '/app/institution/impact-reports'
+      path: '/impact-reports'
+      fullPath: '/app/institution/impact-reports'
+      preLoaderRoute: typeof AppInstitutionImpactReportsRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/institution/events': {
+      id: '/app/institution/events'
+      path: '/events'
+      fullPath: '/app/institution/events'
+      preLoaderRoute: typeof AppInstitutionEventsRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/institution/donations': {
+      id: '/app/institution/donations'
+      path: '/donations'
+      fullPath: '/app/institution/donations'
+      preLoaderRoute: typeof AppInstitutionDonationsRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/donor/saved': {
+      id: '/app/donor/saved'
+      path: '/saved'
+      fullPath: '/app/donor/saved'
+      preLoaderRoute: typeof AppDonorSavedRouteImport
+      parentRoute: typeof AppDonorRoute
+    }
+    '/app/donor/impact': {
+      id: '/app/donor/impact'
+      path: '/impact'
+      fullPath: '/app/donor/impact'
+      preLoaderRoute: typeof AppDonorImpactRouteImport
+      parentRoute: typeof AppDonorRoute
+    }
+    '/app/donor/following': {
+      id: '/app/donor/following'
+      path: '/following'
+      fullPath: '/app/donor/following'
+      preLoaderRoute: typeof AppDonorFollowingRouteImport
+      parentRoute: typeof AppDonorRoute
+    }
+    '/app/donor/donations': {
+      id: '/app/donor/donations'
+      path: '/donations'
+      fullPath: '/app/donor/donations'
+      preLoaderRoute: typeof AppDonorDonationsRouteImport
+      parentRoute: typeof AppDonorRoute
+    }
+    '/app/admin/users': {
+      id: '/app/admin/users'
+      path: '/users'
+      fullPath: '/app/admin/users'
+      preLoaderRoute: typeof AppAdminUsersRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/reports': {
+      id: '/app/admin/reports'
+      path: '/reports'
+      fullPath: '/app/admin/reports'
+      preLoaderRoute: typeof AppAdminReportsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/needs': {
+      id: '/app/admin/needs'
+      path: '/needs'
+      fullPath: '/app/admin/needs'
+      preLoaderRoute: typeof AppAdminNeedsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/institutions': {
+      id: '/app/admin/institutions'
+      path: '/institutions'
+      fullPath: '/app/admin/institutions'
+      preLoaderRoute: typeof AppAdminInstitutionsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/audit': {
+      id: '/app/admin/audit'
+      path: '/audit'
+      fullPath: '/app/admin/audit'
+      preLoaderRoute: typeof AppAdminAuditRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/analytics': {
+      id: '/app/admin/analytics'
+      path: '/analytics'
+      fullPath: '/app/admin/analytics'
+      preLoaderRoute: typeof AppAdminAnalyticsRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/institution/needs/': {
+      id: '/app/institution/needs/'
+      path: '/'
+      fullPath: '/app/institution/needs/'
+      preLoaderRoute: typeof AppInstitutionNeedsIndexRouteImport
+      parentRoute: typeof AppInstitutionNeedsRoute
+    }
+    '/app/institution/events/': {
+      id: '/app/institution/events/'
+      path: '/'
+      fullPath: '/app/institution/events/'
+      preLoaderRoute: typeof AppInstitutionEventsIndexRouteImport
+      parentRoute: typeof AppInstitutionEventsRoute
+    }
+    '/app/institution/needs/new': {
+      id: '/app/institution/needs/new'
+      path: '/new'
+      fullPath: '/app/institution/needs/new'
+      preLoaderRoute: typeof AppInstitutionNeedsNewRouteImport
+      parentRoute: typeof AppInstitutionNeedsRoute
+    }
+    '/app/institution/needs/$id': {
+      id: '/app/institution/needs/$id'
+      path: '/$id'
+      fullPath: '/app/institution/needs/$id'
+      preLoaderRoute: typeof AppInstitutionNeedsIdRouteImport
+      parentRoute: typeof AppInstitutionNeedsRoute
+    }
+    '/app/institution/events/new': {
+      id: '/app/institution/events/new'
+      path: '/new'
+      fullPath: '/app/institution/events/new'
+      preLoaderRoute: typeof AppInstitutionEventsNewRouteImport
+      parentRoute: typeof AppInstitutionEventsRoute
+    }
   }
 }
+
+interface AppAdminRouteChildren {
+  AppAdminAnalyticsRoute: typeof AppAdminAnalyticsRoute
+  AppAdminAuditRoute: typeof AppAdminAuditRoute
+  AppAdminInstitutionsRoute: typeof AppAdminInstitutionsRoute
+  AppAdminNeedsRoute: typeof AppAdminNeedsRoute
+  AppAdminReportsRoute: typeof AppAdminReportsRoute
+  AppAdminUsersRoute: typeof AppAdminUsersRoute
+  AppAdminIndexRoute: typeof AppAdminIndexRoute
+}
+
+const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminAnalyticsRoute: AppAdminAnalyticsRoute,
+  AppAdminAuditRoute: AppAdminAuditRoute,
+  AppAdminInstitutionsRoute: AppAdminInstitutionsRoute,
+  AppAdminNeedsRoute: AppAdminNeedsRoute,
+  AppAdminReportsRoute: AppAdminReportsRoute,
+  AppAdminUsersRoute: AppAdminUsersRoute,
+  AppAdminIndexRoute: AppAdminIndexRoute,
+}
+
+const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(
+  AppAdminRouteChildren,
+)
+
+interface AppDonorRouteChildren {
+  AppDonorDonationsRoute: typeof AppDonorDonationsRoute
+  AppDonorFollowingRoute: typeof AppDonorFollowingRoute
+  AppDonorImpactRoute: typeof AppDonorImpactRoute
+  AppDonorSavedRoute: typeof AppDonorSavedRoute
+  AppDonorIndexRoute: typeof AppDonorIndexRoute
+}
+
+const AppDonorRouteChildren: AppDonorRouteChildren = {
+  AppDonorDonationsRoute: AppDonorDonationsRoute,
+  AppDonorFollowingRoute: AppDonorFollowingRoute,
+  AppDonorImpactRoute: AppDonorImpactRoute,
+  AppDonorSavedRoute: AppDonorSavedRoute,
+  AppDonorIndexRoute: AppDonorIndexRoute,
+}
+
+const AppDonorRouteWithChildren = AppDonorRoute._addFileChildren(
+  AppDonorRouteChildren,
+)
+
+interface AppInstitutionEventsRouteChildren {
+  AppInstitutionEventsNewRoute: typeof AppInstitutionEventsNewRoute
+  AppInstitutionEventsIndexRoute: typeof AppInstitutionEventsIndexRoute
+}
+
+const AppInstitutionEventsRouteChildren: AppInstitutionEventsRouteChildren = {
+  AppInstitutionEventsNewRoute: AppInstitutionEventsNewRoute,
+  AppInstitutionEventsIndexRoute: AppInstitutionEventsIndexRoute,
+}
+
+const AppInstitutionEventsRouteWithChildren =
+  AppInstitutionEventsRoute._addFileChildren(AppInstitutionEventsRouteChildren)
+
+interface AppInstitutionNeedsRouteChildren {
+  AppInstitutionNeedsIdRoute: typeof AppInstitutionNeedsIdRoute
+  AppInstitutionNeedsNewRoute: typeof AppInstitutionNeedsNewRoute
+  AppInstitutionNeedsIndexRoute: typeof AppInstitutionNeedsIndexRoute
+}
+
+const AppInstitutionNeedsRouteChildren: AppInstitutionNeedsRouteChildren = {
+  AppInstitutionNeedsIdRoute: AppInstitutionNeedsIdRoute,
+  AppInstitutionNeedsNewRoute: AppInstitutionNeedsNewRoute,
+  AppInstitutionNeedsIndexRoute: AppInstitutionNeedsIndexRoute,
+}
+
+const AppInstitutionNeedsRouteWithChildren =
+  AppInstitutionNeedsRoute._addFileChildren(AppInstitutionNeedsRouteChildren)
+
+interface AppInstitutionRouteChildren {
+  AppInstitutionDonationsRoute: typeof AppInstitutionDonationsRoute
+  AppInstitutionEventsRoute: typeof AppInstitutionEventsRouteWithChildren
+  AppInstitutionImpactReportsRoute: typeof AppInstitutionImpactReportsRoute
+  AppInstitutionNeedsRoute: typeof AppInstitutionNeedsRouteWithChildren
+  AppInstitutionProfileRoute: typeof AppInstitutionProfileRoute
+  AppInstitutionVolunteersRoute: typeof AppInstitutionVolunteersRoute
+  AppInstitutionIndexRoute: typeof AppInstitutionIndexRoute
+}
+
+const AppInstitutionRouteChildren: AppInstitutionRouteChildren = {
+  AppInstitutionDonationsRoute: AppInstitutionDonationsRoute,
+  AppInstitutionEventsRoute: AppInstitutionEventsRouteWithChildren,
+  AppInstitutionImpactReportsRoute: AppInstitutionImpactReportsRoute,
+  AppInstitutionNeedsRoute: AppInstitutionNeedsRouteWithChildren,
+  AppInstitutionProfileRoute: AppInstitutionProfileRoute,
+  AppInstitutionVolunteersRoute: AppInstitutionVolunteersRoute,
+  AppInstitutionIndexRoute: AppInstitutionIndexRoute,
+}
+
+const AppInstitutionRouteWithChildren = AppInstitutionRoute._addFileChildren(
+  AppInstitutionRouteChildren,
+)
+
+interface AppMentorRouteChildren {
+  AppMentorMenteesRoute: typeof AppMentorMenteesRoute
+  AppMentorSessionsRoute: typeof AppMentorSessionsRoute
+  AppMentorIndexRoute: typeof AppMentorIndexRoute
+}
+
+const AppMentorRouteChildren: AppMentorRouteChildren = {
+  AppMentorMenteesRoute: AppMentorMenteesRoute,
+  AppMentorSessionsRoute: AppMentorSessionsRoute,
+  AppMentorIndexRoute: AppMentorIndexRoute,
+}
+
+const AppMentorRouteWithChildren = AppMentorRoute._addFileChildren(
+  AppMentorRouteChildren,
+)
+
+interface AppVolunteerRouteChildren {
+  AppVolunteerApplicationsRoute: typeof AppVolunteerApplicationsRoute
+  AppVolunteerCertificatesRoute: typeof AppVolunteerCertificatesRoute
+  AppVolunteerCompletedRoute: typeof AppVolunteerCompletedRoute
+  AppVolunteerUpcomingRoute: typeof AppVolunteerUpcomingRoute
+  AppVolunteerIndexRoute: typeof AppVolunteerIndexRoute
+}
+
+const AppVolunteerRouteChildren: AppVolunteerRouteChildren = {
+  AppVolunteerApplicationsRoute: AppVolunteerApplicationsRoute,
+  AppVolunteerCertificatesRoute: AppVolunteerCertificatesRoute,
+  AppVolunteerCompletedRoute: AppVolunteerCompletedRoute,
+  AppVolunteerUpcomingRoute: AppVolunteerUpcomingRoute,
+  AppVolunteerIndexRoute: AppVolunteerIndexRoute,
+}
+
+const AppVolunteerRouteWithChildren = AppVolunteerRoute._addFileChildren(
+  AppVolunteerRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRouteWithChildren
+  AppDonorRoute: typeof AppDonorRouteWithChildren
+  AppInstitutionRoute: typeof AppInstitutionRouteWithChildren
+  AppMentorRoute: typeof AppMentorRouteWithChildren
+  AppVolunteerRoute: typeof AppVolunteerRouteWithChildren
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRouteWithChildren,
+  AppDonorRoute: AppDonorRouteWithChildren,
+  AppInstitutionRoute: AppInstitutionRouteWithChildren,
+  AppMentorRoute: AppMentorRouteWithChildren,
+  AppVolunteerRoute: AppVolunteerRouteWithChildren,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface EventsRouteChildren {
+  EventsIdRoute: typeof EventsIdRoute
+  EventsIndexRoute: typeof EventsIndexRoute
+}
+
+const EventsRouteChildren: EventsRouteChildren = {
+  EventsIdRoute: EventsIdRoute,
+  EventsIndexRoute: EventsIndexRoute,
+}
+
+const EventsRouteWithChildren =
+  EventsRoute._addFileChildren(EventsRouteChildren)
+
+interface InstitutionsRouteChildren {
+  InstitutionsSlugRoute: typeof InstitutionsSlugRoute
+  InstitutionsIndexRoute: typeof InstitutionsIndexRoute
+}
+
+const InstitutionsRouteChildren: InstitutionsRouteChildren = {
+  InstitutionsSlugRoute: InstitutionsSlugRoute,
+  InstitutionsIndexRoute: InstitutionsIndexRoute,
+}
+
+const InstitutionsRouteWithChildren = InstitutionsRoute._addFileChildren(
+  InstitutionsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdoptAGrandparentRoute: AdoptAGrandparentRoute,
+  AppRoute: AppRouteWithChildren,
   ContactRoute: ContactRoute,
+  CsrRoute: CsrRoute,
+  EventsRoute: EventsRouteWithChildren,
   ExploreRoute: ExploreRoute,
-  InstitutionsRoute: InstitutionsRoute,
+  FeedRoute: FeedRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  InstitutionsRoute: InstitutionsRouteWithChildren,
   LoginRoute: LoginRoute,
+  MentorAChildRoute: MentorAChildRoute,
+  NotificationsRoute: NotificationsRoute,
+  QrTrackingRoute: QrTrackingRoute,
   RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   StoriesRoute: StoriesRoute,
+  VerifyEmailRoute: VerifyEmailRoute,
   VolunteerRoute: VolunteerRoute,
+  AiMatchingRoute: AiMatchingRoute,
+  AiPredictionsRoute: AiPredictionsRoute,
+  ImpactReportsIdRoute: ImpactReportsIdRoute,
+  NeedsIdRoute: NeedsIdRoute,
+  OnboardingProfileRoute: OnboardingProfileRoute,
+  OnboardingRoleRoute: OnboardingRoleRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

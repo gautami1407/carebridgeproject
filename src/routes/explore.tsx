@@ -3,7 +3,7 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { NeedCard } from "@/components/site/NeedCard";
-import { sampleNeeds } from "@/lib/sample-data";
+import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/explore")({
   head: () => ({
@@ -17,23 +17,33 @@ export const Route = createFileRoute("/explore")({
   component: ExplorePage,
 });
 
-const categories = ["All", "Food", "Education", "Medical", "Clothing", "Infrastructure"] as const;
+const categories = ["All", "Food", "Education", "Medical", "Clothing", "Infrastructure", "Technology", "Emergency"] as const;
 const urgencies = ["All", "Critical", "High", "Medium", "Low"] as const;
 
 function ExplorePage() {
   const [q, setQ] = useState("");
   const [cat, setCat] = useState<(typeof categories)[number]>("All");
   const [urg, setUrg] = useState<(typeof urgencies)[number]>("All");
+  const storeNeeds = useStore((s) => s.needs);
+  const institutions = useStore((s) => s.institutions);
+
+  const allNeeds = useMemo(
+    () => storeNeeds.map((n) => {
+      const inst = institutions.find((i) => i.id === n.institutionId);
+      return { id: n.id, title: n.title, institution: inst?.name ?? "", location: inst ? `${inst.city}, ${inst.state}` : "", category: n.category, urgency: n.priority, fulfilled: n.fulfilled, goal: n.goal, unit: n.unit, deadline: n.deadline, impact: n.description };
+    }),
+    [storeNeeds, institutions],
+  );
 
   const filtered = useMemo(() => {
-    return sampleNeeds.filter((n) => {
+    return allNeeds.filter((n) => {
       if (cat !== "All" && n.category !== cat) return false;
       if (urg !== "All" && n.urgency !== urg) return false;
       if (q && !(`${n.title} ${n.institution} ${n.location}`.toLowerCase().includes(q.toLowerCase())))
         return false;
       return true;
     });
-  }, [q, cat, urg]);
+  }, [allNeeds, q, cat, urg]);
 
   return (
     <SiteLayout>
@@ -86,7 +96,7 @@ function ExplorePage() {
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
         <p className="mb-6 text-sm text-muted-foreground">
           Showing <span className="font-semibold text-foreground">{filtered.length}</span> of{" "}
-          {sampleNeeds.length} needs
+          {allNeeds.length} needs
         </p>
         {filtered.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border p-12 text-center text-muted-foreground">
@@ -95,7 +105,7 @@ function ExplorePage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((n) => (
-              <NeedCard key={n.title} need={n} />
+              <NeedCard key={n.id} need={n} />
             ))}
           </div>
         )}
