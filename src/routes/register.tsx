@@ -1,6 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Heart, HeartHandshake, Users, Building2, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { useStore, type Role } from "@/lib/store";
 
 export const Route = createFileRoute("/register")({
   head: () => ({
