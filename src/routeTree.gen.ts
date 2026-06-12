@@ -12,14 +12,21 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VolunteerRouteImport } from './routes/volunteer'
 import { Route as StoriesRouteImport } from './routes/stories'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InstitutionsRouteImport } from './routes/institutions'
+import { Route as FeedRouteImport } from './routes/feed'
 import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as NeedsIdRouteImport } from './routes/needs.$id'
+import { Route as InstitutionsSlugRouteImport } from './routes/institutions.$slug'
+import { Route as ImpactReportsIdRouteImport } from './routes/impact-reports.$id'
+import { Route as EventsIdRouteImport } from './routes/events.$id'
 import { Route as AppVolunteerRouteImport } from './routes/app.volunteer'
 import { Route as AppMentorRouteImport } from './routes/app.mentor'
 import { Route as AppInstitutionRouteImport } from './routes/app.institution'
@@ -66,6 +73,11 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -76,9 +88,19 @@ const InstitutionsRoute = InstitutionsRouteImport.update({
   path: '/institutions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FeedRoute = FeedRouteImport.update({
+  id: '/feed',
+  path: '/feed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExploreRoute = ExploreRouteImport.update({
   id: '/explore',
   path: '/explore',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -105,6 +127,26 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const NeedsIdRoute = NeedsIdRouteImport.update({
+  id: '/needs/$id',
+  path: '/needs/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InstitutionsSlugRoute = InstitutionsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => InstitutionsRoute,
+} as any)
+const ImpactReportsIdRoute = ImpactReportsIdRouteImport.update({
+  id: '/impact-reports/$id',
+  path: '/impact-reports/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsIdRoute = EventsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => EventsRoute,
 } as any)
 const AppVolunteerRoute = AppVolunteerRouteImport.update({
   id: '/volunteer',
@@ -266,9 +308,12 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
+  '/events': typeof EventsRouteWithChildren
   '/explore': typeof ExploreRoute
-  '/institutions': typeof InstitutionsRoute
+  '/feed': typeof FeedRoute
+  '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
   '/register': typeof RegisterRoute
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
@@ -277,6 +322,10 @@ export interface FileRoutesByFullPath {
   '/app/institution': typeof AppInstitutionRouteWithChildren
   '/app/mentor': typeof AppMentorRouteWithChildren
   '/app/volunteer': typeof AppVolunteerRouteWithChildren
+  '/events/$id': typeof EventsIdRoute
+  '/impact-reports/$id': typeof ImpactReportsIdRoute
+  '/institutions/$slug': typeof InstitutionsSlugRoute
+  '/needs/$id': typeof NeedsIdRoute
   '/app/': typeof AppIndexRoute
   '/app/admin/analytics': typeof AppAdminAnalyticsRoute
   '/app/admin/audit': typeof AppAdminAuditRoute
@@ -308,9 +357,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/events': typeof EventsRouteWithChildren
   '/explore': typeof ExploreRoute
-  '/institutions': typeof InstitutionsRoute
+  '/feed': typeof FeedRoute
+  '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
   '/register': typeof RegisterRoute
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
@@ -319,6 +371,10 @@ export interface FileRoutesByTo {
   '/app/institution': typeof AppInstitutionRouteWithChildren
   '/app/mentor': typeof AppMentorRouteWithChildren
   '/app/volunteer': typeof AppVolunteerRouteWithChildren
+  '/events/$id': typeof EventsIdRoute
+  '/impact-reports/$id': typeof ImpactReportsIdRoute
+  '/institutions/$slug': typeof InstitutionsSlugRoute
+  '/needs/$id': typeof NeedsIdRoute
   '/app': typeof AppIndexRoute
   '/app/admin/analytics': typeof AppAdminAnalyticsRoute
   '/app/admin/audit': typeof AppAdminAuditRoute
@@ -352,9 +408,12 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
+  '/events': typeof EventsRouteWithChildren
   '/explore': typeof ExploreRoute
-  '/institutions': typeof InstitutionsRoute
+  '/feed': typeof FeedRoute
+  '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
   '/register': typeof RegisterRoute
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
@@ -363,6 +422,10 @@ export interface FileRoutesById {
   '/app/institution': typeof AppInstitutionRouteWithChildren
   '/app/mentor': typeof AppMentorRouteWithChildren
   '/app/volunteer': typeof AppVolunteerRouteWithChildren
+  '/events/$id': typeof EventsIdRoute
+  '/impact-reports/$id': typeof ImpactReportsIdRoute
+  '/institutions/$slug': typeof InstitutionsSlugRoute
+  '/needs/$id': typeof NeedsIdRoute
   '/app/': typeof AppIndexRoute
   '/app/admin/analytics': typeof AppAdminAnalyticsRoute
   '/app/admin/audit': typeof AppAdminAuditRoute
@@ -397,9 +460,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/app'
     | '/contact'
+    | '/events'
     | '/explore'
+    | '/feed'
     | '/institutions'
     | '/login'
+    | '/notifications'
     | '/register'
     | '/stories'
     | '/volunteer'
@@ -408,6 +474,10 @@ export interface FileRouteTypes {
     | '/app/institution'
     | '/app/mentor'
     | '/app/volunteer'
+    | '/events/$id'
+    | '/impact-reports/$id'
+    | '/institutions/$slug'
+    | '/needs/$id'
     | '/app/'
     | '/app/admin/analytics'
     | '/app/admin/audit'
@@ -439,9 +509,12 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/events'
     | '/explore'
+    | '/feed'
     | '/institutions'
     | '/login'
+    | '/notifications'
     | '/register'
     | '/stories'
     | '/volunteer'
@@ -450,6 +523,10 @@ export interface FileRouteTypes {
     | '/app/institution'
     | '/app/mentor'
     | '/app/volunteer'
+    | '/events/$id'
+    | '/impact-reports/$id'
+    | '/institutions/$slug'
+    | '/needs/$id'
     | '/app'
     | '/app/admin/analytics'
     | '/app/admin/audit'
@@ -482,9 +559,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/app'
     | '/contact'
+    | '/events'
     | '/explore'
+    | '/feed'
     | '/institutions'
     | '/login'
+    | '/notifications'
     | '/register'
     | '/stories'
     | '/volunteer'
@@ -493,6 +573,10 @@ export interface FileRouteTypes {
     | '/app/institution'
     | '/app/mentor'
     | '/app/volunteer'
+    | '/events/$id'
+    | '/impact-reports/$id'
+    | '/institutions/$slug'
+    | '/needs/$id'
     | '/app/'
     | '/app/admin/analytics'
     | '/app/admin/audit'
@@ -526,12 +610,17 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AppRoute: typeof AppRouteWithChildren
   ContactRoute: typeof ContactRoute
+  EventsRoute: typeof EventsRouteWithChildren
   ExploreRoute: typeof ExploreRoute
-  InstitutionsRoute: typeof InstitutionsRoute
+  FeedRoute: typeof FeedRoute
+  InstitutionsRoute: typeof InstitutionsRouteWithChildren
   LoginRoute: typeof LoginRoute
+  NotificationsRoute: typeof NotificationsRoute
   RegisterRoute: typeof RegisterRoute
   StoriesRoute: typeof StoriesRoute
   VolunteerRoute: typeof VolunteerRoute
+  ImpactReportsIdRoute: typeof ImpactReportsIdRoute
+  NeedsIdRoute: typeof NeedsIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -557,6 +646,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -571,11 +667,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InstitutionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/feed': {
+      id: '/feed'
+      path: '/feed'
+      fullPath: '/feed'
+      preLoaderRoute: typeof FeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/explore': {
       id: '/explore'
       path: '/explore'
       fullPath: '/explore'
       preLoaderRoute: typeof ExploreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -612,6 +722,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/needs/$id': {
+      id: '/needs/$id'
+      path: '/needs/$id'
+      fullPath: '/needs/$id'
+      preLoaderRoute: typeof NeedsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/institutions/$slug': {
+      id: '/institutions/$slug'
+      path: '/$slug'
+      fullPath: '/institutions/$slug'
+      preLoaderRoute: typeof InstitutionsSlugRouteImport
+      parentRoute: typeof InstitutionsRoute
+    }
+    '/impact-reports/$id': {
+      id: '/impact-reports/$id'
+      path: '/impact-reports/$id'
+      fullPath: '/impact-reports/$id'
+      preLoaderRoute: typeof ImpactReportsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/$id': {
+      id: '/events/$id'
+      path: '/$id'
+      fullPath: '/events/$id'
+      preLoaderRoute: typeof EventsIdRouteImport
+      parentRoute: typeof EventsRoute
     }
     '/app/volunteer': {
       id: '/app/volunteer'
@@ -964,17 +1102,45 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
+interface EventsRouteChildren {
+  EventsIdRoute: typeof EventsIdRoute
+}
+
+const EventsRouteChildren: EventsRouteChildren = {
+  EventsIdRoute: EventsIdRoute,
+}
+
+const EventsRouteWithChildren =
+  EventsRoute._addFileChildren(EventsRouteChildren)
+
+interface InstitutionsRouteChildren {
+  InstitutionsSlugRoute: typeof InstitutionsSlugRoute
+}
+
+const InstitutionsRouteChildren: InstitutionsRouteChildren = {
+  InstitutionsSlugRoute: InstitutionsSlugRoute,
+}
+
+const InstitutionsRouteWithChildren = InstitutionsRoute._addFileChildren(
+  InstitutionsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AppRoute: AppRouteWithChildren,
   ContactRoute: ContactRoute,
+  EventsRoute: EventsRouteWithChildren,
   ExploreRoute: ExploreRoute,
-  InstitutionsRoute: InstitutionsRoute,
+  FeedRoute: FeedRoute,
+  InstitutionsRoute: InstitutionsRouteWithChildren,
   LoginRoute: LoginRoute,
+  NotificationsRoute: NotificationsRoute,
   RegisterRoute: RegisterRoute,
   StoriesRoute: StoriesRoute,
   VolunteerRoute: VolunteerRoute,
+  ImpactReportsIdRoute: ImpactReportsIdRoute,
+  NeedsIdRoute: NeedsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
