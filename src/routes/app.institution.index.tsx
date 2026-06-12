@@ -3,7 +3,7 @@ import { ListChecks, HeartHandshake, Users, Calendar, Plus, ArrowRight } from "l
 import { MetricCard, PageHeader, StatusBadge } from "@/components/app/AppShell";
 import { useStore } from "@/lib/store";
 
-export const Route = createFileRoute("/app/institution")({
+export const Route = createFileRoute("/app/institution/")({
   component: InstitutionDashboard,
 });
 

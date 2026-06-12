@@ -3,7 +3,7 @@ import { Users, Building2, HeartHandshake, ListChecks, ArrowRight } from "lucide
 import { MetricCard, PageHeader, StatusBadge } from "@/components/app/AppShell";
 import { useStore } from "@/lib/store";
 
-export const Route = createFileRoute("/app/admin")({
+export const Route = createFileRoute("/app/admin/")({
   component: AdminDashboard,
 });
 

@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { GraduationCap, Calendar, Users, Activity } from "lucide-react";
 import { MetricCard, PageHeader } from "@/components/app/AppShell";
 
-export const Route = createFileRoute("/app/mentor")({
+export const Route = createFileRoute("/app/mentor/")({
   component: () => (
     <div className="mx-auto max-w-6xl">
       <PageHeader title="Mentor dashboard" subtitle="Guide a child or young adult through their journey." />
