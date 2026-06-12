@@ -20,7 +20,15 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppVolunteerRouteImport } from './routes/app.volunteer'
+import { Route as AppMentorRouteImport } from './routes/app.mentor'
 import { Route as AppDonorRouteImport } from './routes/app.donor'
+import { Route as AppVolunteerUpcomingRouteImport } from './routes/app.volunteer.upcoming'
+import { Route as AppVolunteerCompletedRouteImport } from './routes/app.volunteer.completed'
+import { Route as AppVolunteerCertificatesRouteImport } from './routes/app.volunteer.certificates'
+import { Route as AppVolunteerApplicationsRouteImport } from './routes/app.volunteer.applications'
+import { Route as AppMentorSessionsRouteImport } from './routes/app.mentor.sessions'
+import { Route as AppMentorMenteesRouteImport } from './routes/app.mentor.mentees'
 import { Route as AppDonorSavedRouteImport } from './routes/app.donor.saved'
 import { Route as AppDonorImpactRouteImport } from './routes/app.donor.impact'
 import { Route as AppDonorFollowingRouteImport } from './routes/app.donor.following'
@@ -81,10 +89,52 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppVolunteerRoute = AppVolunteerRouteImport.update({
+  id: '/volunteer',
+  path: '/volunteer',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMentorRoute = AppMentorRouteImport.update({
+  id: '/mentor',
+  path: '/mentor',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDonorRoute = AppDonorRouteImport.update({
   id: '/donor',
   path: '/donor',
   getParentRoute: () => AppRoute,
+} as any)
+const AppVolunteerUpcomingRoute = AppVolunteerUpcomingRouteImport.update({
+  id: '/upcoming',
+  path: '/upcoming',
+  getParentRoute: () => AppVolunteerRoute,
+} as any)
+const AppVolunteerCompletedRoute = AppVolunteerCompletedRouteImport.update({
+  id: '/completed',
+  path: '/completed',
+  getParentRoute: () => AppVolunteerRoute,
+} as any)
+const AppVolunteerCertificatesRoute =
+  AppVolunteerCertificatesRouteImport.update({
+    id: '/certificates',
+    path: '/certificates',
+    getParentRoute: () => AppVolunteerRoute,
+  } as any)
+const AppVolunteerApplicationsRoute =
+  AppVolunteerApplicationsRouteImport.update({
+    id: '/applications',
+    path: '/applications',
+    getParentRoute: () => AppVolunteerRoute,
+  } as any)
+const AppMentorSessionsRoute = AppMentorSessionsRouteImport.update({
+  id: '/sessions',
+  path: '/sessions',
+  getParentRoute: () => AppMentorRoute,
+} as any)
+const AppMentorMenteesRoute = AppMentorMenteesRouteImport.update({
+  id: '/mentees',
+  path: '/mentees',
+  getParentRoute: () => AppMentorRoute,
 } as any)
 const AppDonorSavedRoute = AppDonorSavedRouteImport.update({
   id: '/saved',
@@ -119,11 +169,19 @@ export interface FileRoutesByFullPath {
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
   '/app/donor': typeof AppDonorRouteWithChildren
+  '/app/mentor': typeof AppMentorRouteWithChildren
+  '/app/volunteer': typeof AppVolunteerRouteWithChildren
   '/app/': typeof AppIndexRoute
   '/app/donor/donations': typeof AppDonorDonationsRoute
   '/app/donor/following': typeof AppDonorFollowingRoute
   '/app/donor/impact': typeof AppDonorImpactRoute
   '/app/donor/saved': typeof AppDonorSavedRoute
+  '/app/mentor/mentees': typeof AppMentorMenteesRoute
+  '/app/mentor/sessions': typeof AppMentorSessionsRoute
+  '/app/volunteer/applications': typeof AppVolunteerApplicationsRoute
+  '/app/volunteer/certificates': typeof AppVolunteerCertificatesRoute
+  '/app/volunteer/completed': typeof AppVolunteerCompletedRoute
+  '/app/volunteer/upcoming': typeof AppVolunteerUpcomingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -136,11 +194,19 @@ export interface FileRoutesByTo {
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
   '/app/donor': typeof AppDonorRouteWithChildren
+  '/app/mentor': typeof AppMentorRouteWithChildren
+  '/app/volunteer': typeof AppVolunteerRouteWithChildren
   '/app': typeof AppIndexRoute
   '/app/donor/donations': typeof AppDonorDonationsRoute
   '/app/donor/following': typeof AppDonorFollowingRoute
   '/app/donor/impact': typeof AppDonorImpactRoute
   '/app/donor/saved': typeof AppDonorSavedRoute
+  '/app/mentor/mentees': typeof AppMentorMenteesRoute
+  '/app/mentor/sessions': typeof AppMentorSessionsRoute
+  '/app/volunteer/applications': typeof AppVolunteerApplicationsRoute
+  '/app/volunteer/certificates': typeof AppVolunteerCertificatesRoute
+  '/app/volunteer/completed': typeof AppVolunteerCompletedRoute
+  '/app/volunteer/upcoming': typeof AppVolunteerUpcomingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -155,11 +221,19 @@ export interface FileRoutesById {
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
   '/app/donor': typeof AppDonorRouteWithChildren
+  '/app/mentor': typeof AppMentorRouteWithChildren
+  '/app/volunteer': typeof AppVolunteerRouteWithChildren
   '/app/': typeof AppIndexRoute
   '/app/donor/donations': typeof AppDonorDonationsRoute
   '/app/donor/following': typeof AppDonorFollowingRoute
   '/app/donor/impact': typeof AppDonorImpactRoute
   '/app/donor/saved': typeof AppDonorSavedRoute
+  '/app/mentor/mentees': typeof AppMentorMenteesRoute
+  '/app/mentor/sessions': typeof AppMentorSessionsRoute
+  '/app/volunteer/applications': typeof AppVolunteerApplicationsRoute
+  '/app/volunteer/certificates': typeof AppVolunteerCertificatesRoute
+  '/app/volunteer/completed': typeof AppVolunteerCompletedRoute
+  '/app/volunteer/upcoming': typeof AppVolunteerUpcomingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -175,11 +249,19 @@ export interface FileRouteTypes {
     | '/stories'
     | '/volunteer'
     | '/app/donor'
+    | '/app/mentor'
+    | '/app/volunteer'
     | '/app/'
     | '/app/donor/donations'
     | '/app/donor/following'
     | '/app/donor/impact'
     | '/app/donor/saved'
+    | '/app/mentor/mentees'
+    | '/app/mentor/sessions'
+    | '/app/volunteer/applications'
+    | '/app/volunteer/certificates'
+    | '/app/volunteer/completed'
+    | '/app/volunteer/upcoming'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -192,11 +274,19 @@ export interface FileRouteTypes {
     | '/stories'
     | '/volunteer'
     | '/app/donor'
+    | '/app/mentor'
+    | '/app/volunteer'
     | '/app'
     | '/app/donor/donations'
     | '/app/donor/following'
     | '/app/donor/impact'
     | '/app/donor/saved'
+    | '/app/mentor/mentees'
+    | '/app/mentor/sessions'
+    | '/app/volunteer/applications'
+    | '/app/volunteer/certificates'
+    | '/app/volunteer/completed'
+    | '/app/volunteer/upcoming'
   id:
     | '__root__'
     | '/'
@@ -210,11 +300,19 @@ export interface FileRouteTypes {
     | '/stories'
     | '/volunteer'
     | '/app/donor'
+    | '/app/mentor'
+    | '/app/volunteer'
     | '/app/'
     | '/app/donor/donations'
     | '/app/donor/following'
     | '/app/donor/impact'
     | '/app/donor/saved'
+    | '/app/mentor/mentees'
+    | '/app/mentor/sessions'
+    | '/app/volunteer/applications'
+    | '/app/volunteer/certificates'
+    | '/app/volunteer/completed'
+    | '/app/volunteer/upcoming'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -309,12 +407,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/volunteer': {
+      id: '/app/volunteer'
+      path: '/volunteer'
+      fullPath: '/app/volunteer'
+      preLoaderRoute: typeof AppVolunteerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/mentor': {
+      id: '/app/mentor'
+      path: '/mentor'
+      fullPath: '/app/mentor'
+      preLoaderRoute: typeof AppMentorRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/donor': {
       id: '/app/donor'
       path: '/donor'
       fullPath: '/app/donor'
       preLoaderRoute: typeof AppDonorRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/app/volunteer/upcoming': {
+      id: '/app/volunteer/upcoming'
+      path: '/upcoming'
+      fullPath: '/app/volunteer/upcoming'
+      preLoaderRoute: typeof AppVolunteerUpcomingRouteImport
+      parentRoute: typeof AppVolunteerRoute
+    }
+    '/app/volunteer/completed': {
+      id: '/app/volunteer/completed'
+      path: '/completed'
+      fullPath: '/app/volunteer/completed'
+      preLoaderRoute: typeof AppVolunteerCompletedRouteImport
+      parentRoute: typeof AppVolunteerRoute
+    }
+    '/app/volunteer/certificates': {
+      id: '/app/volunteer/certificates'
+      path: '/certificates'
+      fullPath: '/app/volunteer/certificates'
+      preLoaderRoute: typeof AppVolunteerCertificatesRouteImport
+      parentRoute: typeof AppVolunteerRoute
+    }
+    '/app/volunteer/applications': {
+      id: '/app/volunteer/applications'
+      path: '/applications'
+      fullPath: '/app/volunteer/applications'
+      preLoaderRoute: typeof AppVolunteerApplicationsRouteImport
+      parentRoute: typeof AppVolunteerRoute
+    }
+    '/app/mentor/sessions': {
+      id: '/app/mentor/sessions'
+      path: '/sessions'
+      fullPath: '/app/mentor/sessions'
+      preLoaderRoute: typeof AppMentorSessionsRouteImport
+      parentRoute: typeof AppMentorRoute
+    }
+    '/app/mentor/mentees': {
+      id: '/app/mentor/mentees'
+      path: '/mentees'
+      fullPath: '/app/mentor/mentees'
+      preLoaderRoute: typeof AppMentorMenteesRouteImport
+      parentRoute: typeof AppMentorRoute
     }
     '/app/donor/saved': {
       id: '/app/donor/saved'
@@ -365,13 +519,49 @@ const AppDonorRouteWithChildren = AppDonorRoute._addFileChildren(
   AppDonorRouteChildren,
 )
 
+interface AppMentorRouteChildren {
+  AppMentorMenteesRoute: typeof AppMentorMenteesRoute
+  AppMentorSessionsRoute: typeof AppMentorSessionsRoute
+}
+
+const AppMentorRouteChildren: AppMentorRouteChildren = {
+  AppMentorMenteesRoute: AppMentorMenteesRoute,
+  AppMentorSessionsRoute: AppMentorSessionsRoute,
+}
+
+const AppMentorRouteWithChildren = AppMentorRoute._addFileChildren(
+  AppMentorRouteChildren,
+)
+
+interface AppVolunteerRouteChildren {
+  AppVolunteerApplicationsRoute: typeof AppVolunteerApplicationsRoute
+  AppVolunteerCertificatesRoute: typeof AppVolunteerCertificatesRoute
+  AppVolunteerCompletedRoute: typeof AppVolunteerCompletedRoute
+  AppVolunteerUpcomingRoute: typeof AppVolunteerUpcomingRoute
+}
+
+const AppVolunteerRouteChildren: AppVolunteerRouteChildren = {
+  AppVolunteerApplicationsRoute: AppVolunteerApplicationsRoute,
+  AppVolunteerCertificatesRoute: AppVolunteerCertificatesRoute,
+  AppVolunteerCompletedRoute: AppVolunteerCompletedRoute,
+  AppVolunteerUpcomingRoute: AppVolunteerUpcomingRoute,
+}
+
+const AppVolunteerRouteWithChildren = AppVolunteerRoute._addFileChildren(
+  AppVolunteerRouteChildren,
+)
+
 interface AppRouteChildren {
   AppDonorRoute: typeof AppDonorRouteWithChildren
+  AppMentorRoute: typeof AppMentorRouteWithChildren
+  AppVolunteerRoute: typeof AppVolunteerRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDonorRoute: AppDonorRouteWithChildren,
+  AppMentorRoute: AppMentorRouteWithChildren,
+  AppVolunteerRoute: AppVolunteerRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
 }
 
@@ -392,3 +582,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
