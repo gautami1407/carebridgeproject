@@ -22,6 +22,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppVolunteerRouteImport } from './routes/app.volunteer'
 import { Route as AppMentorRouteImport } from './routes/app.mentor'
+import { Route as AppInstitutionRouteImport } from './routes/app.institution'
 import { Route as AppDonorRouteImport } from './routes/app.donor'
 import { Route as AppVolunteerUpcomingRouteImport } from './routes/app.volunteer.upcoming'
 import { Route as AppVolunteerCompletedRouteImport } from './routes/app.volunteer.completed'
@@ -29,10 +30,19 @@ import { Route as AppVolunteerCertificatesRouteImport } from './routes/app.volun
 import { Route as AppVolunteerApplicationsRouteImport } from './routes/app.volunteer.applications'
 import { Route as AppMentorSessionsRouteImport } from './routes/app.mentor.sessions'
 import { Route as AppMentorMenteesRouteImport } from './routes/app.mentor.mentees'
+import { Route as AppInstitutionVolunteersRouteImport } from './routes/app.institution.volunteers'
+import { Route as AppInstitutionProfileRouteImport } from './routes/app.institution.profile'
+import { Route as AppInstitutionNeedsRouteImport } from './routes/app.institution.needs'
+import { Route as AppInstitutionImpactReportsRouteImport } from './routes/app.institution.impact-reports'
+import { Route as AppInstitutionEventsRouteImport } from './routes/app.institution.events'
+import { Route as AppInstitutionDonationsRouteImport } from './routes/app.institution.donations'
 import { Route as AppDonorSavedRouteImport } from './routes/app.donor.saved'
 import { Route as AppDonorImpactRouteImport } from './routes/app.donor.impact'
 import { Route as AppDonorFollowingRouteImport } from './routes/app.donor.following'
 import { Route as AppDonorDonationsRouteImport } from './routes/app.donor.donations'
+import { Route as AppInstitutionNeedsNewRouteImport } from './routes/app.institution.needs.new'
+import { Route as AppInstitutionNeedsIdRouteImport } from './routes/app.institution.needs.$id'
+import { Route as AppInstitutionEventsNewRouteImport } from './routes/app.institution.events.new'
 
 const VolunteerRoute = VolunteerRouteImport.update({
   id: '/volunteer',
@@ -99,6 +109,11 @@ const AppMentorRoute = AppMentorRouteImport.update({
   path: '/mentor',
   getParentRoute: () => AppRoute,
 } as any)
+const AppInstitutionRoute = AppInstitutionRouteImport.update({
+  id: '/institution',
+  path: '/institution',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDonorRoute = AppDonorRouteImport.update({
   id: '/donor',
   path: '/donor',
@@ -136,6 +151,38 @@ const AppMentorMenteesRoute = AppMentorMenteesRouteImport.update({
   path: '/mentees',
   getParentRoute: () => AppMentorRoute,
 } as any)
+const AppInstitutionVolunteersRoute =
+  AppInstitutionVolunteersRouteImport.update({
+    id: '/volunteers',
+    path: '/volunteers',
+    getParentRoute: () => AppInstitutionRoute,
+  } as any)
+const AppInstitutionProfileRoute = AppInstitutionProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppInstitutionRoute,
+} as any)
+const AppInstitutionNeedsRoute = AppInstitutionNeedsRouteImport.update({
+  id: '/needs',
+  path: '/needs',
+  getParentRoute: () => AppInstitutionRoute,
+} as any)
+const AppInstitutionImpactReportsRoute =
+  AppInstitutionImpactReportsRouteImport.update({
+    id: '/impact-reports',
+    path: '/impact-reports',
+    getParentRoute: () => AppInstitutionRoute,
+  } as any)
+const AppInstitutionEventsRoute = AppInstitutionEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => AppInstitutionRoute,
+} as any)
+const AppInstitutionDonationsRoute = AppInstitutionDonationsRouteImport.update({
+  id: '/donations',
+  path: '/donations',
+  getParentRoute: () => AppInstitutionRoute,
+} as any)
 const AppDonorSavedRoute = AppDonorSavedRouteImport.update({
   id: '/saved',
   path: '/saved',
@@ -156,6 +203,21 @@ const AppDonorDonationsRoute = AppDonorDonationsRouteImport.update({
   path: '/donations',
   getParentRoute: () => AppDonorRoute,
 } as any)
+const AppInstitutionNeedsNewRoute = AppInstitutionNeedsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppInstitutionNeedsRoute,
+} as any)
+const AppInstitutionNeedsIdRoute = AppInstitutionNeedsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppInstitutionNeedsRoute,
+} as any)
+const AppInstitutionEventsNewRoute = AppInstitutionEventsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppInstitutionEventsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -169,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
   '/app/donor': typeof AppDonorRouteWithChildren
+  '/app/institution': typeof AppInstitutionRouteWithChildren
   '/app/mentor': typeof AppMentorRouteWithChildren
   '/app/volunteer': typeof AppVolunteerRouteWithChildren
   '/app/': typeof AppIndexRoute
@@ -176,12 +239,21 @@ export interface FileRoutesByFullPath {
   '/app/donor/following': typeof AppDonorFollowingRoute
   '/app/donor/impact': typeof AppDonorImpactRoute
   '/app/donor/saved': typeof AppDonorSavedRoute
+  '/app/institution/donations': typeof AppInstitutionDonationsRoute
+  '/app/institution/events': typeof AppInstitutionEventsRouteWithChildren
+  '/app/institution/impact-reports': typeof AppInstitutionImpactReportsRoute
+  '/app/institution/needs': typeof AppInstitutionNeedsRouteWithChildren
+  '/app/institution/profile': typeof AppInstitutionProfileRoute
+  '/app/institution/volunteers': typeof AppInstitutionVolunteersRoute
   '/app/mentor/mentees': typeof AppMentorMenteesRoute
   '/app/mentor/sessions': typeof AppMentorSessionsRoute
   '/app/volunteer/applications': typeof AppVolunteerApplicationsRoute
   '/app/volunteer/certificates': typeof AppVolunteerCertificatesRoute
   '/app/volunteer/completed': typeof AppVolunteerCompletedRoute
   '/app/volunteer/upcoming': typeof AppVolunteerUpcomingRoute
+  '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
+  '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
+  '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -194,6 +266,7 @@ export interface FileRoutesByTo {
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
   '/app/donor': typeof AppDonorRouteWithChildren
+  '/app/institution': typeof AppInstitutionRouteWithChildren
   '/app/mentor': typeof AppMentorRouteWithChildren
   '/app/volunteer': typeof AppVolunteerRouteWithChildren
   '/app': typeof AppIndexRoute
@@ -201,12 +274,21 @@ export interface FileRoutesByTo {
   '/app/donor/following': typeof AppDonorFollowingRoute
   '/app/donor/impact': typeof AppDonorImpactRoute
   '/app/donor/saved': typeof AppDonorSavedRoute
+  '/app/institution/donations': typeof AppInstitutionDonationsRoute
+  '/app/institution/events': typeof AppInstitutionEventsRouteWithChildren
+  '/app/institution/impact-reports': typeof AppInstitutionImpactReportsRoute
+  '/app/institution/needs': typeof AppInstitutionNeedsRouteWithChildren
+  '/app/institution/profile': typeof AppInstitutionProfileRoute
+  '/app/institution/volunteers': typeof AppInstitutionVolunteersRoute
   '/app/mentor/mentees': typeof AppMentorMenteesRoute
   '/app/mentor/sessions': typeof AppMentorSessionsRoute
   '/app/volunteer/applications': typeof AppVolunteerApplicationsRoute
   '/app/volunteer/certificates': typeof AppVolunteerCertificatesRoute
   '/app/volunteer/completed': typeof AppVolunteerCompletedRoute
   '/app/volunteer/upcoming': typeof AppVolunteerUpcomingRoute
+  '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
+  '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
+  '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -221,6 +303,7 @@ export interface FileRoutesById {
   '/stories': typeof StoriesRoute
   '/volunteer': typeof VolunteerRoute
   '/app/donor': typeof AppDonorRouteWithChildren
+  '/app/institution': typeof AppInstitutionRouteWithChildren
   '/app/mentor': typeof AppMentorRouteWithChildren
   '/app/volunteer': typeof AppVolunteerRouteWithChildren
   '/app/': typeof AppIndexRoute
@@ -228,12 +311,21 @@ export interface FileRoutesById {
   '/app/donor/following': typeof AppDonorFollowingRoute
   '/app/donor/impact': typeof AppDonorImpactRoute
   '/app/donor/saved': typeof AppDonorSavedRoute
+  '/app/institution/donations': typeof AppInstitutionDonationsRoute
+  '/app/institution/events': typeof AppInstitutionEventsRouteWithChildren
+  '/app/institution/impact-reports': typeof AppInstitutionImpactReportsRoute
+  '/app/institution/needs': typeof AppInstitutionNeedsRouteWithChildren
+  '/app/institution/profile': typeof AppInstitutionProfileRoute
+  '/app/institution/volunteers': typeof AppInstitutionVolunteersRoute
   '/app/mentor/mentees': typeof AppMentorMenteesRoute
   '/app/mentor/sessions': typeof AppMentorSessionsRoute
   '/app/volunteer/applications': typeof AppVolunteerApplicationsRoute
   '/app/volunteer/certificates': typeof AppVolunteerCertificatesRoute
   '/app/volunteer/completed': typeof AppVolunteerCompletedRoute
   '/app/volunteer/upcoming': typeof AppVolunteerUpcomingRoute
+  '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
+  '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
+  '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -249,6 +341,7 @@ export interface FileRouteTypes {
     | '/stories'
     | '/volunteer'
     | '/app/donor'
+    | '/app/institution'
     | '/app/mentor'
     | '/app/volunteer'
     | '/app/'
@@ -256,12 +349,21 @@ export interface FileRouteTypes {
     | '/app/donor/following'
     | '/app/donor/impact'
     | '/app/donor/saved'
+    | '/app/institution/donations'
+    | '/app/institution/events'
+    | '/app/institution/impact-reports'
+    | '/app/institution/needs'
+    | '/app/institution/profile'
+    | '/app/institution/volunteers'
     | '/app/mentor/mentees'
     | '/app/mentor/sessions'
     | '/app/volunteer/applications'
     | '/app/volunteer/certificates'
     | '/app/volunteer/completed'
     | '/app/volunteer/upcoming'
+    | '/app/institution/events/new'
+    | '/app/institution/needs/$id'
+    | '/app/institution/needs/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -274,6 +376,7 @@ export interface FileRouteTypes {
     | '/stories'
     | '/volunteer'
     | '/app/donor'
+    | '/app/institution'
     | '/app/mentor'
     | '/app/volunteer'
     | '/app'
@@ -281,12 +384,21 @@ export interface FileRouteTypes {
     | '/app/donor/following'
     | '/app/donor/impact'
     | '/app/donor/saved'
+    | '/app/institution/donations'
+    | '/app/institution/events'
+    | '/app/institution/impact-reports'
+    | '/app/institution/needs'
+    | '/app/institution/profile'
+    | '/app/institution/volunteers'
     | '/app/mentor/mentees'
     | '/app/mentor/sessions'
     | '/app/volunteer/applications'
     | '/app/volunteer/certificates'
     | '/app/volunteer/completed'
     | '/app/volunteer/upcoming'
+    | '/app/institution/events/new'
+    | '/app/institution/needs/$id'
+    | '/app/institution/needs/new'
   id:
     | '__root__'
     | '/'
@@ -300,6 +412,7 @@ export interface FileRouteTypes {
     | '/stories'
     | '/volunteer'
     | '/app/donor'
+    | '/app/institution'
     | '/app/mentor'
     | '/app/volunteer'
     | '/app/'
@@ -307,12 +420,21 @@ export interface FileRouteTypes {
     | '/app/donor/following'
     | '/app/donor/impact'
     | '/app/donor/saved'
+    | '/app/institution/donations'
+    | '/app/institution/events'
+    | '/app/institution/impact-reports'
+    | '/app/institution/needs'
+    | '/app/institution/profile'
+    | '/app/institution/volunteers'
     | '/app/mentor/mentees'
     | '/app/mentor/sessions'
     | '/app/volunteer/applications'
     | '/app/volunteer/certificates'
     | '/app/volunteer/completed'
     | '/app/volunteer/upcoming'
+    | '/app/institution/events/new'
+    | '/app/institution/needs/$id'
+    | '/app/institution/needs/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -421,6 +543,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMentorRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/institution': {
+      id: '/app/institution'
+      path: '/institution'
+      fullPath: '/app/institution'
+      preLoaderRoute: typeof AppInstitutionRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/donor': {
       id: '/app/donor'
       path: '/donor'
@@ -470,6 +599,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMentorMenteesRouteImport
       parentRoute: typeof AppMentorRoute
     }
+    '/app/institution/volunteers': {
+      id: '/app/institution/volunteers'
+      path: '/volunteers'
+      fullPath: '/app/institution/volunteers'
+      preLoaderRoute: typeof AppInstitutionVolunteersRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/institution/profile': {
+      id: '/app/institution/profile'
+      path: '/profile'
+      fullPath: '/app/institution/profile'
+      preLoaderRoute: typeof AppInstitutionProfileRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/institution/needs': {
+      id: '/app/institution/needs'
+      path: '/needs'
+      fullPath: '/app/institution/needs'
+      preLoaderRoute: typeof AppInstitutionNeedsRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/institution/impact-reports': {
+      id: '/app/institution/impact-reports'
+      path: '/impact-reports'
+      fullPath: '/app/institution/impact-reports'
+      preLoaderRoute: typeof AppInstitutionImpactReportsRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/institution/events': {
+      id: '/app/institution/events'
+      path: '/events'
+      fullPath: '/app/institution/events'
+      preLoaderRoute: typeof AppInstitutionEventsRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/institution/donations': {
+      id: '/app/institution/donations'
+      path: '/donations'
+      fullPath: '/app/institution/donations'
+      preLoaderRoute: typeof AppInstitutionDonationsRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
     '/app/donor/saved': {
       id: '/app/donor/saved'
       path: '/saved'
@@ -498,6 +669,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDonorDonationsRouteImport
       parentRoute: typeof AppDonorRoute
     }
+    '/app/institution/needs/new': {
+      id: '/app/institution/needs/new'
+      path: '/new'
+      fullPath: '/app/institution/needs/new'
+      preLoaderRoute: typeof AppInstitutionNeedsNewRouteImport
+      parentRoute: typeof AppInstitutionNeedsRoute
+    }
+    '/app/institution/needs/$id': {
+      id: '/app/institution/needs/$id'
+      path: '/$id'
+      fullPath: '/app/institution/needs/$id'
+      preLoaderRoute: typeof AppInstitutionNeedsIdRouteImport
+      parentRoute: typeof AppInstitutionNeedsRoute
+    }
+    '/app/institution/events/new': {
+      id: '/app/institution/events/new'
+      path: '/new'
+      fullPath: '/app/institution/events/new'
+      preLoaderRoute: typeof AppInstitutionEventsNewRouteImport
+      parentRoute: typeof AppInstitutionEventsRoute
+    }
   }
 }
 
@@ -517,6 +709,52 @@ const AppDonorRouteChildren: AppDonorRouteChildren = {
 
 const AppDonorRouteWithChildren = AppDonorRoute._addFileChildren(
   AppDonorRouteChildren,
+)
+
+interface AppInstitutionEventsRouteChildren {
+  AppInstitutionEventsNewRoute: typeof AppInstitutionEventsNewRoute
+}
+
+const AppInstitutionEventsRouteChildren: AppInstitutionEventsRouteChildren = {
+  AppInstitutionEventsNewRoute: AppInstitutionEventsNewRoute,
+}
+
+const AppInstitutionEventsRouteWithChildren =
+  AppInstitutionEventsRoute._addFileChildren(AppInstitutionEventsRouteChildren)
+
+interface AppInstitutionNeedsRouteChildren {
+  AppInstitutionNeedsIdRoute: typeof AppInstitutionNeedsIdRoute
+  AppInstitutionNeedsNewRoute: typeof AppInstitutionNeedsNewRoute
+}
+
+const AppInstitutionNeedsRouteChildren: AppInstitutionNeedsRouteChildren = {
+  AppInstitutionNeedsIdRoute: AppInstitutionNeedsIdRoute,
+  AppInstitutionNeedsNewRoute: AppInstitutionNeedsNewRoute,
+}
+
+const AppInstitutionNeedsRouteWithChildren =
+  AppInstitutionNeedsRoute._addFileChildren(AppInstitutionNeedsRouteChildren)
+
+interface AppInstitutionRouteChildren {
+  AppInstitutionDonationsRoute: typeof AppInstitutionDonationsRoute
+  AppInstitutionEventsRoute: typeof AppInstitutionEventsRouteWithChildren
+  AppInstitutionImpactReportsRoute: typeof AppInstitutionImpactReportsRoute
+  AppInstitutionNeedsRoute: typeof AppInstitutionNeedsRouteWithChildren
+  AppInstitutionProfileRoute: typeof AppInstitutionProfileRoute
+  AppInstitutionVolunteersRoute: typeof AppInstitutionVolunteersRoute
+}
+
+const AppInstitutionRouteChildren: AppInstitutionRouteChildren = {
+  AppInstitutionDonationsRoute: AppInstitutionDonationsRoute,
+  AppInstitutionEventsRoute: AppInstitutionEventsRouteWithChildren,
+  AppInstitutionImpactReportsRoute: AppInstitutionImpactReportsRoute,
+  AppInstitutionNeedsRoute: AppInstitutionNeedsRouteWithChildren,
+  AppInstitutionProfileRoute: AppInstitutionProfileRoute,
+  AppInstitutionVolunteersRoute: AppInstitutionVolunteersRoute,
+}
+
+const AppInstitutionRouteWithChildren = AppInstitutionRoute._addFileChildren(
+  AppInstitutionRouteChildren,
 )
 
 interface AppMentorRouteChildren {
@@ -553,6 +791,7 @@ const AppVolunteerRouteWithChildren = AppVolunteerRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppDonorRoute: typeof AppDonorRouteWithChildren
+  AppInstitutionRoute: typeof AppInstitutionRouteWithChildren
   AppMentorRoute: typeof AppMentorRouteWithChildren
   AppVolunteerRoute: typeof AppVolunteerRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
@@ -560,6 +799,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppDonorRoute: AppDonorRouteWithChildren,
+  AppInstitutionRoute: AppInstitutionRouteWithChildren,
   AppMentorRoute: AppMentorRouteWithChildren,
   AppVolunteerRoute: AppVolunteerRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
