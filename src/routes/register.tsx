@@ -22,6 +22,10 @@ const roles = [
 
 function RegisterPage() {
   const [role, setRole] = useState<(typeof roles)[number]["id"]>("donor");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const signIn = useStore((s) => s.signIn);
 
   return (
     <div className="min-h-screen bg-surface px-4 py-12">
@@ -61,15 +65,18 @@ function RegisterPage() {
           })}
         </div>
 
-        <form onSubmit={(e) => e.preventDefault()} className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-soft sm:p-8">
+        <form
+          onSubmit={(e) => { e.preventDefault(); signIn({ id: "u-1", name: name || "Friend", email, role: role as Role, institutionId: role === "institution" ? "inst-1" : undefined }); navigate({ to: "/verify-email" }); }}
+          className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-soft sm:p-8"
+        >
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
               <span className="text-sm font-semibold">{role === "institution" ? "Institution name" : "Full name"}</span>
-              <input className="mt-1.5 w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary" />
+              <input value={name} onChange={(e) => setName(e.target.value)} required className="mt-1.5 w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary" />
             </label>
             <label className="block">
               <span className="text-sm font-semibold">Email</span>
-              <input type="email" className="mt-1.5 w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary" />
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="mt-1.5 w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary" />
             </label>
             <label className="block">
               <span className="text-sm font-semibold">Phone</span>
@@ -77,7 +84,7 @@ function RegisterPage() {
             </label>
             <label className="block">
               <span className="text-sm font-semibold">Password</span>
-              <input type="password" className="mt-1.5 w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary" />
+              <input type="password" required className="mt-1.5 w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary" />
             </label>
           </div>
           <button className="mt-6 w-full rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:brightness-110">
