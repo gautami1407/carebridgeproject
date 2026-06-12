@@ -18,9 +18,11 @@ import { Route as QrTrackingRouteImport } from './routes/qr-tracking'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MentorAChildRouteImport } from './routes/mentor-a-child'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as InstitutionsRouteImport } from './routes/institutions'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FeedRouteImport } from './routes/feed'
 import { Route as ExploreRouteImport } from './routes/explore'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as CsrRouteImport } from './routes/csr'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AppRouteImport } from './routes/app'
@@ -56,7 +58,9 @@ import { Route as AppMentorSessionsRouteImport } from './routes/app.mentor.sessi
 import { Route as AppMentorMenteesRouteImport } from './routes/app.mentor.mentees'
 import { Route as AppInstitutionVolunteersRouteImport } from './routes/app.institution.volunteers'
 import { Route as AppInstitutionProfileRouteImport } from './routes/app.institution.profile'
+import { Route as AppInstitutionNeedsRouteImport } from './routes/app.institution.needs'
 import { Route as AppInstitutionImpactReportsRouteImport } from './routes/app.institution.impact-reports'
+import { Route as AppInstitutionEventsRouteImport } from './routes/app.institution.events'
 import { Route as AppInstitutionDonationsRouteImport } from './routes/app.institution.donations'
 import { Route as AppDonorSavedRouteImport } from './routes/app.donor.saved'
 import { Route as AppDonorImpactRouteImport } from './routes/app.donor.impact'
@@ -119,6 +123,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InstitutionsRoute = InstitutionsRouteImport.update({
+  id: '/institutions',
+  path: '/institutions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
@@ -132,6 +141,11 @@ const FeedRoute = FeedRouteImport.update({
 const ExploreRoute = ExploreRouteImport.update({
   id: '/explore',
   path: '/explore',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CsrRoute = CsrRouteImport.update({
@@ -165,14 +179,14 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const InstitutionsIndexRoute = InstitutionsIndexRouteImport.update({
-  id: '/institutions/',
-  path: '/institutions/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => InstitutionsRoute,
 } as any)
 const EventsIndexRoute = EventsIndexRouteImport.update({
-  id: '/events/',
-  path: '/events/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => EventsRoute,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
@@ -312,12 +326,22 @@ const AppInstitutionProfileRoute = AppInstitutionProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AppInstitutionRoute,
 } as any)
+const AppInstitutionNeedsRoute = AppInstitutionNeedsRouteImport.update({
+  id: '/needs',
+  path: '/needs',
+  getParentRoute: () => AppInstitutionRoute,
+} as any)
 const AppInstitutionImpactReportsRoute =
   AppInstitutionImpactReportsRouteImport.update({
     id: '/impact-reports',
     path: '/impact-reports',
     getParentRoute: () => AppInstitutionRoute,
   } as any)
+const AppInstitutionEventsRoute = AppInstitutionEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => AppInstitutionRoute,
+} as any)
 const AppInstitutionDonationsRoute = AppInstitutionDonationsRouteImport.update({
   id: '/donations',
   path: '/donations',
@@ -375,30 +399,30 @@ const AppAdminAnalyticsRoute = AppAdminAnalyticsRouteImport.update({
 } as any)
 const AppInstitutionNeedsIndexRoute =
   AppInstitutionNeedsIndexRouteImport.update({
-    id: '/needs/',
-    path: '/needs/',
-    getParentRoute: () => AppInstitutionRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => AppInstitutionNeedsRoute,
   } as any)
 const AppInstitutionEventsIndexRoute =
   AppInstitutionEventsIndexRouteImport.update({
-    id: '/events/',
-    path: '/events/',
-    getParentRoute: () => AppInstitutionRoute,
+    id: '/',
+    path: '/',
+    getParentRoute: () => AppInstitutionEventsRoute,
   } as any)
 const AppInstitutionNeedsNewRoute = AppInstitutionNeedsNewRouteImport.update({
-  id: '/needs/new',
-  path: '/needs/new',
-  getParentRoute: () => AppInstitutionRoute,
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppInstitutionNeedsRoute,
 } as any)
 const AppInstitutionNeedsIdRoute = AppInstitutionNeedsIdRouteImport.update({
-  id: '/needs/$id',
-  path: '/needs/$id',
-  getParentRoute: () => AppInstitutionRoute,
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppInstitutionNeedsRoute,
 } as any)
 const AppInstitutionEventsNewRoute = AppInstitutionEventsNewRouteImport.update({
-  id: '/events/new',
-  path: '/events/new',
-  getParentRoute: () => AppInstitutionRoute,
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppInstitutionEventsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -408,9 +432,11 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
   '/csr': typeof CsrRoute
+  '/events': typeof EventsRouteWithChildren
   '/explore': typeof ExploreRoute
   '/feed': typeof FeedRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
   '/mentor-a-child': typeof MentorAChildRoute
   '/notifications': typeof NotificationsRoute
@@ -447,7 +473,9 @@ export interface FileRoutesByFullPath {
   '/app/donor/impact': typeof AppDonorImpactRoute
   '/app/donor/saved': typeof AppDonorSavedRoute
   '/app/institution/donations': typeof AppInstitutionDonationsRoute
+  '/app/institution/events': typeof AppInstitutionEventsRouteWithChildren
   '/app/institution/impact-reports': typeof AppInstitutionImpactReportsRoute
+  '/app/institution/needs': typeof AppInstitutionNeedsRouteWithChildren
   '/app/institution/profile': typeof AppInstitutionProfileRoute
   '/app/institution/volunteers': typeof AppInstitutionVolunteersRoute
   '/app/mentor/mentees': typeof AppMentorMenteesRoute
@@ -535,9 +563,11 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/contact': typeof ContactRoute
   '/csr': typeof CsrRoute
+  '/events': typeof EventsRouteWithChildren
   '/explore': typeof ExploreRoute
   '/feed': typeof FeedRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
   '/mentor-a-child': typeof MentorAChildRoute
   '/notifications': typeof NotificationsRoute
@@ -574,7 +604,9 @@ export interface FileRoutesById {
   '/app/donor/impact': typeof AppDonorImpactRoute
   '/app/donor/saved': typeof AppDonorSavedRoute
   '/app/institution/donations': typeof AppInstitutionDonationsRoute
+  '/app/institution/events': typeof AppInstitutionEventsRouteWithChildren
   '/app/institution/impact-reports': typeof AppInstitutionImpactReportsRoute
+  '/app/institution/needs': typeof AppInstitutionNeedsRouteWithChildren
   '/app/institution/profile': typeof AppInstitutionProfileRoute
   '/app/institution/volunteers': typeof AppInstitutionVolunteersRoute
   '/app/mentor/mentees': typeof AppMentorMenteesRoute
@@ -603,9 +635,11 @@ export interface FileRouteTypes {
     | '/app'
     | '/contact'
     | '/csr'
+    | '/events'
     | '/explore'
     | '/feed'
     | '/forgot-password'
+    | '/institutions'
     | '/login'
     | '/mentor-a-child'
     | '/notifications'
@@ -642,7 +676,9 @@ export interface FileRouteTypes {
     | '/app/donor/impact'
     | '/app/donor/saved'
     | '/app/institution/donations'
+    | '/app/institution/events'
     | '/app/institution/impact-reports'
+    | '/app/institution/needs'
     | '/app/institution/profile'
     | '/app/institution/volunteers'
     | '/app/mentor/mentees'
@@ -729,9 +765,11 @@ export interface FileRouteTypes {
     | '/app'
     | '/contact'
     | '/csr'
+    | '/events'
     | '/explore'
     | '/feed'
     | '/forgot-password'
+    | '/institutions'
     | '/login'
     | '/mentor-a-child'
     | '/notifications'
@@ -768,7 +806,9 @@ export interface FileRouteTypes {
     | '/app/donor/impact'
     | '/app/donor/saved'
     | '/app/institution/donations'
+    | '/app/institution/events'
     | '/app/institution/impact-reports'
+    | '/app/institution/needs'
     | '/app/institution/profile'
     | '/app/institution/volunteers'
     | '/app/mentor/mentees'
@@ -796,9 +836,11 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   ContactRoute: typeof ContactRoute
   CsrRoute: typeof CsrRoute
+  EventsRoute: typeof EventsRouteWithChildren
   ExploreRoute: typeof ExploreRoute
   FeedRoute: typeof FeedRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  InstitutionsRoute: typeof InstitutionsRouteWithChildren
   LoginRoute: typeof LoginRoute
   MentorAChildRoute: typeof MentorAChildRoute
   NotificationsRoute: typeof NotificationsRoute
@@ -814,8 +856,6 @@ export interface RootRouteChildren {
   NeedsIdRoute: typeof NeedsIdRoute
   OnboardingProfileRoute: typeof OnboardingProfileRoute
   OnboardingRoleRoute: typeof OnboardingRoleRoute
-  EventsIndexRoute: typeof EventsIndexRoute
-  InstitutionsIndexRoute: typeof InstitutionsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -883,6 +923,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/institutions': {
+      id: '/institutions'
+      path: '/institutions'
+      fullPath: '/institutions'
+      preLoaderRoute: typeof InstitutionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/forgot-password': {
       id: '/forgot-password'
       path: '/forgot-password'
@@ -902,6 +949,13 @@ declare module '@tanstack/react-router' {
       path: '/explore'
       fullPath: '/explore'
       preLoaderRoute: typeof ExploreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/csr': {
@@ -948,17 +1002,17 @@ declare module '@tanstack/react-router' {
     }
     '/institutions/': {
       id: '/institutions/'
-      path: '/institutions'
+      path: '/'
       fullPath: '/institutions/'
       preLoaderRoute: typeof InstitutionsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof InstitutionsRoute
     }
     '/events/': {
       id: '/events/'
-      path: '/events'
+      path: '/'
       fullPath: '/events/'
       preLoaderRoute: typeof EventsIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof EventsRoute
     }
     '/app/': {
       id: '/app/'
@@ -1149,11 +1203,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInstitutionProfileRouteImport
       parentRoute: typeof AppInstitutionRoute
     }
+    '/app/institution/needs': {
+      id: '/app/institution/needs'
+      path: '/needs'
+      fullPath: '/app/institution/needs'
+      preLoaderRoute: typeof AppInstitutionNeedsRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
     '/app/institution/impact-reports': {
       id: '/app/institution/impact-reports'
       path: '/impact-reports'
       fullPath: '/app/institution/impact-reports'
       preLoaderRoute: typeof AppInstitutionImpactReportsRouteImport
+      parentRoute: typeof AppInstitutionRoute
+    }
+    '/app/institution/events': {
+      id: '/app/institution/events'
+      path: '/events'
+      fullPath: '/app/institution/events'
+      preLoaderRoute: typeof AppInstitutionEventsRouteImport
       parentRoute: typeof AppInstitutionRoute
     }
     '/app/institution/donations': {
@@ -1235,38 +1303,38 @@ declare module '@tanstack/react-router' {
     }
     '/app/institution/needs/': {
       id: '/app/institution/needs/'
-      path: '/needs'
+      path: '/'
       fullPath: '/app/institution/needs/'
       preLoaderRoute: typeof AppInstitutionNeedsIndexRouteImport
-      parentRoute: typeof AppInstitutionRoute
+      parentRoute: typeof AppInstitutionNeedsRoute
     }
     '/app/institution/events/': {
       id: '/app/institution/events/'
-      path: '/events'
+      path: '/'
       fullPath: '/app/institution/events/'
       preLoaderRoute: typeof AppInstitutionEventsIndexRouteImport
-      parentRoute: typeof AppInstitutionRoute
+      parentRoute: typeof AppInstitutionEventsRoute
     }
     '/app/institution/needs/new': {
       id: '/app/institution/needs/new'
-      path: '/needs/new'
+      path: '/new'
       fullPath: '/app/institution/needs/new'
       preLoaderRoute: typeof AppInstitutionNeedsNewRouteImport
-      parentRoute: typeof AppInstitutionRoute
+      parentRoute: typeof AppInstitutionNeedsRoute
     }
     '/app/institution/needs/$id': {
       id: '/app/institution/needs/$id'
-      path: '/needs/$id'
+      path: '/$id'
       fullPath: '/app/institution/needs/$id'
       preLoaderRoute: typeof AppInstitutionNeedsIdRouteImport
-      parentRoute: typeof AppInstitutionRoute
+      parentRoute: typeof AppInstitutionNeedsRoute
     }
     '/app/institution/events/new': {
       id: '/app/institution/events/new'
-      path: '/events/new'
+      path: '/new'
       fullPath: '/app/institution/events/new'
       preLoaderRoute: typeof AppInstitutionEventsNewRouteImport
-      parentRoute: typeof AppInstitutionRoute
+      parentRoute: typeof AppInstitutionEventsRoute
     }
   }
 }
@@ -1315,30 +1383,52 @@ const AppDonorRouteWithChildren = AppDonorRoute._addFileChildren(
   AppDonorRouteChildren,
 )
 
+interface AppInstitutionEventsRouteChildren {
+  AppInstitutionEventsNewRoute: typeof AppInstitutionEventsNewRoute
+  AppInstitutionEventsIndexRoute: typeof AppInstitutionEventsIndexRoute
+}
+
+const AppInstitutionEventsRouteChildren: AppInstitutionEventsRouteChildren = {
+  AppInstitutionEventsNewRoute: AppInstitutionEventsNewRoute,
+  AppInstitutionEventsIndexRoute: AppInstitutionEventsIndexRoute,
+}
+
+const AppInstitutionEventsRouteWithChildren =
+  AppInstitutionEventsRoute._addFileChildren(AppInstitutionEventsRouteChildren)
+
+interface AppInstitutionNeedsRouteChildren {
+  AppInstitutionNeedsIdRoute: typeof AppInstitutionNeedsIdRoute
+  AppInstitutionNeedsNewRoute: typeof AppInstitutionNeedsNewRoute
+  AppInstitutionNeedsIndexRoute: typeof AppInstitutionNeedsIndexRoute
+}
+
+const AppInstitutionNeedsRouteChildren: AppInstitutionNeedsRouteChildren = {
+  AppInstitutionNeedsIdRoute: AppInstitutionNeedsIdRoute,
+  AppInstitutionNeedsNewRoute: AppInstitutionNeedsNewRoute,
+  AppInstitutionNeedsIndexRoute: AppInstitutionNeedsIndexRoute,
+}
+
+const AppInstitutionNeedsRouteWithChildren =
+  AppInstitutionNeedsRoute._addFileChildren(AppInstitutionNeedsRouteChildren)
+
 interface AppInstitutionRouteChildren {
   AppInstitutionDonationsRoute: typeof AppInstitutionDonationsRoute
+  AppInstitutionEventsRoute: typeof AppInstitutionEventsRouteWithChildren
   AppInstitutionImpactReportsRoute: typeof AppInstitutionImpactReportsRoute
+  AppInstitutionNeedsRoute: typeof AppInstitutionNeedsRouteWithChildren
   AppInstitutionProfileRoute: typeof AppInstitutionProfileRoute
   AppInstitutionVolunteersRoute: typeof AppInstitutionVolunteersRoute
   AppInstitutionIndexRoute: typeof AppInstitutionIndexRoute
-  AppInstitutionEventsNewRoute: typeof AppInstitutionEventsNewRoute
-  AppInstitutionNeedsIdRoute: typeof AppInstitutionNeedsIdRoute
-  AppInstitutionNeedsNewRoute: typeof AppInstitutionNeedsNewRoute
-  AppInstitutionEventsIndexRoute: typeof AppInstitutionEventsIndexRoute
-  AppInstitutionNeedsIndexRoute: typeof AppInstitutionNeedsIndexRoute
 }
 
 const AppInstitutionRouteChildren: AppInstitutionRouteChildren = {
   AppInstitutionDonationsRoute: AppInstitutionDonationsRoute,
+  AppInstitutionEventsRoute: AppInstitutionEventsRouteWithChildren,
   AppInstitutionImpactReportsRoute: AppInstitutionImpactReportsRoute,
+  AppInstitutionNeedsRoute: AppInstitutionNeedsRouteWithChildren,
   AppInstitutionProfileRoute: AppInstitutionProfileRoute,
   AppInstitutionVolunteersRoute: AppInstitutionVolunteersRoute,
   AppInstitutionIndexRoute: AppInstitutionIndexRoute,
-  AppInstitutionEventsNewRoute: AppInstitutionEventsNewRoute,
-  AppInstitutionNeedsIdRoute: AppInstitutionNeedsIdRoute,
-  AppInstitutionNeedsNewRoute: AppInstitutionNeedsNewRoute,
-  AppInstitutionEventsIndexRoute: AppInstitutionEventsIndexRoute,
-  AppInstitutionNeedsIndexRoute: AppInstitutionNeedsIndexRoute,
 }
 
 const AppInstitutionRouteWithChildren = AppInstitutionRoute._addFileChildren(
@@ -1401,6 +1491,33 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
+interface EventsRouteChildren {
+  EventsIdRoute: typeof EventsIdRoute
+  EventsIndexRoute: typeof EventsIndexRoute
+}
+
+const EventsRouteChildren: EventsRouteChildren = {
+  EventsIdRoute: EventsIdRoute,
+  EventsIndexRoute: EventsIndexRoute,
+}
+
+const EventsRouteWithChildren =
+  EventsRoute._addFileChildren(EventsRouteChildren)
+
+interface InstitutionsRouteChildren {
+  InstitutionsSlugRoute: typeof InstitutionsSlugRoute
+  InstitutionsIndexRoute: typeof InstitutionsIndexRoute
+}
+
+const InstitutionsRouteChildren: InstitutionsRouteChildren = {
+  InstitutionsSlugRoute: InstitutionsSlugRoute,
+  InstitutionsIndexRoute: InstitutionsIndexRoute,
+}
+
+const InstitutionsRouteWithChildren = InstitutionsRoute._addFileChildren(
+  InstitutionsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -1408,9 +1525,11 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   ContactRoute: ContactRoute,
   CsrRoute: CsrRoute,
+  EventsRoute: EventsRouteWithChildren,
   ExploreRoute: ExploreRoute,
   FeedRoute: FeedRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  InstitutionsRoute: InstitutionsRouteWithChildren,
   LoginRoute: LoginRoute,
   MentorAChildRoute: MentorAChildRoute,
   NotificationsRoute: NotificationsRoute,
@@ -1426,19 +1545,7 @@ const rootRouteChildren: RootRouteChildren = {
   NeedsIdRoute: NeedsIdRoute,
   OnboardingProfileRoute: OnboardingProfileRoute,
   OnboardingRoleRoute: OnboardingRoleRoute,
-  EventsIndexRoute: EventsIndexRoute,
-  InstitutionsIndexRoute: InstitutionsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
