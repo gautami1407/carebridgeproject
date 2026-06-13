@@ -14,16 +14,237 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      donations: {
+        Row: {
+          amount: number
+          created_at: string
+          donor_id: string | null
+          id: string
+          is_anonymous: boolean
+          message: string | null
+          need_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          donor_id?: string | null
+          id?: string
+          is_anonymous?: boolean
+          message?: string | null
+          need_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          donor_id?: string | null
+          id?: string
+          is_anonymous?: boolean
+          message?: string | null
+          need_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "donations_need_id_fkey"
+            columns: ["need_id"]
+            isOneToOne: false
+            referencedRelation: "needs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institutions: {
+        Row: {
+          city: string | null
+          country: string | null
+          cover_image: string | null
+          created_at: string
+          description: string | null
+          id: string
+          mission: string | null
+          name: string
+          owner_id: string | null
+          residents_count: number | null
+          slug: string
+          state: string | null
+          type: Database["public"]["Enums"]["institution_type"]
+          updated_at: string
+          verification: Database["public"]["Enums"]["verification_status"]
+        }
+        Insert: {
+          city?: string | null
+          country?: string | null
+          cover_image?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          mission?: string | null
+          name: string
+          owner_id?: string | null
+          residents_count?: number | null
+          slug: string
+          state?: string | null
+          type?: Database["public"]["Enums"]["institution_type"]
+          updated_at?: string
+          verification?: Database["public"]["Enums"]["verification_status"]
+        }
+        Update: {
+          city?: string | null
+          country?: string | null
+          cover_image?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          mission?: string | null
+          name?: string
+          owner_id?: string | null
+          residents_count?: number | null
+          slug?: string
+          state?: string | null
+          type?: Database["public"]["Enums"]["institution_type"]
+          updated_at?: string
+          verification?: Database["public"]["Enums"]["verification_status"]
+        }
+        Relationships: []
+      }
+      needs: {
+        Row: {
+          beneficiaries: number | null
+          category: Database["public"]["Enums"]["need_category"]
+          cover_image: string | null
+          created_at: string
+          deadline: string | null
+          description: string
+          goal_amount: number
+          id: string
+          institution_id: string
+          raised_amount: number
+          status: Database["public"]["Enums"]["need_status"]
+          title: string
+          updated_at: string
+          urgency: Database["public"]["Enums"]["need_urgency"]
+        }
+        Insert: {
+          beneficiaries?: number | null
+          category?: Database["public"]["Enums"]["need_category"]
+          cover_image?: string | null
+          created_at?: string
+          deadline?: string | null
+          description: string
+          goal_amount?: number
+          id?: string
+          institution_id: string
+          raised_amount?: number
+          status?: Database["public"]["Enums"]["need_status"]
+          title: string
+          updated_at?: string
+          urgency?: Database["public"]["Enums"]["need_urgency"]
+        }
+        Update: {
+          beneficiaries?: number | null
+          category?: Database["public"]["Enums"]["need_category"]
+          cover_image?: string | null
+          created_at?: string
+          deadline?: string | null
+          description?: string
+          goal_amount?: number
+          id?: string
+          institution_id?: string
+          raised_amount?: number
+          status?: Database["public"]["Enums"]["need_status"]
+          title?: string
+          updated_at?: string
+          urgency?: Database["public"]["Enums"]["need_urgency"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "needs_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          city: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "donor" | "volunteer" | "mentor" | "institution_admin" | "admin"
+      institution_type: "orphanage" | "old_age_home" | "shelter" | "other"
+      need_category:
+        | "food"
+        | "education"
+        | "medical"
+        | "shelter"
+        | "clothing"
+        | "other"
+      need_status: "draft" | "active" | "fulfilled" | "closed"
+      need_urgency: "low" | "medium" | "high" | "critical"
+      verification_status: "pending" | "verified" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +371,20 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["donor", "volunteer", "mentor", "institution_admin", "admin"],
+      institution_type: ["orphanage", "old_age_home", "shelter", "other"],
+      need_category: [
+        "food",
+        "education",
+        "medical",
+        "shelter",
+        "clothing",
+        "other",
+      ],
+      need_status: ["draft", "active", "fulfilled", "closed"],
+      need_urgency: ["low", "medium", "high", "critical"],
+      verification_status: ["pending", "verified", "rejected"],
+    },
   },
 } as const
