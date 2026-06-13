@@ -139,8 +139,6 @@ function RootComponent() {
 }
 
 function AuthSyncBridge() {
-  // lazy import to avoid SSR localStorage access
-  const { useAuthSync } = require("@/hooks/use-auth-sync") as typeof import("@/hooks/use-auth-sync");
   useAuthSync();
   return null;
 }
