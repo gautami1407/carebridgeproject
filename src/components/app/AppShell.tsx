@@ -126,7 +126,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Link to="/notifications" className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-muted">
               <Bell className="size-4" /> Notifications
             </Link>
-            <button onClick={() => { signOut(); navigate({ to: "/" }); }} className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-muted">
+            <button onClick={async () => { const { supabase } = await import("@/integrations/supabase/client"); await supabase.auth.signOut(); signOut(); navigate({ to: "/" }); }} className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-muted">
               <LogOut className="size-4" /> Sign out
             </button>
           </div>
