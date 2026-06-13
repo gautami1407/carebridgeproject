@@ -250,6 +250,7 @@ type State = {
   savedInstitutions: string[];
   signIn: (s: Session) => void;
   signOut: () => void;
+  syncSession: (s: Session) => void;
   setRole: (r: Role) => void;
   createNeed: (n: Omit<Need, "id" | "createdAt" | "updates" | "fulfilled" | "status">) => string;
   donate: (needId: string, amount: number) => void;
