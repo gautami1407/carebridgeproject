@@ -129,11 +129,17 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      <AuthSyncBridge />
       <Outlet />
     </QueryClientProvider>
   );
+}
+
+function AuthSyncBridge() {
+  // lazy import to avoid SSR localStorage access
+  const { useAuthSync } = require("@/hooks/use-auth-sync") as typeof import("@/hooks/use-auth-sync");
+  useAuthSync();
+  return null;
 }
