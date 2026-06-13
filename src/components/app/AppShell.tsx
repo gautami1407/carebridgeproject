@@ -76,10 +76,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [roleOpen, setRoleOpen] = useState(false);
   const [bellOpen, setBellOpen] = useState(false);
 
-  // Auto-create demo session if none
+  // Require auth — bounce to login if no session
   useEffect(() => {
-    if (!session) setRole("donor");
-  }, [session, setRole]);
+    if (!session) navigate({ to: "/login" });
+  }, [session, navigate]);
 
   const role = session?.role ?? "donor";
   const groups = navByRole[role];
