@@ -250,6 +250,7 @@ type State = {
   savedInstitutions: string[];
   signIn: (s: Session) => void;
   signOut: () => void;
+  syncSession: (s: Session) => void;
   setRole: (r: Role) => void;
   createNeed: (n: Omit<Need, "id" | "createdAt" | "updates" | "fulfilled" | "status">) => string;
   donate: (needId: string, amount: number) => void;
@@ -276,6 +277,7 @@ export const useStore = create<State>()(
       savedInstitutions: ["inst-1"],
       signIn: (s) => set({ session: s }),
       signOut: () => set({ session: null }),
+      syncSession: (s) => set({ session: s }),
       setRole: (r) =>
         set((st) => ({
           session: st.session
