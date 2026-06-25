@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   Heart, LayoutDashboard, HeartHandshake, Bookmark, Users, Calendar,
   Building2, ListChecks, BarChart3, Bell, ShieldCheck, GraduationCap,
-  Newspaper, FileCheck2, Activity, Award, MessagesSquare, Settings, LogOut, ChevronDown,
+  Newspaper, FileCheck2, Activity, Award, MessagesSquare, Settings, LogOut,
 } from "lucide-react";
 import { useStore, type Role } from "@/lib/store";
 
