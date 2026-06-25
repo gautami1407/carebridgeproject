@@ -18,7 +18,7 @@ export type Database = {
         Row: {
           amount: number
           created_at: string
-          donor_id: string | null
+          donor_id: string
           id: string
           is_anonymous: boolean
           message: string | null
@@ -27,7 +27,7 @@ export type Database = {
         Insert: {
           amount: number
           created_at?: string
-          donor_id?: string | null
+          donor_id: string
           id?: string
           is_anonymous?: boolean
           message?: string | null
@@ -36,7 +36,7 @@ export type Database = {
         Update: {
           amount?: number
           created_at?: string
-          donor_id?: string | null
+          donor_id?: string
           id?: string
           is_anonymous?: boolean
           message?: string | null
@@ -173,7 +173,6 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
-          phone: string | null
           updated_at: string
         }
         Insert: {
@@ -183,7 +182,6 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
-          phone?: string | null
           updated_at?: string
         }
         Update: {
@@ -192,6 +190,23 @@ export type Database = {
           city?: string | null
           created_at?: string
           full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles_private: {
+        Row: {
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
           id?: string
           phone?: string | null
           updated_at?: string
