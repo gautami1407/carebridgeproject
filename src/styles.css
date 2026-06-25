@@ -43,8 +43,15 @@
   --color-support-foreground: var(--support-foreground);
   --color-urgent: var(--urgent);
   --color-urgent-foreground: var(--urgent-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
   --color-surface: var(--surface);
   --color-surface-strong: var(--surface-strong);
+
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
