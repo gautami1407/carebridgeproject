@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   Heart, LayoutDashboard, HeartHandshake, Bookmark, Users, Calendar,
   Building2, ListChecks, BarChart3, Bell, ShieldCheck, GraduationCap,
-  Newspaper, FileCheck2, Activity, Award, MessagesSquare, Settings, LogOut, ChevronDown,
+  Newspaper, FileCheck2, Activity, Award, MessagesSquare, Settings, LogOut,
 } from "lucide-react";
 import { useStore, type Role } from "@/lib/store";
 
@@ -67,14 +67,13 @@ const roleLabels: Record<Role, string> = {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const session = useStore((s) => s.session);
-  const setRole = useStore((s) => s.setRole);
   const signOut = useStore((s) => s.signOut);
   const notifications = useStore((s) => s.notifications);
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [roleOpen, setRoleOpen] = useState(false);
   const [bellOpen, setBellOpen] = useState(false);
+
 
   // Require auth — bounce to login if no session
   useEffect(() => {
@@ -166,26 +165,11 @@ export function AppShell({ children }: { children: ReactNode }) {
               )}
             </div>
 
-            {/* Role switcher */}
-            <div className="relative">
-              <button onClick={() => setRoleOpen((v) => !v)} className="flex items-center gap-2 rounded-md border border-border px-3 py-2 text-sm font-semibold hover:bg-muted">
-                {roleLabels[role]} <ChevronDown className="size-3.5" />
-              </button>
-              {roleOpen && (
-                <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-xl border border-border bg-card shadow-lift">
-                  <div className="border-b border-border px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Preview as</div>
-                  {(Object.keys(roleLabels) as Role[]).map((r) => (
-                    <button
-                      key={r}
-                      onClick={() => { setRole(r); setRoleOpen(false); navigate({ to: `/app/${r === "admin" ? "admin" : r}` }); }}
-                      className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-muted ${r === role ? "font-bold text-primary" : ""}`}
-                    >
-                      {roleLabels[r]}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Role badge (read-only; server-verified via DB) */}
+            <span className="rounded-md border border-border px-3 py-2 text-sm font-semibold text-muted-foreground">
+              {roleLabels[role]}
+            </span>
+
           </div>
         </header>
         <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
