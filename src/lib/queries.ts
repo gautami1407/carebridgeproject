@@ -228,14 +228,20 @@ export function useInstitutionDonations(institutionId?: string) {
     queryKey: keys.donations(`inst:${institutionId ?? ""}`),
     enabled: !!institutionId,
     queryFn: async () => {
-      // Donations for any need belonging to this institution
       const { data, error } = await supabase
         .from("donations")
-        .select("*, need:needs!inner(title, institution_id), donor:profiles(full_name)")
+        .select("*, need:needs!inner(title, institution_id)")
         .eq("need.institution_id", institutionId!)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data ?? [];
+      const rows = data ?? [];
+      const donorIds = Array.from(new Set(rows.filter((r) => !r.is_anonymous).map((r) => r.donor_id)));
+      const byId = new Map<string, string | null>();
+      if (donorIds.length) {
+        const { data: profiles } = await supabase.from("profiles").select("id, full_name").in("id", donorIds);
+        (profiles ?? []).forEach((p) => byId.set(p.id, p.full_name));
+      }
+      return rows.map((r) => ({ ...r, donor: r.is_anonymous ? null : { full_name: byId.get(r.donor_id) ?? null } }));
     },
   });
 }
@@ -370,12 +376,21 @@ export function useFeed() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("feed_posts")
-        .select("*, author:profiles(full_name, avatar_url), institution:institutions(name, slug)")
+        .select("*, institution:institutions(name, slug)")
         .eq("is_public", true)
         .order("created_at", { ascending: false })
         .limit(40);
       if (error) throw error;
-      return data ?? [];
+      const rows = data ?? [];
+      // Hydrate author names in a separate query (no FK to profiles)
+      const authorIds = Array.from(new Set(rows.map((r) => r.author_id)));
+      if (authorIds.length === 0) return rows.map((r) => ({ ...r, author: null as { full_name: string | null } | null }));
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, full_name")
+        .in("id", authorIds);
+      const byId = new Map((profiles ?? []).map((p) => [p.id, p.full_name]));
+      return rows.map((r) => ({ ...r, author: { full_name: byId.get(r.author_id) ?? null } }));
     },
   });
 }

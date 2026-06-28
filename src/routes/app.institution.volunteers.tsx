@@ -14,11 +14,18 @@ export const Route = createFileRoute("/app/institution/volunteers")({
       queryFn: async () => {
         const { data, error } = await supabase
           .from("volunteer_applications")
-          .select("*, opportunity:volunteer_opportunities!inner(title, institution_id), user:profiles(full_name)")
+          .select("*, opportunity:volunteer_opportunities!inner(title, institution_id)")
           .eq("opportunity.institution_id", inst!.id)
           .order("created_at", { ascending: false });
         if (error) throw error;
-        return data ?? [];
+        const rows = data ?? [];
+        const userIds = Array.from(new Set(rows.map((r) => r.user_id)));
+        const byId = new Map<string, string | null>();
+        if (userIds.length) {
+          const { data: profiles } = await supabase.from("profiles").select("id, full_name").in("id", userIds);
+          (profiles ?? []).forEach((p) => byId.set(p.id, p.full_name));
+        }
+        return rows.map((r) => ({ ...r, user: { full_name: byId.get(r.user_id) ?? null } }));
       },
     });
     if (isLoading) return <LoadingState />;

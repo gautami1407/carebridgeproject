@@ -48,22 +48,26 @@ function FeedPage() {
           {isLoading ? <LoadingState /> :
             isError ? <ErrorState error={error} onRetry={() => refetch()} /> :
             feed.length === 0 ? <EmptyState title="No posts yet" body="Be the first to share an update." /> :
-            feed.map((p: { id: string; body: string; created_at: string; author?: { full_name?: string | null } | null; institution?: { name: string; slug: string } | null }) => (
-              <article key={p.id} className="rounded-2xl border border-border bg-card p-5 shadow-soft">
-                <header className="flex items-center justify-between">
-                  <div>
-                    <p className="font-bold">{p.institution?.name ?? p.author?.full_name ?? "Member"}</p>
-                    <p className="text-xs text-muted-foreground">{new Date(p.created_at).toLocaleString()}</p>
-                  </div>
-                </header>
-                <p className="mt-3 whitespace-pre-line leading-relaxed">{p.body}</p>
-                <footer className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
-                  <button className="inline-flex items-center gap-1 hover:text-foreground" aria-label="Like"><Heart className="size-4" /></button>
-                  <button className="inline-flex items-center gap-1 hover:text-foreground" aria-label="Share"><Share2 className="size-4" />Share</button>
-                  <button className="inline-flex items-center gap-1 hover:text-foreground" aria-label="Save"><Bookmark className="size-4" />Save</button>
-                </footer>
-              </article>
-            ))}
+            feed.map((p) => {
+              const inst = p.institution as { name: string; slug: string } | null;
+              const author = (p as unknown as { author?: { full_name?: string | null } | null }).author;
+              return (
+                <article key={p.id} className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+                  <header className="flex items-center justify-between">
+                    <div>
+                      <p className="font-bold">{inst?.name ?? author?.full_name ?? "Member"}</p>
+                      <p className="text-xs text-muted-foreground">{new Date(p.created_at).toLocaleString()}</p>
+                    </div>
+                  </header>
+                  <p className="mt-3 whitespace-pre-line leading-relaxed">{p.body}</p>
+                  <footer className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
+                    <button className="inline-flex items-center gap-1 hover:text-foreground" aria-label="Like"><Heart className="size-4" /></button>
+                    <button className="inline-flex items-center gap-1 hover:text-foreground" aria-label="Share"><Share2 className="size-4" />Share</button>
+                    <button className="inline-flex items-center gap-1 hover:text-foreground" aria-label="Save"><Bookmark className="size-4" />Save</button>
+                  </footer>
+                </article>
+              );
+            })}
         </div>
       </section>
     </SiteLayout>
