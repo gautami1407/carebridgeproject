@@ -22,16 +22,19 @@ const urgencyStyles: Record<Need["urgency"], string> = {
   Low: "bg-muted text-muted-foreground",
 };
 
+function fmtAmount(value: number, unit: string) {
+  if (unit === "₹") return `₹${value.toLocaleString()}`;
+  return `${value} ${unit}`;
+}
+
 export function NeedCard({ need }: { need: Need }) {
-  const pct = Math.min(100, Math.round((need.fulfilled / need.goal) * 100));
+  const pct = Math.min(100, Math.round((need.fulfilled / Math.max(1, need.goal)) * 100));
   const remaining = Math.max(0, need.goal - need.fulfilled);
 
   return (
     <article className="group flex flex-col rounded-2xl border border-border bg-card p-6 shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-lift">
       <div className="flex items-start justify-between gap-3">
-        <span
-          className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${urgencyStyles[need.urgency]}`}
-        >
+        <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${urgencyStyles[need.urgency]}`}>
           {need.urgency} Priority
         </span>
         <span className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
@@ -42,26 +45,23 @@ export function NeedCard({ need }: { need: Need }) {
 
       <h3 className="mt-4 text-lg font-bold tracking-tight text-foreground">{need.title}</h3>
       <p className="mt-1 text-sm font-medium text-foreground/80">{need.institution}</p>
-      <p className="mt-0.5 inline-flex items-center gap-1 text-xs text-muted-foreground">
-        <MapPin className="size-3" /> {need.location} • {need.category}
-      </p>
+      {(need.location || need.category) && (
+        <p className="mt-0.5 inline-flex items-center gap-1 text-xs text-muted-foreground">
+          <MapPin className="size-3" /> {need.location}{need.location && need.category ? " • " : ""}{need.category}
+        </p>
+      )}
 
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{need.impact}</p>
+      <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-muted-foreground">{need.impact}</p>
 
       <div className="mt-6 space-y-1.5">
         <div className="flex items-center justify-between text-xs font-semibold">
-          <span className="text-foreground">
-            {need.fulfilled}/{need.goal} {need.unit}
-          </span>
+          <span className="text-foreground">{fmtAmount(need.fulfilled, need.unit)} of {fmtAmount(need.goal, need.unit)}</span>
           <span className="text-support">{pct}%</span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-surface-strong">
-          <div
-            className="h-full rounded-full bg-support transition-all"
-            style={{ width: `${pct}%` }}
-          />
+          <div className="h-full rounded-full bg-support transition-all" style={{ width: `${pct}%` }} />
         </div>
-        <p className="text-xs text-muted-foreground">{remaining} {need.unit} still needed</p>
+        {remaining > 0 && <p className="text-xs text-muted-foreground">{fmtAmount(remaining, need.unit)} still needed</p>}
       </div>
 
       <div className="mt-6 flex gap-2">
