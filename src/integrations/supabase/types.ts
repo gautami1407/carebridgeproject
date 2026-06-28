@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_log: {
+        Row: {
+          created_at: string
+          entity_id: string | null
+          entity_type: Database["public"]["Enums"]["entity_kind"] | null
+          id: string
+          summary: string
+          type: Database["public"]["Enums"]["activity_type"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: Database["public"]["Enums"]["entity_kind"] | null
+          id?: string
+          summary: string
+          type: Database["public"]["Enums"]["activity_type"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: Database["public"]["Enums"]["entity_kind"] | null
+          id?: string
+          summary?: string
+          type?: Database["public"]["Enums"]["activity_type"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       donations: {
         Row: {
           amount: number
@@ -48,6 +78,236 @@ export type Database = {
             columns: ["need_id"]
             isOneToOne: false
             referencedRelation: "needs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_registrations: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          note: string | null
+          status: Database["public"]["Enums"]["registration_status"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          note?: string | null
+          status?: Database["public"]["Enums"]["registration_status"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          note?: string | null
+          status?: Database["public"]["Enums"]["registration_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          banner_url: string | null
+          capacity: number | null
+          created_at: string
+          description: string | null
+          ends_at: string | null
+          id: string
+          institution_id: string
+          is_published: boolean
+          kind: Database["public"]["Enums"]["event_kind"]
+          location: string | null
+          starts_at: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          banner_url?: string | null
+          capacity?: number | null
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          institution_id: string
+          is_published?: boolean
+          kind?: Database["public"]["Enums"]["event_kind"]
+          location?: string | null
+          starts_at: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          banner_url?: string | null
+          capacity?: number | null
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          institution_id?: string
+          is_published?: boolean
+          kind?: Database["public"]["Enums"]["event_kind"]
+          location?: string | null
+          starts_at?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feed_posts: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          institution_id: string | null
+          is_public: boolean
+          kind: Database["public"]["Enums"]["feed_kind"]
+          media: string[]
+          related_entity: Database["public"]["Enums"]["entity_kind"] | null
+          related_id: string | null
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          institution_id?: string | null
+          is_public?: boolean
+          kind?: Database["public"]["Enums"]["feed_kind"]
+          media?: string[]
+          related_entity?: Database["public"]["Enums"]["entity_kind"] | null
+          related_id?: string | null
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          institution_id?: string | null
+          is_public?: boolean
+          kind?: Database["public"]["Enums"]["feed_kind"]
+          media?: string[]
+          related_entity?: Database["public"]["Enums"]["entity_kind"] | null
+          related_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feed_posts_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      impact_reports: {
+        Row: {
+          beneficiaries: number | null
+          created_at: string
+          id: string
+          institution_id: string
+          is_published: boolean
+          need_id: string | null
+          outcomes: string | null
+          photos: string[]
+          published_at: string | null
+          summary: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          beneficiaries?: number | null
+          created_at?: string
+          id?: string
+          institution_id: string
+          is_published?: boolean
+          need_id?: string | null
+          outcomes?: string | null
+          photos?: string[]
+          published_at?: string | null
+          summary?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          beneficiaries?: number | null
+          created_at?: string
+          id?: string
+          institution_id?: string
+          is_published?: boolean
+          need_id?: string | null
+          outcomes?: string | null
+          photos?: string[]
+          published_at?: string | null
+          summary?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "impact_reports_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "impact_reports_need_id_fkey"
+            columns: ["need_id"]
+            isOneToOne: false
+            referencedRelation: "needs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      institution_documents: {
+        Row: {
+          created_at: string
+          id: string
+          institution_id: string
+          label: string | null
+          storage_path: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          institution_id: string
+          label?: string | null
+          storage_path: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          institution_id?: string
+          label?: string | null
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "institution_documents_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
             referencedColumns: ["id"]
           },
         ]
@@ -165,6 +425,39 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          read_at: string | null
+          title: string
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          title: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          title?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -213,6 +506,30 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_items: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: Database["public"]["Enums"]["saved_kind"]
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: Database["public"]["Enums"]["saved_kind"]
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: Database["public"]["Enums"]["saved_kind"]
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -234,6 +551,103 @@ export type Database = {
         }
         Relationships: []
       }
+      volunteer_applications: {
+        Row: {
+          created_at: string
+          hours_logged: number
+          id: string
+          message: string | null
+          opportunity_id: string
+          status: Database["public"]["Enums"]["application_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hours_logged?: number
+          id?: string
+          message?: string | null
+          opportunity_id: string
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hours_logged?: number
+          id?: string
+          message?: string | null
+          opportunity_id?: string
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "volunteer_applications_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "volunteer_opportunities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      volunteer_opportunities: {
+        Row: {
+          category: Database["public"]["Enums"]["opportunity_category"]
+          created_at: string
+          description: string | null
+          ends_at: string | null
+          id: string
+          institution_id: string
+          is_open: boolean
+          location: string | null
+          skills: string[]
+          slots: number | null
+          starts_at: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["opportunity_category"]
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          institution_id: string
+          is_open?: boolean
+          location?: string | null
+          skills?: string[]
+          slots?: number | null
+          starts_at?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["opportunity_category"]
+          created_at?: string
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          institution_id?: string
+          is_open?: boolean
+          location?: string | null
+          skills?: string[]
+          slots?: number | null
+          starts_at?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "volunteer_opportunities_institution_id_fkey"
+            columns: ["institution_id"]
+            isOneToOne: false
+            referencedRelation: "institutions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -242,7 +656,46 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      activity_type:
+        | "donation_made"
+        | "donation_received"
+        | "application_submitted"
+        | "application_decided"
+        | "event_registered"
+        | "need_created"
+        | "need_completed"
+        | "institution_verified"
+        | "profile_updated"
       app_role: "donor" | "volunteer" | "mentor" | "institution_admin" | "admin"
+      application_status:
+        | "pending"
+        | "accepted"
+        | "rejected"
+        | "completed"
+        | "withdrawn"
+      entity_kind:
+        | "need"
+        | "institution"
+        | "event"
+        | "opportunity"
+        | "application"
+        | "donation"
+        | "impact_report"
+        | "post"
+      event_kind:
+        | "health_camp"
+        | "education"
+        | "birthday"
+        | "festival"
+        | "volunteer_drive"
+        | "fundraiser"
+        | "other"
+      feed_kind:
+        | "success_story"
+        | "need_update"
+        | "event_update"
+        | "volunteer_story"
+        | "milestone"
       institution_type: "orphanage" | "old_age_home" | "shelter" | "other"
       need_category:
         | "food"
@@ -253,6 +706,29 @@ export type Database = {
         | "other"
       need_status: "draft" | "active" | "fulfilled" | "closed"
       need_urgency: "low" | "medium" | "high" | "critical"
+      notification_type:
+        | "donation_received"
+        | "need_completed"
+        | "application_accepted"
+        | "application_rejected"
+        | "new_need_nearby"
+        | "event_reminder"
+        | "institution_verified"
+        | "generic"
+      opportunity_category:
+        | "teaching"
+        | "healthcare"
+        | "mentorship"
+        | "event_support"
+        | "technology"
+        | "fundraising"
+        | "other"
+      registration_status:
+        | "registered"
+        | "waitlisted"
+        | "cancelled"
+        | "attended"
+      saved_kind: "need" | "institution" | "event" | "opportunity"
       verification_status: "pending" | "verified" | "rejected"
     }
     CompositeTypes: {
@@ -381,7 +857,51 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      activity_type: [
+        "donation_made",
+        "donation_received",
+        "application_submitted",
+        "application_decided",
+        "event_registered",
+        "need_created",
+        "need_completed",
+        "institution_verified",
+        "profile_updated",
+      ],
       app_role: ["donor", "volunteer", "mentor", "institution_admin", "admin"],
+      application_status: [
+        "pending",
+        "accepted",
+        "rejected",
+        "completed",
+        "withdrawn",
+      ],
+      entity_kind: [
+        "need",
+        "institution",
+        "event",
+        "opportunity",
+        "application",
+        "donation",
+        "impact_report",
+        "post",
+      ],
+      event_kind: [
+        "health_camp",
+        "education",
+        "birthday",
+        "festival",
+        "volunteer_drive",
+        "fundraiser",
+        "other",
+      ],
+      feed_kind: [
+        "success_story",
+        "need_update",
+        "event_update",
+        "volunteer_story",
+        "milestone",
+      ],
       institution_type: ["orphanage", "old_age_home", "shelter", "other"],
       need_category: [
         "food",
@@ -393,6 +913,32 @@ export const Constants = {
       ],
       need_status: ["draft", "active", "fulfilled", "closed"],
       need_urgency: ["low", "medium", "high", "critical"],
+      notification_type: [
+        "donation_received",
+        "need_completed",
+        "application_accepted",
+        "application_rejected",
+        "new_need_nearby",
+        "event_reminder",
+        "institution_verified",
+        "generic",
+      ],
+      opportunity_category: [
+        "teaching",
+        "healthcare",
+        "mentorship",
+        "event_support",
+        "technology",
+        "fundraising",
+        "other",
+      ],
+      registration_status: [
+        "registered",
+        "waitlisted",
+        "cancelled",
+        "attended",
+      ],
+      saved_kind: ["need", "institution", "event", "opportunity"],
       verification_status: ["pending", "verified", "rejected"],
     },
   },

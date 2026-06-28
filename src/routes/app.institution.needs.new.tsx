@@ -1,61 +1,92 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageHeader } from "@/components/app/AppShell";
-import { useStore, type NeedCategory, type Priority } from "@/lib/store";
+import { FileUpload } from "@/components/app/FileUpload";
+import { useCreateNeed, useMyInstitution } from "@/lib/queries";
+import type { Database } from "@/integrations/supabase/types";
+import { LoadingState, EmptyState } from "@/components/app/states";
 
-export const Route = createFileRoute("/app/institution/needs/new")({
-  component: NewNeed,
-});
+type Category = Database["public"]["Enums"]["need_category"];
+type Urgency = Database["public"]["Enums"]["need_urgency"];
 
-const categories: NeedCategory[] = ["Food", "Education", "Medical", "Clothing", "Infrastructure", "Technology", "Emergency"];
-const priorities: Priority[] = ["Critical", "High", "Medium", "Low"];
+const categories: Category[] = ["food", "education", "medical", "shelter", "clothing", "other"];
+const urgencies: Urgency[] = ["critical", "high", "medium", "low"];
+
+export const Route = createFileRoute("/app/institution/needs/new")({ component: NewNeed });
 
 function NewNeed() {
   const navigate = useNavigate();
-  const createNeed = useStore((s) => s.createNeed);
-  const instId = useStore((s) => s.session?.institutionId ?? "inst-1");
+  const { data: inst, isLoading: instLoading } = useMyInstitution();
+  const createNeed = useCreateNeed();
+  const [coverPath, setCoverPath] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
   const [form, setForm] = useState({
-    title: "", category: "Education" as NeedCategory, description: "",
-    unit: "items", goal: 10, estimatedCost: 10000, priority: "Medium" as Priority,
-    deadline: "14 days left", beneficiaries: 10,
+    title: "",
+    category: "education" as Category,
+    description: "",
+    goal_amount: 10000,
+    beneficiaries: 10,
+    urgency: "medium" as Urgency,
+    deadline: "",
   });
-  const set = (k: keyof typeof form, v: string | number) => setForm({ ...form, [k]: v });
+  const set = <K extends keyof typeof form>(k: K, v: (typeof form)[K]) => setForm({ ...form, [k]: v });
+
+  if (instLoading) return <LoadingState />;
+  if (!inst) return <EmptyState title="No institution linked" body="You need to be linked to an institution to post needs. Contact a platform admin." />;
 
   return (
     <div className="mx-auto max-w-3xl">
       <PageHeader title="Create a new need" subtitle="Be specific. Donors give more when impact is clear." />
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          const id = createNeed({ ...form, institutionId: instId });
-          navigate({ to: "/app/institution/needs/$id", params: { id } });
+          setErr(null);
+          try {
+            const need = await createNeed.mutateAsync({
+              title: form.title,
+              category: form.category,
+              description: form.description,
+              goal_amount: form.goal_amount,
+              urgency: form.urgency,
+              beneficiaries: form.beneficiaries,
+              deadline: form.deadline || null,
+              institution_id: inst.id,
+              cover_image: coverPath,
+              status: "active",
+            });
+            navigate({ to: "/app/institution/needs/$id", params: { id: need.id } });
+          } catch (ex) {
+            setErr(ex instanceof Error ? ex.message : "Failed to create need");
+          }
         }}
         className="space-y-5 rounded-2xl border border-border bg-card p-6 shadow-soft"
       >
         <Field label="Title"><input required value={form.title} onChange={(e) => set("title", e.target.value)} className="input" /></Field>
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Category">
-            <select value={form.category} onChange={(e) => set("category", e.target.value)} className="input">
-              {categories.map((c) => <option key={c}>{c}</option>)}
+            <select value={form.category} onChange={(e) => set("category", e.target.value as Category)} className="input capitalize">
+              {categories.map((c) => <option key={c} value={c} className="capitalize">{c}</option>)}
             </select>
           </Field>
-          <Field label="Priority">
-            <select value={form.priority} onChange={(e) => set("priority", e.target.value)} className="input">
-              {priorities.map((p) => <option key={p}>{p}</option>)}
+          <Field label="Urgency">
+            <select value={form.urgency} onChange={(e) => set("urgency", e.target.value as Urgency)} className="input capitalize">
+              {urgencies.map((p) => <option key={p} value={p} className="capitalize">{p}</option>)}
             </select>
           </Field>
         </div>
         <Field label="Description"><textarea rows={4} required value={form.description} onChange={(e) => set("description", e.target.value)} className="input" /></Field>
         <div className="grid gap-5 sm:grid-cols-3">
-          <Field label="Quantity"><input type="number" min={1} value={form.goal} onChange={(e) => set("goal", +e.target.value)} className="input" /></Field>
-          <Field label="Unit"><input value={form.unit} onChange={(e) => set("unit", e.target.value)} className="input" /></Field>
+          <Field label="Goal (₹)"><input type="number" min={1} required value={form.goal_amount} onChange={(e) => set("goal_amount", +e.target.value)} className="input" /></Field>
           <Field label="Beneficiaries"><input type="number" min={1} value={form.beneficiaries} onChange={(e) => set("beneficiaries", +e.target.value)} className="input" /></Field>
+          <Field label="Deadline"><input type="date" value={form.deadline} onChange={(e) => set("deadline", e.target.value)} className="input" /></Field>
         </div>
-        <div className="grid gap-5 sm:grid-cols-2">
-          <Field label="Estimated cost (₹)"><input type="number" min={0} value={form.estimatedCost} onChange={(e) => set("estimatedCost", +e.target.value)} className="input" /></Field>
-          <Field label="Deadline"><input value={form.deadline} onChange={(e) => set("deadline", e.target.value)} className="input" placeholder="e.g. 14 days left" /></Field>
-        </div>
-        <button className="w-full rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:brightness-110">Publish need</button>
+        <Field label="Cover image (optional)">
+          <FileUpload bucket="public-media" prefix="needs" accept="image/*" onUploaded={(out) => setCoverPath(out.url)} label="Upload cover image" />
+        </Field>
+        {err && <p className="text-sm text-urgent">{err}</p>}
+        <button disabled={createNeed.isPending} className="w-full rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:brightness-110 disabled:opacity-60">
+          {createNeed.isPending ? "Publishing…" : "Publish need"}
+        </button>
       </form>
       <style>{`.input{margin-top:.375rem;width:100%;border-radius:.375rem;border:1px solid var(--border);background:var(--background);padding:.625rem .75rem;font-size:.875rem;outline:none}.input:focus{border-color:var(--primary)}`}</style>
     </div>

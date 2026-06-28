@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import {
   Heart, LayoutDashboard, HeartHandshake, Bookmark, Users, Calendar,
   Building2, ListChecks, BarChart3, Bell, ShieldCheck, GraduationCap,
-  Newspaper, FileCheck2, Activity, Award, MessagesSquare, Settings, LogOut,
+  Newspaper, FileCheck2, Activity, Award, MessagesSquare, Settings, LogOut, Search,
 } from "lucide-react";
 import { useStore, type Role } from "@/lib/store";
+import { useNotifications, useMarkNotificationRead } from "@/lib/queries";
+import { GlobalSearch } from "@/components/app/GlobalSearch";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard };
 
@@ -68,26 +70,47 @@ const roleLabels: Record<Role, string> = {
 export function AppShell({ children }: { children: ReactNode }) {
   const session = useStore((s) => s.session);
   const signOut = useStore((s) => s.signOut);
-  const notifications = useStore((s) => s.notifications);
+  const { data: notifications = [] } = useNotifications();
+  const markRead = useMarkNotificationRead();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
   const [bellOpen, setBellOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
-
-  // Require auth — bounce to login if no session
+  // Require auth — bounce to login if no session (gives 500ms for hydration)
   useEffect(() => {
-    if (!session) navigate({ to: "/login" });
+    if (session) return;
+    const t = setTimeout(() => {
+      if (!useStore.getState().session) navigate({ to: "/login" });
+    }, 600);
+    return () => clearTimeout(t);
   }, [session, navigate]);
+
+  // Cmd/Ctrl+K opens search
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   const role = session?.role ?? "donor";
   const groups = navByRole[role];
-  const unread = notifications.filter((n) => !n.read).length;
+  const unread = notifications.filter((n) => !n.read_at).length;
 
   return (
     <div className="flex min-h-screen bg-surface">
+      {mobileOpen && <div className="fixed inset-0 z-30 bg-black/40 lg:hidden" onClick={() => setMobileOpen(false)} aria-hidden />}
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-40 w-64 -translate-x-full border-r border-border bg-card transition-transform lg:static lg:translate-x-0 ${mobileOpen ? "translate-x-0" : ""}`}>
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 w-64 -translate-x-full border-r border-border bg-card transition-transform lg:static lg:translate-x-0 ${mobileOpen ? "translate-x-0" : ""}`}
+        aria-label="Primary navigation"
+      >
         <div className="flex h-16 items-center gap-2 border-b border-border px-5">
           <Link to="/" className="flex items-center gap-2">
             <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
@@ -107,11 +130,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                     key={it.to}
                     to={it.to}
                     onClick={() => setMobileOpen(false)}
+                    aria-current={active ? "page" : undefined}
                     className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                       active ? "bg-primary/10 text-primary" : "text-foreground/80 hover:bg-muted"
                     }`}
                   >
-                    <it.icon className="size-4" />
+                    <it.icon className="size-4" aria-hidden />
                     {it.label}
                   </Link>
                 );
@@ -135,28 +159,49 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Main */}
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-3 border-b border-border bg-background/85 px-4 backdrop-blur sm:px-6">
-          <button onClick={() => setMobileOpen((v) => !v)} className="grid size-9 place-items-center rounded-md border border-border lg:hidden">
+          <button
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label="Toggle navigation menu"
+            className="grid size-9 place-items-center rounded-md border border-border lg:hidden"
+          >
             <Settings className="size-4" />
           </button>
-          <p className="hidden text-sm text-muted-foreground sm:block">
-            Welcome back, <span className="font-semibold text-foreground">{session?.name ?? "Friend"}</span>
-          </p>
+
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="hidden sm:flex items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground hover:bg-muted"
+            aria-label="Search the platform"
+          >
+            <Search className="size-3.5" />
+            Search needs, institutions…
+            <kbd className="ml-2 rounded border border-border bg-background px-1.5 py-0.5 text-[10px] font-mono">⌘K</kbd>
+          </button>
 
           <div className="flex items-center gap-2">
             {/* Bell */}
             <div className="relative">
-              <button onClick={() => setBellOpen((v) => !v)} className="relative grid size-9 place-items-center rounded-md border border-border hover:bg-muted">
+              <button
+                onClick={() => setBellOpen((v) => !v)}
+                aria-label={`Notifications${unread ? ` (${unread} unread)` : ""}`}
+                className="relative grid size-9 place-items-center rounded-md border border-border hover:bg-muted"
+              >
                 <Bell className="size-4" />
-                {unread > 0 && <span className="absolute -right-1 -top-1 grid size-4 place-items-center rounded-full bg-urgent text-[10px] font-bold text-urgent-foreground">{unread}</span>}
+                {unread > 0 && <span className="absolute -right-1 -top-1 grid min-w-[16px] place-items-center rounded-full bg-urgent px-1 text-[10px] font-bold text-urgent-foreground">{unread > 9 ? "9+" : unread}</span>}
               </button>
               {bellOpen && (
                 <div className="absolute right-0 mt-2 w-80 overflow-hidden rounded-xl border border-border bg-card shadow-lift">
                   <div className="border-b border-border px-4 py-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">Notifications</div>
                   <ul className="max-h-80 overflow-auto">
+                    {notifications.length === 0 && (
+                      <li className="px-4 py-6 text-center text-xs text-muted-foreground">You're all caught up.</li>
+                    )}
                     {notifications.slice(0, 5).map((n) => (
-                      <li key={n.id} className="border-b border-border px-4 py-3 text-sm last:border-0">
+                      <li key={n.id} className={`border-b border-border px-4 py-3 text-sm last:border-0 ${!n.read_at ? "bg-primary/5" : ""}`}>
                         <p className="font-semibold">{n.title}</p>
-                        <p className="mt-0.5 text-xs text-muted-foreground">{n.body}</p>
+                        {n.body && <p className="mt-0.5 text-xs text-muted-foreground">{n.body}</p>}
+                        {!n.read_at && (
+                          <button onClick={() => markRead.mutate(n.id)} className="mt-1 text-[11px] font-semibold text-primary hover:underline">Mark read</button>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -166,14 +211,15 @@ export function AppShell({ children }: { children: ReactNode }) {
             </div>
 
             {/* Role badge (read-only; server-verified via DB) */}
-            <span className="rounded-md border border-border px-3 py-2 text-sm font-semibold text-muted-foreground">
+            <span className="rounded-md border border-border px-3 py-2 text-sm font-semibold text-muted-foreground" title="Your role">
               {roleLabels[role]}
             </span>
-
           </div>
         </header>
         <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
       </div>
+
+      <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
 }
@@ -185,7 +231,7 @@ export function MetricCard({ label, value, delta, icon: Icon, accent }: { label:
     <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
-        <span className={`grid size-9 place-items-center rounded-lg ${acClass}`}><Icon className="size-4" /></span>
+        <span className={`grid size-9 place-items-center rounded-lg ${acClass}`} aria-hidden><Icon className="size-4" /></span>
       </div>
       <p className="mt-3 text-3xl font-bold tracking-tight">{value}</p>
       {delta && <p className="mt-1 text-xs text-support">{delta}</p>}
@@ -208,8 +254,8 @@ export function PageHeader({ title, subtitle, action }: { title: string; subtitl
 export function StatusBadge({ status }: { status: string }) {
   const tone =
     /critical|urgent|rejected|emergency/i.test(status) ? "bg-urgent/10 text-urgent"
-    : /verified|active|fulfilled|accepted|received|utilized|completed|confirmed/i.test(status) ? "bg-support/10 text-support"
-    : /pending|draft|initiated/i.test(status) ? "bg-amber-100 text-amber-700"
+    : /verified|active|fulfilled|accepted|received|utilized|completed|confirmed|open/i.test(status) ? "bg-support/10 text-support"
+    : /pending|draft|initiated|waitlisted/i.test(status) ? "bg-amber-100 text-amber-700"
     : "bg-muted text-muted-foreground";
   return <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${tone}`}>{status}</span>;
 }
