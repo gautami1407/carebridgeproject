@@ -44,6 +44,35 @@ export type Database = {
         }
         Relationships: []
       }
+      donation_certificates: {
+        Row: {
+          certificate_no: string
+          donation_id: string
+          id: string
+          issued_at: string
+        }
+        Insert: {
+          certificate_no: string
+          donation_id: string
+          id?: string
+          issued_at?: string
+        }
+        Update: {
+          certificate_no?: string
+          donation_id?: string
+          id?: string
+          issued_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "donation_certificates_donation_id_fkey"
+            columns: ["donation_id"]
+            isOneToOne: true
+            referencedRelation: "donations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       donations: {
         Row: {
           amount: number
@@ -369,6 +398,7 @@ export type Database = {
       needs: {
         Row: {
           beneficiaries: number | null
+          beneficiaries_count: number | null
           category: Database["public"]["Enums"]["need_category"]
           cover_image: string | null
           created_at: string
@@ -385,6 +415,7 @@ export type Database = {
         }
         Insert: {
           beneficiaries?: number | null
+          beneficiaries_count?: number | null
           category?: Database["public"]["Enums"]["need_category"]
           cover_image?: string | null
           created_at?: string
@@ -401,6 +432,7 @@ export type Database = {
         }
         Update: {
           beneficiaries?: number | null
+          beneficiaries_count?: number | null
           category?: Database["public"]["Enums"]["need_category"]
           cover_image?: string | null
           created_at?: string

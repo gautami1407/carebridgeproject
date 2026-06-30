@@ -1,102 +1,91 @@
+# CareBridge Phase 4 — Intelligence & Differentiation Layer
 
-# Phase 3 — Audit, Connect, Wire to Cloud
+Phase 4 is large (15 modules + polish). To stay safe and avoid breaking the working platform, I'll ship it in **4 waves**, each independently usable. No existing dashboards, routes, queries, or tables get rewritten — everything is **additive**.
 
-Goal: every page in the app reads/writes real Lovable Cloud data, no dead-end buttons, role-based nav is enforced, and image/document uploads work. No new modules, no landing-page work.
+## Ground rules (apply to every wave)
 
-## 1. Database additions (one migration)
+- Reuse existing primitives: `AppShell`, `MetricCard`, `StatusBadge`, `LoadingState`/`ErrorState`/`EmptyState`, `NeedCard`, `useNeeds`/`useDonations`/etc. in `src/lib/queries.ts`.
+- New logic lives in small new files: `src/lib/scoring.ts`, `src/lib/impact.ts`, `src/lib/badges.ts`, `src/components/app/*` additions.
+- New DB only where needed (badges, certificates, feed reactions, AI placeholders). Existing tables get **derived** values in code, not schema rewrites.
+- One migration per wave, batched.
 
-Tables already live: `profiles`, `profiles_private`, `user_roles`, `institutions`, `needs`, `donations`.
+---
 
-Add these (with GRANTs + RLS scoped to `auth.uid()` and `private.has_role`):
+## Wave 1 — Trust & Impact Surfaces (highest user-visible value)
 
-- `events` — institution_id, title, description, starts_at, location, capacity, banner_url
-- `event_registrations` — event_id, user_id, status
-- `volunteer_opportunities` — institution_id, title, category, skills[], location, starts_at, ends_at, slots
-- `volunteer_applications` — opportunity_id, user_id, status, message, hours_logged
-- `notifications` — user_id, type, title, body, link, read_at
-- `activity_log` — user_id, type, entity_type, entity_id, summary
-- `impact_reports` — need_id, institution_id, summary, beneficiaries, photos[], outcomes, published_at
-- `feed_posts` — author_id (institution or user), kind, body, media[], related_entity
-- `saved_items` — user_id, entity_type, entity_id (replaces mock favorites)
+**Modules 1, 2, 3, 4, 5, 7**
 
-Triggers: insert into `activity_log` + `notifications` on donation, application, registration, need status change.
+1. **Smart prioritization** (M1) — pure client scorer in `src/lib/scoring.ts` using `beneficiaries_count`, `deadline`, progress %, category weight, `verification`, `urgency`. Returns `{score, tier}` → `PriorityBadge` component. Add "Sort by AI Priority" option to `explore.tsx` and admin needs list. No schema change.
+2. **Donation impact calculator** (M2) — `src/lib/impact.ts` maps category + amount → human sentences ("₹500 = school supplies for 5 children"). Render live in `needs.$id.tsx` donate form and post-donation toast. Cumulative impact shown on donor dashboard.
+3. **Institution impact timeline** (M3) — new public route `institutions.$slug.timeline.tsx` (or tab on existing slug page). Reads `activity_log` filtered by institution + needs/donations/events join. Vertical timeline component reusing donor impact timeline styles.
+4. **Transparency score** (M4) — `src/lib/transparency.ts` computes 0–100 from verification, reports count, donation utilisation %, profile completeness, recency. Surfaced as badge + explainer popover on institution profile.
+5. **Public impact dashboard** (M5) — new route `impact.tsx` with live counters (animated) and 2–3 Recharts. Aggregates via `supabase.rpc`-style client queries (sum, count). Linked from header.
+6. **Donation certificates** (M7) — new table `donation_certificates(id, donation_id, certificate_no, issued_at)`, auto-issued via trigger after `donations` insert. Client renders PDF with `jspdf` from a styled template; download button on donation history.
 
-## 2. Storage buckets
+**Migration 1:** `donation_certificates` table + trigger; add `beneficiaries_count int` to `needs` if missing; add `priority_score numeric generated` column (optional, code-only fallback otherwise).
 
-- `institution-docs` (private) — verification PDFs/images; readable by owning institution + admins
-- `public-media` (public) — need images, event banners, impact photos, avatars
+---
 
-RLS on `storage.objects` keyed by path prefix `{user_id}/...` or `{institution_id}/...`.
+## Wave 2 — Personalization & Gamification
 
-Reusable `<FileUpload>` component (drag/drop, preview, progress) used everywhere uploads happen.
+**Modules 6, 8, 13**
 
-## 3. Replace mock store with real data hooks
+7. **Personalized recommendation panels** (M6) — `src/lib/recommend.ts` with role-specific heuristics (category overlap, city match, recency). Add `<RecommendedFor role=… />` widget block to each dashboard index (donor/volunteer/institution/admin) — appended, no existing layout removed.
+8. **Achievements & badges** (M8) — `src/lib/badges.ts` defines catalog + earn rules. New tables `badges(code, label, description, icon, kind)` seeded via migration and `user_badges(user_id, badge_code, earned_at)`. Awarding done in DB triggers on donations, volunteer_applications, hours, institutions. UI: badge grid on profile, toast on earn.
+9. **Profile achievements page** (M13) — new route `profile.tsx` (authenticated) showing contribution summary, hours, impact, certificates, badges, mini-timeline. Reuses existing query hooks.
 
-Delete the seeded data from `src/lib/store.ts`. Keep only UI state (sidebar collapsed, recent searches). All entity reads/writes move to TanStack Query hooks under `src/lib/queries/`:
+**Migration 2:** `badges`, `user_badges`, award triggers.
 
-- `useNeeds`, `useNeed`, `useCreateNeed`, `useUpdateNeed`
-- `useInstitutions`, `useInstitution`, `useUpdateInstitution`
-- `useDonations`, `useCreateDonation`
-- `useEvents`, `useEventRegistrations`
-- `useOpportunities`, `useApplications`
-- `useNotifications`, `useMarkRead`
-- `useFeed`, `useActivity`, `useImpactReport`
-- `useSaved`, `useToggleSave`
+---
 
-Each hook uses the browser supabase client; writes use server functions when they touch other users' data or trigger side effects.
+## Wave 3 — Discovery, Community & Matching
 
-## 4. Auth & role-based routing
+**Modules 9, 10, 11, 12, 14**
 
-- Move every `/app/*` route under `src/routes/_authenticated/` so the integration's managed gate redirects unauth users to `/auth` (replacing the bespoke gate in `AppShell`).
-- Add a `useCurrentRole()` hook that reads `user_roles` once per session.
-- Sidebar in `AppShell` already filters by role — confirm every nav item points at a real route and remove orphan items.
-- Per-role layout routes (`_authenticated/donor`, `/volunteer`, `/mentor`, `/institution`, `/admin`) call `private.has_role` via a server fn in `beforeLoad` and redirect to `/app` if the user lacks the role.
+10. **Advanced community feed** (M9) — extend `feed_posts` with `media_urls text[]`, `post_kind enum('update','announcement','impact','story')`. New tables `feed_reactions(post_id,user_id,kind)`, `feed_comments`, `feed_bookmarks`, `feed_reports`. Upgrade `feed.tsx` and add composer media upload via existing `FileUpload`.
+11. **Volunteer matching** (M10) — `src/lib/matching.ts` scores opportunities vs profile (location, skills, languages, availability). Add `skills`, `languages`, `availability` to `profiles_private` (or new `volunteer_profiles`). UI: match % chip + "why" tooltip on opportunities; "Recommended for you" row on volunteer dashboard.
+12. **Smart search upgrade** (M11) — extend existing `GlobalSearch` with sections (Institutions/Needs/Volunteers/Events/Reports/Users), trending causes (from view counts/donations 7d), quick-filter chips, popular searches table.
+13. **Institution discovery map** (M12) — new route `map.tsx` using `leaflet` + `react-leaflet` (OpenStreetMap tiles, no key). Pins for institutions w/ lat/lng; filters by type + urgent needs; click → profile. Add nullable `lat`/`lng` to institutions.
+14. **Public stats page** (M14) — `our-impact.tsx` with growth charts (donations over time, volunteers over time, top causes, top institutions). Recharts area/line/bar.
 
-## 5. Connect every page
+**Migration 3:** feed extensions, reactions/comments/bookmarks/reports tables, volunteer skill fields, popular_searches log, institution lat/lng.
 
-Audit pass — open each route, replace mock reads with the new hooks, add loading/empty/error states using shared `<EmptyState>`, `<LoadingState>`, `<ErrorState>` components. Wire every button to a real action or remove it.
+---
 
-Public routes that need to work without auth (`/needs/:id`, `/institutions/:slug`, `/events/:id`, `/impact-reports/:id`) get public server functions using the server publishable client + narrow `TO anon` SELECT policies on safe columns only.
+## Wave 4 — AI-Ready Scaffolding & Polish
 
-Forms (institution profile, new need, new event, new opportunity, donation, application, profile) get Zod validation and toast feedback on success/error.
+**Module 15 + platform polish**
 
-## 6. Cross-cutting components
+15. **AI scaffolding** (M15) — empty tables: `ai_predictions(entity_type, entity_id, model, score, payload, created_at)`, `ai_recommendations(user_id, entity_type, entity_id, score, reason)`. Server fn stubs in `src/lib/ai.functions.ts` returning deterministic placeholders today. Routes `ai.predictions.tsx` / `ai.matching.tsx` already exist — wire to read these tables and show "Preview — model coming soon" cards. Architecture is the contract; no real model calls yet.
+16. **Polish pass** — only where missing:
+    - Add success animations (subtle `framer-motion` already not installed → use Tailwind keyframes; no new dep).
+    - Confirm dialogs for destructive actions using existing `alert-dialog`.
+    - Toasts via existing `sonner`.
+    - Skeleton loading on remaining pages still using bare spinners.
+    - Keyboard: `g d`, `g e`, `g i` shortcuts; `?` opens cheat-sheet.
+    - A11y: focus rings, aria-labels on icon buttons, alt text audit.
+    - Dark-mode token sweep (no toggle yet — tokens only).
 
-Standardise and dedupe:
+**Migration 4:** `ai_predictions`, `ai_recommendations`, `popular_searches` (if not in W3).
 
-- `<PageHeader>` (title, description, actions)
-- `<StatCard>`, `<ProgressCard>`
-- `<NeedCard>`, `<InstitutionCard>`, `<EventCard>`, `<OpportunityCard>`, `<NotificationItem>` — single source of truth, used by both public pages and dashboards
-- `<FiltersBar>` driven by URL search params (Zod-validated) so filters survive refresh and are shareable
-- `<DataTable>` wrapper around shadcn `Table` for admin pages
-- Empty / loading / error state primitives
+---
 
-## 7. Notifications & activity
+## Technical notes
 
-- Bell in `AppShell` reads `notifications` (with realtime channel subscription), shows unread count, dropdown lists recent, link to `/app/notifications` page.
-- Profile dropdown gets an "Activity" link → renders `activity_log` for current user.
+- **No external AI calls** this phase. Scoring, impact text, matching, transparency are all deterministic functions — easy to swap for real models later by replacing the function body, keeping the same return shape.
+- **PDFs**: `jspdf` (~50KB, pure JS, edge-safe) — install once in Wave 1.
+- **Maps**: `leaflet` + `react-leaflet` — installed Wave 3, lazy-loaded only on `/map`.
+- **Charts**: existing `recharts` already in stack (shadcn chart).
+- **All new tables** ship with explicit `GRANT`s and RLS scoped to `authenticated` (per project security memory).
+- **Security memory**: continue revoking `EXECUTE` on new trigger functions from `PUBLIC`/`authenticated`.
 
-## 8. Admin moderation
+## Order of operations next turn
 
-- Institution verification page: list `pending` institutions with docs from `institution-docs` bucket, approve/reject buttons call server fn requiring `admin` role.
-- User list reads from `profiles` + `user_roles`; admins can grant/revoke roles via server fn.
-- Need moderation: flag/unpublish.
+If you approve, I'll start **Wave 1** in the next turn:
+1. Migration 1 (certificates + need fields).
+2. New libs: `scoring.ts`, `impact.ts`, `transparency.ts`.
+3. New components: `PriorityBadge`, `ImpactCalculator`, `TransparencyScore`, `LiveCounter`.
+4. New routes: `impact.tsx`, institution timeline tab.
+5. Wire into `explore.tsx`, `needs.$id.tsx`, donor dashboard, institution profile, donations history.
 
-## 9. Out of scope (explicit)
-
-- No landing-page changes.
-- No new feature modules — placeholders (Mentor-a-Child, AI Matching, CSR) stay as "Coming soon" pages.
-- No payment integration — donations record an entry only.
-- No realtime feed; notifications get realtime, feed is polled.
-- No i18n, no PWA, no analytics dashboards (the chart placeholders stay).
-
-## Order of execution
-
-1. Migration (tables + RLS + triggers) and storage buckets — single commit.
-2. Replace store with query hooks; move routes under `_authenticated/`; wire `AppShell` and auth gate.
-3. Page-by-page audit: dashboards → listings → detail pages → forms → admin.
-4. File upload component + plug into institution profile, need form, event form, impact reports.
-5. Notifications bell + realtime + activity log surfacing.
-6. Final pass: empty/loading/error states, accessibility labels, sidebar dedupe.
-
-This is ~6–10 turns of work. Approving this plan starts step 1 (the migration).
+Reply **"go"** to start Wave 1, or tell me to reshuffle / drop modules.
