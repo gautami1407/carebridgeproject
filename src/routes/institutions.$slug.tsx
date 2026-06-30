@@ -1,10 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
-import { useInstitutionBySlug, useNeeds, useEvents, useImpactReports } from "@/lib/queries";
+import { useInstitutionBySlug, useNeeds, useEvents, useImpactReports, useInstitutionTimeline } from "@/lib/queries";
 import { NeedCard } from "@/components/site/NeedCard";
-import { MapPin, ArrowLeft, Users, Building2, Calendar } from "lucide-react";
+import { MapPin, ArrowLeft, Users, Building2, Calendar, HeartHandshake, FileText, Activity, CheckCircle2 } from "lucide-react";
 import { needToCardUI, cap } from "@/lib/db-mappers";
 import { LoadingState, ErrorState, EmptyState } from "@/components/app/states";
+import { transparencyScore } from "@/lib/transparency";
+import { TransparencyScore } from "@/components/app/TransparencyScore";
+import type { TimelineEvent } from "@/lib/queries";
 
 export const Route = createFileRoute("/institutions/$slug")({
   component: InstitutionPublic,
@@ -17,12 +20,24 @@ function InstitutionPublic() {
   const { data: needs = [] } = useNeeds({ institutionId: inst?.id });
   const { data: events = [] } = useEvents({ institutionId: inst?.id, upcomingOnly: true });
   const { data: reports = [] } = useImpactReports(inst?.id);
+  const { data: timeline = [] } = useInstitutionTimeline(inst?.id);
 
   if (isLoading) return <SiteLayout><div className="p-12"><LoadingState /></div></SiteLayout>;
   if (isError) return <SiteLayout><div className="p-12"><ErrorState error={error} onRetry={() => refetch()} /></div></SiteLayout>;
   if (!inst) throw notFound();
   const active = needs.filter((n) => n.status !== "fulfilled" && n.status !== "closed");
   const completed = needs.filter((n) => n.status === "fulfilled");
+  const totalRaised = needs.reduce((s, n) => s + Number(n.raised_amount ?? 0), 0);
+  const totalGoal = needs.reduce((s, n) => s + Number(n.goal_amount ?? 0), 0);
+  const trust = transparencyScore({
+    inst,
+    reportsCount: reports.length,
+    needsCount: needs.length,
+    completedNeedsCount: completed.length,
+    totalRaised,
+    totalGoal,
+    lastActivityAt: timeline[0]?.at ?? inst.created_at,
+  });
 
   return (
     <SiteLayout>
