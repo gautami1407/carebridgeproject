@@ -27,7 +27,7 @@ export function transparencyScore(inp: TrustInputs): TrustBreakdown {
   components.push({ label: "Verification", max: 25, got: verifiedPts, detail: `Status: ${inp.inst.verification ?? "unverified"}` });
 
   // Profile completion (15)
-  const fields = [inp.inst.description, inp.inst.cover_image, inp.inst.city, inp.inst.state, inp.inst.residents_count, inp.inst.contact_email];
+  const fields = [inp.inst.description, inp.inst.cover_image, inp.inst.city, inp.inst.state, inp.inst.residents_count, inp.inst.mission];
   const filled = fields.filter(Boolean).length;
   const profilePts = Math.round((filled / fields.length) * 15);
   components.push({ label: "Profile completion", max: 15, got: profilePts, detail: `${filled}/${fields.length} fields filled` });
