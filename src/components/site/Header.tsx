@@ -7,6 +7,7 @@ const navItems = [
   { to: "/", label: "Home" },
   { to: "/explore", label: "Explore Needs" },
   { to: "/institutions", label: "Institutions" },
+  { to: "/impact", label: "Our Impact" },
   { to: "/volunteer", label: "Volunteer" },
   { to: "/stories", label: "Stories" },
   { to: "/about", label: "About" },

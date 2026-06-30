@@ -1,10 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
-import { useInstitutionBySlug, useNeeds, useEvents, useImpactReports } from "@/lib/queries";
+import { useInstitutionBySlug, useNeeds, useEvents, useImpactReports, useInstitutionTimeline } from "@/lib/queries";
 import { NeedCard } from "@/components/site/NeedCard";
-import { MapPin, ArrowLeft, Users, Building2, Calendar } from "lucide-react";
+import { MapPin, ArrowLeft, Users, Building2, Calendar, HeartHandshake, FileText, Activity, CheckCircle2 } from "lucide-react";
 import { needToCardUI, cap } from "@/lib/db-mappers";
 import { LoadingState, ErrorState, EmptyState } from "@/components/app/states";
+import { transparencyScore } from "@/lib/transparency";
+import { TransparencyScore } from "@/components/app/TransparencyScore";
+import type { TimelineEvent } from "@/lib/queries";
 
 export const Route = createFileRoute("/institutions/$slug")({
   component: InstitutionPublic,
@@ -17,12 +20,24 @@ function InstitutionPublic() {
   const { data: needs = [] } = useNeeds({ institutionId: inst?.id });
   const { data: events = [] } = useEvents({ institutionId: inst?.id, upcomingOnly: true });
   const { data: reports = [] } = useImpactReports(inst?.id);
+  const { data: timeline = [] } = useInstitutionTimeline(inst?.id);
 
   if (isLoading) return <SiteLayout><div className="p-12"><LoadingState /></div></SiteLayout>;
   if (isError) return <SiteLayout><div className="p-12"><ErrorState error={error} onRetry={() => refetch()} /></div></SiteLayout>;
   if (!inst) throw notFound();
   const active = needs.filter((n) => n.status !== "fulfilled" && n.status !== "closed");
   const completed = needs.filter((n) => n.status === "fulfilled");
+  const totalRaised = needs.reduce((s, n) => s + Number(n.raised_amount ?? 0), 0);
+  const totalGoal = needs.reduce((s, n) => s + Number(n.goal_amount ?? 0), 0);
+  const trust = transparencyScore({
+    inst,
+    reportsCount: reports.length,
+    needsCount: needs.length,
+    completedNeedsCount: completed.length,
+    totalRaised,
+    totalGoal,
+    lastActivityAt: timeline[0]?.at ?? inst.created_at,
+  });
 
   return (
     <SiteLayout>
@@ -37,9 +52,12 @@ function InstitutionPublic() {
                 <h1 className="mt-1 text-3xl font-bold tracking-tight">{inst.name}</h1>
                 <p className="mt-1 inline-flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="size-3.5" />{[inst.city, inst.state].filter(Boolean).join(", ")}</p>
               </div>
-              {inst.verification === "verified" && (
-                <span className="inline-flex items-center gap-1 rounded-md bg-support/10 px-3 py-1.5 text-xs font-bold text-support">Verified</span>
-              )}
+              <div className="flex flex-wrap items-center gap-2">
+                {inst.verification === "verified" && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-support/10 px-3 py-1.5 text-xs font-bold text-support">Verified</span>
+                )}
+                <TransparencyScore breakdown={trust} />
+              </div>
             </div>
             {inst.description && <p className="mt-4 leading-relaxed text-foreground/80">{inst.description}</p>}
             <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -92,9 +110,39 @@ function InstitutionPublic() {
             </div>
           )}
         </Section>
+        <Section title="Impact timeline">
+          {timeline.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No activity yet.</p>
+          ) : (
+            <ol className="relative ml-3 border-l-2 border-primary/20">
+              {timeline.slice(0, 25).map((t) => (
+                <li key={t.id} className="ml-6 pb-6">
+                  <span className="absolute -left-[9px] grid size-4 place-items-center rounded-full bg-primary text-primary-foreground" aria-hidden>
+                    <TimelineIcon kind={t.kind} />
+                  </span>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{new Date(t.at).toLocaleString()}</p>
+                  <p className="mt-0.5 text-sm font-semibold">{t.title}</p>
+                  {t.subtitle && <p className="text-xs text-muted-foreground">{t.subtitle}</p>}
+                </li>
+              ))}
+            </ol>
+          )}
+        </Section>
       </section>
     </SiteLayout>
   );
+}
+
+function TimelineIcon({ kind }: { kind: TimelineEvent["kind"] }) {
+  const cls = "size-2.5";
+  switch (kind) {
+    case "donation_received": return <HeartHandshake className={cls} />;
+    case "event_conducted": return <Calendar className={cls} />;
+    case "report_published": return <FileText className={cls} />;
+    case "need_completed": return <CheckCircle2 className={cls} />;
+    case "volunteer_joined": return <Users className={cls} />;
+    default: return <Activity className={cls} />;
+  }
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

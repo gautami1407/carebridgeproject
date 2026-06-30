@@ -555,3 +555,155 @@ export async function globalSearch(query: string): Promise<SearchHit[]> {
   );
   return hits;
 }
+
+/* ---------- Donation certificates (Phase 4) ---------- */
+
+export function useMyCertificates() {
+  const uid = useStore((s) => s.session?.id);
+  return useQuery({
+    queryKey: ["my-certificates", uid ?? "anon"],
+    enabled: !!uid,
+    queryFn: async () => {
+      // Get my donations + joined need/institution, then certificates by donation_id
+      const { data: donations, error } = await supabase
+        .from("donations")
+        .select("id, amount, created_at, need:needs(title, institution:institutions(name))")
+        .eq("donor_id", uid!)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      const ids = (donations ?? []).map((d) => d.id);
+      if (ids.length === 0) return [];
+      const { data: certs } = await supabase
+        .from("donation_certificates")
+        .select("donation_id, certificate_no, issued_at")
+        .in("donation_id", ids);
+      const byId = new Map((certs ?? []).map((c) => [c.donation_id, c]));
+      return (donations ?? []).map((d) => {
+        const c = byId.get(d.id);
+        const need = d.need as { title?: string; institution?: { name?: string } | null } | null;
+        return {
+          donationId: d.id,
+          amount: Number(d.amount),
+          createdAt: d.created_at,
+          needTitle: need?.title ?? "Donation",
+          institutionName: need?.institution?.name ?? "CareBridge Institution",
+          certificateNo: c?.certificate_no ?? null,
+          issuedAt: c?.issued_at ?? d.created_at,
+        };
+      });
+    },
+  });
+}
+
+/* ---------- Institution public timeline ---------- */
+
+export type TimelineEvent = {
+  id: string;
+  at: string;
+  kind: "need_created" | "donation_received" | "event_conducted" | "need_completed" | "report_published" | "volunteer_joined";
+  title: string;
+  subtitle?: string;
+};
+
+export function useInstitutionTimeline(institutionId?: string) {
+  return useQuery({
+    queryKey: ["institution-timeline", institutionId ?? "none"],
+    enabled: !!institutionId,
+    queryFn: async (): Promise<TimelineEvent[]> => {
+      const [needs, donations, events, reports] = await Promise.all([
+        supabase.from("needs").select("id, title, created_at, status, updated_at").eq("institution_id", institutionId!).order("created_at", { ascending: false }).limit(40),
+        supabase.from("donations").select("id, amount, created_at, need:needs!inner(title, institution_id)").eq("need.institution_id", institutionId!).order("created_at", { ascending: false }).limit(40),
+        supabase.from("events").select("id, title, starts_at").eq("institution_id", institutionId!).order("starts_at", { ascending: false }).limit(20),
+        supabase.from("impact_reports").select("id, title, published_at, created_at").eq("institution_id", institutionId!).order("created_at", { ascending: false }).limit(20),
+      ]);
+      const out: TimelineEvent[] = [];
+      (needs.data ?? []).forEach((n) => {
+        out.push({ id: `need-${n.id}`, at: n.created_at, kind: "need_created", title: `New need posted`, subtitle: n.title });
+        if (n.status === "fulfilled") out.push({ id: `done-${n.id}`, at: n.updated_at ?? n.created_at, kind: "need_completed", title: `Need completed`, subtitle: n.title });
+      });
+      (donations.data ?? []).forEach((d) => {
+        const need = d.need as { title?: string } | null;
+        out.push({ id: `don-${d.id}`, at: d.created_at, kind: "donation_received", title: `₹${Number(d.amount).toLocaleString()} received`, subtitle: need?.title });
+      });
+      (events.data ?? []).forEach((e) => {
+        out.push({ id: `evt-${e.id}`, at: e.starts_at, kind: "event_conducted", title: `Event: ${e.title}` });
+      });
+      (reports.data ?? []).forEach((r) => {
+        out.push({ id: `rep-${r.id}`, at: r.published_at ?? r.created_at, kind: "report_published", title: `Impact report: ${r.title}` });
+      });
+      return out.sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime()).slice(0, 60);
+    },
+  });
+}
+
+/* ---------- Public platform stats ---------- */
+
+export function usePlatformStats() {
+  return useQuery({
+    queryKey: ["platform-stats"],
+    queryFn: async () => {
+      const [donations, needs, insts, evts] = await Promise.all([
+        supabase.from("donations").select("amount, created_at, need:needs(category, beneficiaries, beneficiaries_count)"),
+        supabase.from("needs").select("id, status, category, beneficiaries, beneficiaries_count, institution:institutions(type)"),
+        supabase.from("institutions").select("id, type, verification"),
+        supabase.from("event_registrations").select("id"),
+      ]);
+      const dons = donations.data ?? [];
+      const nds = needs.data ?? [];
+      const ins = insts.data ?? [];
+
+      const totalAmount = dons.reduce((s, d) => s + Number(d.amount ?? 0), 0);
+      const meals = Math.floor(
+        dons.filter((d) => {
+          const cat = (d.need as { category?: string } | null)?.category;
+          return cat === "food";
+        }).reduce((s, d) => s + Number(d.amount ?? 0), 0) / 60,
+      );
+      const completedNeeds = nds.filter((n) => n.status === "fulfilled").length;
+      const childrenBenef = nds
+        .filter((n) => (n.institution as { type?: string } | null)?.type === "orphanage")
+        .reduce((s, n) => s + Number(n.beneficiaries_count ?? n.beneficiaries ?? 0), 0);
+      const seniorsBenef = nds
+        .filter((n) => (n.institution as { type?: string } | null)?.type === "old_age_home")
+        .reduce((s, n) => s + Number(n.beneficiaries_count ?? n.beneficiaries ?? 0), 0);
+      const verifiedInsts = ins.filter((i) => i.verification === "verified").length;
+      const volunteersActive = (evts.data ?? []).length;
+
+      // Donations by month (last 6 months)
+      const byMonth = new Map<string, number>();
+      const now = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        byMonth.set(d.toLocaleString("en-IN", { month: "short" }), 0);
+      }
+      dons.forEach((d) => {
+        const dt = new Date(d.created_at);
+        const key = dt.toLocaleString("en-IN", { month: "short" });
+        if (byMonth.has(key)) byMonth.set(key, (byMonth.get(key) ?? 0) + Number(d.amount ?? 0));
+      });
+      const trend = Array.from(byMonth, ([month, amount]) => ({ month, amount }));
+
+      // Donations by category
+      const byCat = new Map<string, number>();
+      dons.forEach((d) => {
+        const cat = (d.need as { category?: string } | null)?.category ?? "other";
+        byCat.set(cat, (byCat.get(cat) ?? 0) + Number(d.amount ?? 0));
+      });
+      const categories = Array.from(byCat, ([category, amount]) => ({ category, amount }));
+
+      return {
+        totalAmount,
+        donationsCount: dons.length,
+        meals,
+        completedNeeds,
+        childrenBenef,
+        seniorsBenef,
+        verifiedInsts,
+        volunteersActive,
+        trend,
+        categories,
+      };
+    },
+  });
+}
+

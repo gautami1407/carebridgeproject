@@ -7,6 +7,10 @@ import { StatusBadge } from "@/components/app/AppShell";
 import { LoadingState, ErrorState } from "@/components/app/states";
 import { cap, deadlineLabel } from "@/lib/db-mappers";
 import { useStore } from "@/lib/store";
+import { priorityScore } from "@/lib/scoring";
+import { PriorityBadge } from "@/components/app/PriorityBadge";
+import { ImpactCalculator } from "@/components/app/ImpactCalculator";
+import { impactStatement, suggestedAmounts } from "@/lib/impact";
 
 export const Route = createFileRoute("/needs/$id")({
   component: NeedPublic,
@@ -50,7 +54,7 @@ function NeedPublic() {
         <Link to="/explore" className="inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" />All needs</Link>
         <div className="mt-6 grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <div className="flex flex-wrap items-center gap-2"><StatusBadge status={cap(need.urgency)} /><StatusBadge status={cap(need.category)} /></div>
+            <div className="flex flex-wrap items-center gap-2"><PriorityBadge tier={priorityScore(need).tier} score={priorityScore(need).score} /><StatusBadge status={cap(need.urgency)} /><StatusBadge status={cap(need.category)} /></div>
             <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{need.title}</h1>
             {inst && (
               <p className="mt-2 inline-flex items-center gap-1 text-sm text-muted-foreground"><MapPin className="size-3.5" />{inst.name} • {[inst.city, inst.state].filter(Boolean).join(", ")}</p>
@@ -74,12 +78,13 @@ function NeedPublic() {
             <div className="flex items-baseline justify-between"><span className="text-3xl font-bold">{pct}%</span><span className="text-sm text-muted-foreground">₹{raised.toLocaleString()} / ₹{goal.toLocaleString()}</span></div>
             <div className="h-3 rounded-full bg-surface-strong"><div className="h-full rounded-full bg-support" style={{ width: `${pct}%` }} /></div>
             {done ? (
-              <p className="rounded-md bg-support/10 px-3 py-2 text-sm font-semibold text-support">Thank you! Your donation has been recorded.</p>
+              <div className="rounded-md bg-support/10 px-3 py-2 text-sm font-semibold text-support"><p>Thank you! Your donation has been recorded.</p><p className="mt-1 text-xs font-normal opacity-90">{impactStatement(amount, need.category)}</p></div>
             ) : (
               <>
-                <div className="grid grid-cols-3 gap-2">{[500, 1000, 5000].map((v) => (<button key={v} onClick={() => setAmount(v)} className={`rounded-md border px-3 py-2 text-sm font-semibold ${amount === v ? "border-primary bg-primary/5 text-primary" : "border-border"}`}>₹{v}</button>))}</div>
+                <div className="grid grid-cols-4 gap-2">{suggestedAmounts(need.category).map((v) => (<button key={v} onClick={() => setAmount(v)} className={`rounded-md border px-2 py-2 text-xs font-semibold ${amount === v ? "border-primary bg-primary/5 text-primary" : "border-border"}`}>₹{v >= 1000 ? `${v / 1000}k` : v}</button>))}</div>
                 <label className="sr-only" htmlFor="custom-amount">Custom amount</label>
                 <input id="custom-amount" type="number" min={1} value={amount} onChange={(e) => setAmount(+e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
+                <ImpactCalculator amount={amount} category={need.category} />
                 <button
                   onClick={handleDonate}
                   disabled={donate.isPending || amount < 1}
