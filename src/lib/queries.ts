@@ -707,3 +707,52 @@ export function usePlatformStats() {
   });
 }
 
+/* ---------- Badges & achievements (Phase 4) ---------- */
+
+export function useBadgeCatalog() {
+  return useQuery({
+    queryKey: ["badge-catalog"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("badges").select("*").order("category").order("tier");
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+export function useUserBadges(userId?: string) {
+  const uid = useStore((s) => s.session?.id);
+  const target = userId ?? uid;
+  return useQuery({
+    queryKey: ["user-badges", target ?? "anon"],
+    enabled: !!target,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("user_badges")
+        .select("badge_id, earned_at, badge:badges(*)")
+        .eq("user_id", target!)
+        .order("earned_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+/* ---------- Public volunteer opportunities list (for recommendations) ---------- */
+
+export function useAllOpportunities() {
+  return useQuery({
+    queryKey: ["all-opportunities"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("volunteer_opportunities")
+        .select("*, institution:institutions(name, slug, city, state)")
+        .eq("is_open", true)
+        .order("created_at", { ascending: false })
+        .limit(60);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
