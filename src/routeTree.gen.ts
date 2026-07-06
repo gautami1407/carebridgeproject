@@ -15,6 +15,7 @@ import { Route as StoriesRouteImport } from './routes/stories'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as QrTrackingRouteImport } from './routes/qr-tracking'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MentorAChildRouteImport } from './routes/mentor-a-child'
 import { Route as LoginRouteImport } from './routes/login'
@@ -107,6 +108,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const QrTrackingRoute = QrTrackingRouteImport.update({
   id: '/qr-tracking',
   path: '/qr-tracking',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NotificationsRoute = NotificationsRouteImport.update({
@@ -447,6 +453,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/mentor-a-child': typeof MentorAChildRoute
   '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
   '/qr-tracking': typeof QrTrackingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -515,6 +522,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/mentor-a-child': typeof MentorAChildRoute
   '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
   '/qr-tracking': typeof QrTrackingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -580,6 +588,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/mentor-a-child': typeof MentorAChildRoute
   '/notifications': typeof NotificationsRoute
+  '/profile': typeof ProfileRoute
   '/qr-tracking': typeof QrTrackingRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -653,6 +662,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/mentor-a-child'
     | '/notifications'
+    | '/profile'
     | '/qr-tracking'
     | '/register'
     | '/reset-password'
@@ -721,6 +731,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/mentor-a-child'
     | '/notifications'
+    | '/profile'
     | '/qr-tracking'
     | '/register'
     | '/reset-password'
@@ -785,6 +796,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/mentor-a-child'
     | '/notifications'
+    | '/profile'
     | '/qr-tracking'
     | '/register'
     | '/reset-password'
@@ -857,6 +869,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   MentorAChildRoute: typeof MentorAChildRoute
   NotificationsRoute: typeof NotificationsRoute
+  ProfileRoute: typeof ProfileRoute
   QrTrackingRoute: typeof QrTrackingRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -913,6 +926,13 @@ declare module '@tanstack/react-router' {
       path: '/qr-tracking'
       fullPath: '/qr-tracking'
       preLoaderRoute: typeof QrTrackingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/notifications': {
@@ -1554,6 +1574,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MentorAChildRoute: MentorAChildRoute,
   NotificationsRoute: NotificationsRoute,
+  ProfileRoute: ProfileRoute,
   QrTrackingRoute: QrTrackingRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
