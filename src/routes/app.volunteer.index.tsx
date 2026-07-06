@@ -1,15 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Clock, Calendar, Building2, Award, ArrowRight } from "lucide-react";
+import { Clock, Calendar, Building2, Award, ArrowRight, Sparkles } from "lucide-react";
 import { MetricCard, PageHeader, StatusBadge } from "@/components/app/AppShell";
-import { useMyApplications, useEvents } from "@/lib/queries";
+import { useMyApplications, useEvents, useAllOpportunities, useUserBadges } from "@/lib/queries";
+import { recommendOpportunitiesForVolunteer } from "@/lib/recommend";
+import { iconFor, TIER_STYLES, type BadgeTier } from "@/lib/badges";
 
 export const Route = createFileRoute("/app/volunteer/")({ component: VolunteerDashboard });
 
 function VolunteerDashboard() {
   const { data: apps = [] } = useMyApplications();
   const { data: events = [] } = useEvents({ upcomingOnly: true });
+  const { data: opps = [] } = useAllOpportunities();
+  const { data: myBadges = [] } = useUserBadges();
   const hours = apps.reduce((a, b) => a + Number(b.hours_logged ?? 0), 0);
   const insts = new Set(apps.map((a) => (a.opportunity as { institution_id?: string } | null)?.institution_id).filter(Boolean)).size;
+  const recommended = recommendOpportunitiesForVolunteer(opps as never[], {}, 3);
+
 
   return (
     <div className="mx-auto max-w-6xl">
