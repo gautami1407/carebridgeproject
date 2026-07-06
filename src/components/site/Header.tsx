@@ -48,7 +48,11 @@ export function Header() {
 
         <div className="hidden items-center gap-2 lg:flex">
           {session ? (
-            <Link to="/app" className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft hover:brightness-110">Open app</Link>
+            <>
+              <Link to="/profile" className="rounded-md px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted">Profile</Link>
+              <Link to="/app" className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft hover:brightness-110">Open app</Link>
+            </>
+
           ) : (
             <>
               <Link to="/login" className="rounded-md px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted">Login</Link>
