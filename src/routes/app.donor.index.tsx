@@ -1,8 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { HeartHandshake, Heart, Building2, Activity, ArrowRight } from "lucide-react";
+import { HeartHandshake, Heart, Building2, Activity, ArrowRight, Award } from "lucide-react";
 import { MetricCard, PageHeader, StatusBadge } from "@/components/app/AppShell";
-import { useMyDonations, useNeeds } from "@/lib/queries";
+import { useMyDonations, useNeeds, useUserBadges } from "@/lib/queries";
 import { LoadingState } from "@/components/app/states";
+import { recommendNeedsForDonor } from "@/lib/recommend";
+import { iconFor, TIER_STYLES, type BadgeTier } from "@/lib/badges";
+
 
 export const Route = createFileRoute("/app/donor/")({ component: DonorDashboard });
 
