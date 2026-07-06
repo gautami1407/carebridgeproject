@@ -12,12 +12,19 @@ export const Route = createFileRoute("/app/donor/")({ component: DonorDashboard 
 function DonorDashboard() {
   const { data: donations = [], isLoading } = useMyDonations();
   const { data: openNeeds = [] } = useNeeds({ onlyActive: true });
+  const { data: myBadges = [] } = useUserBadges();
 
   const total = donations.reduce((a, b) => a + Number(b.amount), 0);
   const causes = new Set(donations.map((d) => d.need_id)).size;
   const insts = new Set(
     donations.map((d) => (d.need as { institution_id?: string | null } | null)?.institution_id).filter(Boolean),
   ).size;
+
+  const pastCategories = donations
+    .map((d) => (d.need as { category?: string } | null)?.category)
+    .filter((c): c is string => !!c);
+  const recommended = recommendNeedsForDonor(openNeeds, pastCategories, 3);
+
 
   return (
     <div className="mx-auto max-w-6xl">
