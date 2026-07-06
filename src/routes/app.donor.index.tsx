@@ -66,11 +66,12 @@ function DonorDashboard() {
         </div>
         <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
           <h2 className="text-lg font-bold">Recommended for you</h2>
-          {openNeeds.length === 0 ? (
+          <p className="text-xs text-muted-foreground">Based on your giving history</p>
+          {recommended.length === 0 ? (
             <p className="mt-4 text-sm text-muted-foreground">No open needs right now.</p>
           ) : (
             <ul className="mt-4 space-y-4">
-              {openNeeds.slice(0, 3).map((n) => {
+              {recommended.map((n) => {
                 const pct = Math.round((Number(n.raised_amount) / Math.max(1, Number(n.goal_amount))) * 100);
                 return (
                   <li key={n.id}>
@@ -84,6 +85,34 @@ function DonorDashboard() {
             </ul>
           )}
         </div>
+      </div>
+
+      <div className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-soft">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-bold flex items-center gap-2"><Award className="size-5 text-primary" /> Your achievements</h2>
+            <p className="text-xs text-muted-foreground">{myBadges.length} badge{myBadges.length === 1 ? "" : "s"} earned</p>
+          </div>
+          <Link to="/profile" className="text-sm font-semibold text-primary hover:underline">View profile <ArrowRight className="ml-0.5 inline size-3.5" /></Link>
+        </div>
+        {myBadges.length === 0 ? (
+          <p className="mt-4 text-sm text-muted-foreground">Make your first donation to unlock the <span className="font-semibold text-foreground">First Steps</span> badge.</p>
+        ) : (
+          <ul className="mt-4 flex flex-wrap gap-3">
+            {myBadges.slice(0, 6).map((ub) => {
+              const b = ub.badge as { name: string; icon: string; tier: string } | null;
+              if (!b) return null;
+              const Icon = iconFor(b.icon);
+              const tone = TIER_STYLES[(b.tier as BadgeTier) ?? "bronze"];
+              return (
+                <li key={ub.badge_id} title={b.name} className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold ${tone.chip}`}>
+                  <Icon className="size-3.5" aria-hidden />
+                  {b.name}
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
     </div>
   );
