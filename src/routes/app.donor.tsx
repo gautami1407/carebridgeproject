@@ -1,2 +1,6 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-export const Route = createFileRoute("/app/donor")({ component: () => <Outlet /> });
+import { createFileRoute } from "@tanstack/react-router";
+import { RoleGuard } from "@/components/app/RoleGuard";
+
+export const Route = createFileRoute("/app/donor")({
+  component: () => <RoleGuard allow={["donor"]} areaLabel="the donor dashboard" />,
+});

@@ -1,10 +1,11 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/app/AppShell";
+import { SessionGuard } from "@/components/app/RoleGuard";
 
 export const Route = createFileRoute("/app")({
   component: () => (
     <AppShell>
-      <Outlet />
+      <SessionGuard />
     </AppShell>
   ),
 });
