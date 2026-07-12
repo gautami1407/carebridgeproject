@@ -757,6 +757,7 @@ export type Database = {
         Args: { _code: string; _user_id: string }
         Returns: undefined
       }
+      get_donation_message: { Args: { _donation_id: string }; Returns: string }
     }
     Enums: {
       activity_type:
