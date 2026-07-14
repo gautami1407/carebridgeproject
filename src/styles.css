@@ -5,9 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * CareBridge design system.
- * Modern humanitarian platform — clean, trustworthy, hopeful.
- * Primary: deep trust blue. Secondary: growth green. Accent: urgent orange.
+ * CareBridge design system — Ocean Deep edition.
+ * Editorial serif headlines, humanist sans body.
+ * Palette: navy #0c2340, deep #1a4a6e, teal #2d8a9e, mint #5cbdb9.
  */
 
 @theme inline {
@@ -52,117 +52,128 @@
   --color-surface: var(--surface);
   --color-surface-strong: var(--surface-strong);
 
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-teal: var(--brand-teal);
+  --color-brand-mint: var(--brand-mint);
+  --color-brand-ink: var(--brand-ink);
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
 
-  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.04), 0 4px 16px oklch(0 0 0 / 0.04);
-  --shadow-lift: 0 1px 2px oklch(0 0 0 / 0.04), 0 10px 30px oklch(0 0 0 / 0.08);
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.04), 0 4px 16px oklch(0 0 0 / 0.05);
+  --shadow-lift: 0 1px 2px oklch(0 0 0 / 0.05), 0 18px 40px oklch(0 0 0 / 0.10);
+  --shadow-glow: 0 12px 40px -12px color-mix(in oklab, #2d8a9e 45%, transparent);
+
+  --gradient-hero: radial-gradient(1200px 600px at 15% -10%, color-mix(in oklab, #2d8a9e 22%, transparent), transparent 55%),
+                   radial-gradient(900px 500px at 90% 110%, color-mix(in oklab, #5cbdb9 20%, transparent), transparent 60%),
+                   linear-gradient(180deg, #0c2340 0%, #0a1c33 100%);
 }
 
 :root {
-  --radius: 0.75rem;
+  --radius: 0.9rem;
 
-  /* Surfaces — clean off-white */
-  --background: #FAFAFA;
-  --foreground: #1A1A1A;
-  --surface: #F4F5F7;
-  --surface-strong: #ECEEF2;
+  /* Brand palette (Ocean Deep) */
+  --brand-ink: #0c2340;
+  --brand-deep: #1a4a6e;
+  --brand-teal: #2d8a9e;
+  --brand-mint: #5cbdb9;
 
-  --card: #FFFFFF;
-  --card-foreground: #1A1A1A;
-  --popover: #FFFFFF;
-  --popover-foreground: #1A1A1A;
+  /* Surfaces — warm off-white with a hint of navy */
+  --background: #f8fafc;
+  --foreground: #0c2340;
+  --surface: #f1f5f9;
+  --surface-strong: #e2e8f0;
 
-  /* Deep navy — primary brand */
-  --primary: #0B1F3A;
-  --primary-foreground: #FAFAFA;
+  --card: #ffffff;
+  --card-foreground: #0c2340;
+  --popover: #ffffff;
+  --popover-foreground: #0c2340;
 
-  /* Neutral secondary */
-  --secondary: #ECEEF2;
-  --secondary-foreground: #0B1F3A;
+  /* Primary = deep navy */
+  --primary: #0c2340;
+  --primary-foreground: #f8fafc;
 
-  --muted: #F1F3F6;
-  --muted-foreground: #5A6473;
+  --secondary: #e2e8f0;
+  --secondary-foreground: #0c2340;
 
-  /* Accent surface — amber tint */
-  --accent: #FFF6E0;
-  --accent-foreground: #6B4A00;
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
 
-  /* Growth green — secondary action / success */
-  --support: #00A86B;
-  --support-foreground: #FAFAFA;
+  /* Accent surface — light mint tint */
+  --accent: #eafaf7;
+  --accent-foreground: #0c2340;
 
-  /* Amber accent — urgent / highlight */
-  --urgent: #FFB703;
-  --urgent-foreground: #1A1A1A;
+  /* Support = teal (progress, verified, success chips) */
+  --support: #2d8a9e;
+  --support-foreground: #ffffff;
 
-  --destructive: #EF4444;
-  --destructive-foreground: #FAFAFA;
+  /* Urgent = warm coral for critical priority against the cool palette */
+  --urgent: #e05252;
+  --urgent-foreground: #ffffff;
 
-  --border: #E4E7EC;
-  --input: #E4E7EC;
-  --ring: #0B1F3A;
+  --destructive: #e05252;
+  --destructive-foreground: #ffffff;
 
-  /* Status semantics */
-  --success: #22C55E;
-  --success-foreground: #FAFAFA;
-  --warning: #F59E0B;
-  --warning-foreground: #1A1A1A;
-  --danger: #EF4444;
-  --danger-foreground: #FAFAFA;
+  --border: #dde5ed;
+  --input: #dde5ed;
+  --ring: #2d8a9e;
 
-  --chart-1: #0B1F3A;
-  --chart-2: #00A86B;
-  --chart-3: #FFB703;
-  --chart-4: #3B82F6;
-  --chart-5: #22C55E;
+  --success: #15803d;
+  --success-foreground: #ffffff;
+  --warning: #d97706;
+  --warning-foreground: #ffffff;
+  --danger: #dc2626;
+  --danger-foreground: #ffffff;
 
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #1A1A1A;
-  --sidebar-primary: #0B1F3A;
-  --sidebar-primary-foreground: #FAFAFA;
-  --sidebar-accent: #F1F3F6;
-  --sidebar-accent-foreground: #0B1F3A;
-  --sidebar-border: #E4E7EC;
-  --sidebar-ring: #0B1F3A;
+  --chart-1: #0c2340;
+  --chart-2: #2d8a9e;
+  --chart-3: #5cbdb9;
+  --chart-4: #1a4a6e;
+  --chart-5: #d97706;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0c2340;
+  --sidebar-primary: #0c2340;
+  --sidebar-primary-foreground: #f8fafc;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0c2340;
+  --sidebar-border: #dde5ed;
+  --sidebar-ring: #2d8a9e;
 }
-
 
 .dark {
-  --background: #0B1220;
-  --foreground: #FAFAFA;
-  --surface: #111A2E;
-  --surface-strong: #18243D;
-  --card: #111A2E;
-  --card-foreground: #FAFAFA;
-  --popover: #111A2E;
-  --popover-foreground: #FAFAFA;
-  --primary: #4D7BC9;
-  --primary-foreground: #0B1F3A;
-  --secondary: #1B2742;
-  --secondary-foreground: #FAFAFA;
-  --muted: #1B2742;
-  --muted-foreground: #9AA4B8;
-  --accent: #1B2742;
-  --accent-foreground: #FAFAFA;
-  --support: #34C58A;
-  --support-foreground: #06241A;
-  --urgent: #FFC940;
-  --urgent-foreground: #1A1A1A;
-  --destructive: #F87171;
-  --destructive-foreground: #FAFAFA;
-  --success: #34D399;
-  --success-foreground: #06241A;
-  --warning: #FBBF24;
-  --warning-foreground: #1A1A1A;
-  --danger: #F87171;
-  --danger-foreground: #FAFAFA;
-  --border: rgba(255,255,255,0.10);
-  --input: rgba(255,255,255,0.14);
-  --ring: #4D7BC9;
+  --background: #05121f;
+  --foreground: #eaf3f7;
+  --surface: #0a1c30;
+  --surface-strong: #12283f;
+  --card: #0a1c30;
+  --card-foreground: #eaf3f7;
+  --popover: #0a1c30;
+  --popover-foreground: #eaf3f7;
+  --primary: #5cbdb9;
+  --primary-foreground: #05121f;
+  --secondary: #12283f;
+  --secondary-foreground: #eaf3f7;
+  --muted: #12283f;
+  --muted-foreground: #9db3c3;
+  --accent: #12283f;
+  --accent-foreground: #eaf3f7;
+  --support: #5cbdb9;
+  --support-foreground: #05121f;
+  --urgent: #f87171;
+  --urgent-foreground: #ffffff;
+  --destructive: #f87171;
+  --destructive-foreground: #ffffff;
+  --success: #34d399;
+  --success-foreground: #05121f;
+  --warning: #fbbf24;
+  --warning-foreground: #05121f;
+  --danger: #f87171;
+  --danger-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.10);
+  --input: rgba(255, 255, 255, 0.14);
+  --ring: #5cbdb9;
 }
-
 
 @layer base {
   * {
@@ -176,8 +187,35 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
   }
   h1, h2, h3, h4 {
-    letter-spacing: -0.02em;
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    font-weight: 400;
   }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+@utility bg-hero-ocean {
+  background-image: var(--gradient-hero);
+}
+
+@utility ring-focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--ring);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@utility animate-marquee {
+  animation: marquee 40s linear infinite;
 }
