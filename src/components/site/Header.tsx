@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useStore } from "@/lib/store";
 
@@ -13,26 +13,32 @@ const navItems = [
   { to: "/about", label: "About" },
 ] as const;
 
+function BrandMark() {
+  return (
+    <Link to="/" className="flex shrink-0 items-center gap-2.5">
+      <span className="grid size-9 place-items-center rounded-lg bg-[color:var(--brand-ink)] text-[color:var(--brand-mint)]">
+        <span className="block size-4 rotate-45 border-2 border-current" />
+      </span>
+      <span className="flex flex-col leading-none">
+        <span className="font-display text-2xl tracking-tight text-foreground">CareBridge</span>
+        <span className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground sm:block">
+          Care · Community
+        </span>
+      </span>
+    </Link>
+  );
+}
+
 export function Header() {
   const [open, setOpen] = useState(false);
   const session = useStore((s) => s.session);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <span className="grid size-9 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <Heart className="size-5" strokeWidth={2.5} />
-          </span>
-          <span className="flex flex-col leading-none">
-            <span className="text-base font-bold tracking-tight text-foreground">CareBridge</span>
-            <span className="hidden text-[10px] font-medium uppercase tracking-wider text-muted-foreground sm:block">
-              Care • Community
-            </span>
-          </span>
-        </Link>
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-lg">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+        <BrandMark />
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-8 lg:flex">
           {navItems.map((item) => (
             <Link
               key={item.to}
@@ -49,14 +55,33 @@ export function Header() {
         <div className="hidden items-center gap-2 lg:flex">
           {session ? (
             <>
-              <Link to="/profile" className="rounded-md px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted">Profile</Link>
-              <Link to="/app" className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft hover:brightness-110">Open app</Link>
+              <Link
+                to="/profile"
+                className="rounded-full px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted"
+              >
+                Profile
+              </Link>
+              <Link
+                to="/app"
+                className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition hover:brightness-110"
+              >
+                Open app
+              </Link>
             </>
-
           ) : (
             <>
-              <Link to="/login" className="rounded-md px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted">Login</Link>
-              <Link to="/register" className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-soft hover:brightness-110">Register</Link>
+              <Link
+                to="/login"
+                className="rounded-full border border-transparent px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft transition hover:brightness-110"
+              >
+                Register
+              </Link>
             </>
           )}
         </div>
@@ -64,7 +89,7 @@ export function Header() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="grid size-10 place-items-center rounded-md border border-border lg:hidden"
+          className="grid size-10 place-items-center rounded-full border border-border lg:hidden"
           aria-label="Toggle menu"
         >
           {open ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -79,7 +104,7 @@ export function Header() {
                 key={item.to}
                 to={item.to}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
                 activeProps={{ className: "bg-muted text-foreground" }}
                 activeOptions={{ exact: item.to === "/" }}
               >
@@ -90,14 +115,14 @@ export function Header() {
               <Link
                 to="/login"
                 onClick={() => setOpen(false)}
-                className="rounded-md border border-border px-3 py-2 text-center text-sm font-semibold"
+                className="rounded-full border border-border px-3 py-2 text-center text-sm font-semibold"
               >
                 Login
               </Link>
               <Link
                 to="/register"
                 onClick={() => setOpen(false)}
-                className="rounded-md bg-primary px-3 py-2 text-center text-sm font-semibold text-primary-foreground"
+                className="rounded-full bg-primary px-3 py-2 text-center text-sm font-semibold text-primary-foreground"
               >
                 Register
               </Link>
