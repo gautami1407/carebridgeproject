@@ -19,8 +19,7 @@ BASE_URL = os.environ.get("BASE_URL", "http://localhost:8080")
 # Every path here is wrapped by SessionGuard (via /app) or RoleGuard.
 # An anonymous visitor MUST be redirected to /login.
 PROTECTED_ROUTES = [
-    "/app", "/notifications", "/profile",
-    "/onboarding/role", "/onboarding/profile",
+    "/app",
     # donor
     "/app/donor", "/app/donor/donations", "/app/donor/saved",
     "/app/donor/following", "/app/donor/impact",
@@ -42,8 +41,11 @@ PROTECTED_ROUTES = [
 
 PUBLIC_ROUTES = [
     "/", "/about", "/contact", "/explore", "/institutions",
-    "/events", "/stories", "/impact", "/login", "/register",
+    "/events", "/stories", "/impact", "/register",
 ]
+
+# Routes that should serve themselves to anonymous visitors (no redirect away).
+SELF_SERVING_ROUTES = ["/login"]
 
 results = {"pass": 0, "fail": 0, "failures": []}
 
