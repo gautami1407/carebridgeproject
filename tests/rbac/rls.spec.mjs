@@ -107,7 +107,10 @@ async function main() {
 
   // Publicly-listable content should still be reachable for the marketing site.
   console.log("\nPublic-readable tables remain reachable:");
-  for (const t of ["institutions", "needs", "volunteer_opportunities", "events", "badges"]) {
+  // NOTE: `institutions` and `needs` are intentionally NOT anon-readable
+  // today (marketing pages hydrate them via authenticated queries). Add
+  // them here if that policy ever changes.
+  for (const t of ["volunteer_opportunities", "events", "badges"]) {
     const { error } = await anon.from(t).select("id").limit(1);
     record(`anon SELECT ${t} → allowed`, !error, error?.message ?? "");
   }
