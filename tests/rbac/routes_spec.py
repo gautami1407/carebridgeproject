@@ -71,33 +71,59 @@ async def wait_for_redirect(page, timeout_ms=4000):
     return urlparse(page.url).path
 
 
+async def visit_fresh(browser, path):
+    """Open a fresh incognito context so cookies AND localStorage are empty.
+
+    Supabase persists its session in localStorage, so `clear_cookies()`
+    alone is not enough to guarantee an anonymous visit.
+    """
+    context = await browser.new_context(viewport={"width": 1280, "height": 900})
+    page = await context.new_page()
+    try:
+        resp = await page.goto(f"{BASE_URL}{path}", wait_until="domcontentloaded")
+        await page.wait_for_timeout(200)
+        return page, resp, context
+    except Exception:
+        await context.close()
+        raise
+
+
 async def main():
     print(f"\nRBAC route-guard regression — {BASE_URL}\n")
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=True)
-        context = await browser.new_context(viewport={"width": 1280, "height": 900})
-        page = await context.new_page()
 
         print("Protected routes (anonymous → /login):")
         for path in PROTECTED_ROUTES:
             try:
-                await context.clear_cookies()
-                await page.goto(f"{BASE_URL}{path}", wait_until="domcontentloaded")
+                page, _, context = await visit_fresh(browser, path)
                 final_path = await wait_for_redirect(page)
                 record(path, final_path == "/login", f"landed on {final_path}")
+                await context.close()
             except Exception as e:
                 record(path, False, f"error: {e}")
 
         print("\nPublic routes (reachable while anonymous):")
         for path in PUBLIC_ROUTES:
             try:
-                await context.clear_cookies()
-                resp = await page.goto(f"{BASE_URL}{path}", wait_until="domcontentloaded")
-                await page.wait_for_timeout(300)
+                page, resp, context = await visit_fresh(browser, path)
                 final_path = urlparse(page.url).path
                 status = resp.status if resp else 0
                 ok = status < 400 and final_path != "/login"
                 record(path, ok, f"status={status} path={final_path}")
+                await context.close()
+            except Exception as e:
+                record(path, False, f"error: {e}")
+
+        print("\nSelf-serving routes (stay on the requested path):")
+        for path in SELF_SERVING_ROUTES:
+            try:
+                page, resp, context = await visit_fresh(browser, path)
+                final_path = urlparse(page.url).path
+                status = resp.status if resp else 0
+                ok = status < 400 and final_path == path
+                record(path, ok, f"status={status} path={final_path}")
+                await context.close()
             except Exception as e:
                 record(path, False, f"error: {e}")
 
