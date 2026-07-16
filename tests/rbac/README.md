@@ -7,24 +7,23 @@ Two suites, run independently:
 
 | Suite | File | What it verifies |
 | ----- | ---- | ---------------- |
-| Route guards | `tests/rbac/routes.spec.mjs` | Every `/app/*` route (donor, volunteer, mentor, institution, admin) redirects an anonymous browser to `/login`; marketing routes stay public. |
-| RLS policies | `tests/rbac/rls.spec.mjs` | The anonymous Supabase client cannot read private tables (`donations`, `notifications`, `user_roles`, `profiles_private`, …) and cannot INSERT/UPDATE/DELETE sensitive tables. Public tables (`needs`, `institutions`, `events`, `badges`, `volunteer_opportunities`) remain readable. |
+| Route guards | `tests/rbac/routes_spec.py` | Every `/app/*` route (donor, volunteer, mentor, institution, admin) redirects an anonymous browser to `/login`; marketing routes stay public. |
+| RLS policies | `tests/rbac/rls.spec.mjs` | The anonymous Supabase client cannot read private tables (`donations`, `notifications`, `user_roles`, `profiles_private`, …) and cannot INSERT/UPDATE/DELETE sensitive tables. Known-public tables (`volunteer_opportunities`, `events`, `badges`) remain readable. |
 
 ## Running
 
 ```bash
 # 1) Route guards — needs the dev server running on :8080
-node tests/rbac/routes.spec.mjs
+python3 tests/rbac/routes_spec.py
 
 # 2) RLS — hits the live Supabase Data API with the anon key
 node tests/rbac/rls.spec.mjs
 ```
 
 Both scripts exit non-zero on the first failure, making them safe to wire
-into CI. `routes.spec.mjs` uses Playwright's bundled Chromium (already
-available in the sandbox); `rls.spec.mjs` uses `@supabase/supabase-js`
-(already a project dependency) and reads `SUPABASE_URL` /
-`SUPABASE_PUBLISHABLE_KEY` from `.env`.
+into CI. `routes_spec.py` uses Playwright's bundled Chromium; `rls.spec.mjs`
+uses `@supabase/supabase-js` (already a project dependency) and reads
+`SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` from `.env`.
 
 ## What is NOT covered
 
