@@ -122,13 +122,25 @@ function NeedPublic() {
             <Link to="/volunteer" className="block w-full rounded-md border border-border px-4 py-2.5 text-center text-sm font-semibold hover:bg-muted">Volunteer instead</Link>
             <div className="flex gap-2">
               <button
-                onClick={() => session ? toggleSaved.mutate({ entityId: id, entityType: "need" }) : (window.location.href = "/login")}
+                onClick={() => {
+                  if (!session) { window.location.href = "/login"; return; }
+                  toggleSaved.mutate(
+                    { entityId: id, entityType: "need" },
+                    { onSuccess: (r) => toast.success(r.saved ? "Saved to your list" : "Removed from saved") },
+                  );
+                }}
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-border px-3 py-2 text-xs font-semibold hover:bg-muted"
                 aria-pressed={isSaved}
               >
                 <Bookmark className={`size-3.5 ${isSaved ? "fill-primary text-primary" : ""}`} />{isSaved ? "Saved" : "Save"}
               </button>
-              <button onClick={() => navigator.clipboard?.writeText(window.location.href)} className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-border px-3 py-2 text-xs font-semibold hover:bg-muted"><Share2 className="size-3.5" />Share</button>
+              <button
+                onClick={() => {
+                  navigator.clipboard?.writeText(window.location.href);
+                  toast.success("Link copied to clipboard");
+                }}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-border px-3 py-2 text-xs font-semibold hover:bg-muted"
+              ><Share2 className="size-3.5" />Share</button>
             </div>
             {inst && (
               <Link to="/institutions/$slug" params={{ slug: inst.slug }} className="block rounded-xl border border-border p-3 text-xs hover:bg-muted">
