@@ -1,8 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { useNeed, useDonate, useToggleSaved, useSavedItems } from "@/lib/queries";
-import { ArrowLeft, MapPin, Share2, Bookmark, Heart, Users, Clock, Loader2 } from "lucide-react";
+import { ArrowLeft, MapPin, Share2, Bookmark, Heart, Users, Clock, Loader2, CheckCircle2 } from "lucide-react";
 import { StatusBadge } from "@/components/app/AppShell";
 import { LoadingState, ErrorState } from "@/components/app/states";
 import { cap, deadlineLabel } from "@/lib/db-mappers";
@@ -28,6 +29,8 @@ function NeedPublic() {
   const { data: saved = [] } = useSavedItems();
   const isSaved = saved.some((s) => s.entity_id === id && s.entity_type === "need");
   const [amount, setAmount] = useState(1000);
+  const [message, setMessage] = useState("");
+  const [anonymous, setAnonymous] = useState(false);
   const [done, setDone] = useState(false);
 
   if (isLoading) return <SiteLayout><div className="p-12"><LoadingState /></div></SiteLayout>;
@@ -40,11 +43,15 @@ function NeedPublic() {
 
   async function handleDonate() {
     if (!session) { window.location.href = "/login?next=" + encodeURIComponent(`/needs/${id}`); return; }
+    if (amount < 1) { toast.error("Enter an amount"); return; }
     try {
-      await donate.mutateAsync({ needId: id, amount });
+      await donate.mutateAsync({ needId: id, amount, message: message.trim() || undefined, anonymous });
       setDone(true);
+      toast.success(`Thank you! ₹${amount.toLocaleString()} donated`, {
+        description: impactStatement(amount, need!.category),
+      });
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Donation failed");
+      toast.error("Donation failed", { description: e instanceof Error ? e.message : "Please try again." });
     }
   }
 
@@ -78,12 +85,29 @@ function NeedPublic() {
             <div className="flex items-baseline justify-between"><span className="text-3xl font-bold">{pct}%</span><span className="text-sm text-muted-foreground">₹{raised.toLocaleString()} / ₹{goal.toLocaleString()}</span></div>
             <div className="h-3 rounded-full bg-surface-strong"><div className="h-full rounded-full bg-support" style={{ width: `${pct}%` }} /></div>
             {done ? (
-              <div className="rounded-md bg-support/10 px-3 py-2 text-sm font-semibold text-support"><p>Thank you! Your donation has been recorded.</p><p className="mt-1 text-xs font-normal opacity-90">{impactStatement(amount, need.category)}</p></div>
+              <div className="space-y-2 rounded-md bg-support/10 p-4 text-sm text-support">
+                <p className="flex items-center gap-1.5 font-bold"><CheckCircle2 className="size-4" /> Donation confirmed</p>
+                <p className="text-xs opacity-90">{impactStatement(amount, need.category)}</p>
+                <Link to="/app/donor/donations" className="mt-2 inline-block rounded-md bg-support px-3 py-1.5 text-xs font-bold text-white hover:brightness-110">
+                  View certificate →
+                </Link>
+              </div>
             ) : (
               <>
                 <div className="grid grid-cols-4 gap-2">{suggestedAmounts(need.category).map((v) => (<button key={v} onClick={() => setAmount(v)} className={`rounded-md border px-2 py-2 text-xs font-semibold ${amount === v ? "border-primary bg-primary/5 text-primary" : "border-border"}`}>₹{v >= 1000 ? `${v / 1000}k` : v}</button>))}</div>
                 <label className="sr-only" htmlFor="custom-amount">Custom amount</label>
                 <input id="custom-amount" type="number" min={1} value={amount} onChange={(e) => setAmount(+e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value.slice(0, 280))}
+                  placeholder="Add a message of support (optional)"
+                  rows={2}
+                  className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+                <label className="flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
+                  <input type="checkbox" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} className="size-3.5 rounded border-border" />
+                  Donate anonymously
+                </label>
                 <ImpactCalculator amount={amount} category={need.category} />
                 <button
                   onClick={handleDonate}
@@ -98,13 +122,25 @@ function NeedPublic() {
             <Link to="/volunteer" className="block w-full rounded-md border border-border px-4 py-2.5 text-center text-sm font-semibold hover:bg-muted">Volunteer instead</Link>
             <div className="flex gap-2">
               <button
-                onClick={() => session ? toggleSaved.mutate({ entityId: id, entityType: "need" }) : (window.location.href = "/login")}
+                onClick={() => {
+                  if (!session) { window.location.href = "/login"; return; }
+                  toggleSaved.mutate(
+                    { entityId: id, entityType: "need" },
+                    { onSuccess: (r) => toast.success(r.saved ? "Saved to your list" : "Removed from saved") },
+                  );
+                }}
                 className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-border px-3 py-2 text-xs font-semibold hover:bg-muted"
                 aria-pressed={isSaved}
               >
                 <Bookmark className={`size-3.5 ${isSaved ? "fill-primary text-primary" : ""}`} />{isSaved ? "Saved" : "Save"}
               </button>
-              <button onClick={() => navigator.clipboard?.writeText(window.location.href)} className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-border px-3 py-2 text-xs font-semibold hover:bg-muted"><Share2 className="size-3.5" />Share</button>
+              <button
+                onClick={() => {
+                  navigator.clipboard?.writeText(window.location.href);
+                  toast.success("Link copied to clipboard");
+                }}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-border px-3 py-2 text-xs font-semibold hover:bg-muted"
+              ><Share2 className="size-3.5" />Share</button>
             </div>
             {inst && (
               <Link to="/institutions/$slug" params={{ slug: inst.slug }} className="block rounded-xl border border-border p-3 text-xs hover:bg-muted">

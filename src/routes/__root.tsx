@@ -12,6 +12,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { useAuthSync } from "@/hooks/use-auth-sync";
+import { useRealtimeSync } from "@/hooks/use-realtime";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -134,11 +136,13 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthSyncBridge />
       <Outlet />
+      <Toaster position="top-right" richColors closeButton />
     </QueryClientProvider>
   );
 }
 
 function AuthSyncBridge() {
   useAuthSync();
+  useRealtimeSync();
   return null;
 }
