@@ -1,8 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { useNeed, useDonate, useToggleSaved, useSavedItems } from "@/lib/queries";
-import { ArrowLeft, MapPin, Share2, Bookmark, Heart, Users, Clock, Loader2 } from "lucide-react";
+import { ArrowLeft, MapPin, Share2, Bookmark, Heart, Users, Clock, Loader2, CheckCircle2 } from "lucide-react";
 import { StatusBadge } from "@/components/app/AppShell";
 import { LoadingState, ErrorState } from "@/components/app/states";
 import { cap, deadlineLabel } from "@/lib/db-mappers";
@@ -28,6 +29,8 @@ function NeedPublic() {
   const { data: saved = [] } = useSavedItems();
   const isSaved = saved.some((s) => s.entity_id === id && s.entity_type === "need");
   const [amount, setAmount] = useState(1000);
+  const [message, setMessage] = useState("");
+  const [anonymous, setAnonymous] = useState(false);
   const [done, setDone] = useState(false);
 
   if (isLoading) return <SiteLayout><div className="p-12"><LoadingState /></div></SiteLayout>;
@@ -40,11 +43,15 @@ function NeedPublic() {
 
   async function handleDonate() {
     if (!session) { window.location.href = "/login?next=" + encodeURIComponent(`/needs/${id}`); return; }
+    if (amount < 1) { toast.error("Enter an amount"); return; }
     try {
-      await donate.mutateAsync({ needId: id, amount });
+      await donate.mutateAsync({ needId: id, amount, message: message.trim() || undefined, anonymous });
       setDone(true);
+      toast.success(`Thank you! ₹${amount.toLocaleString()} donated`, {
+        description: impactStatement(amount, need!.category),
+      });
     } catch (e) {
-      alert(e instanceof Error ? e.message : "Donation failed");
+      toast.error("Donation failed", { description: e instanceof Error ? e.message : "Please try again." });
     }
   }
 
