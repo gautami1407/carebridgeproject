@@ -1,64 +1,65 @@
 import { Link } from "@tanstack/react-router";
+import { Heart } from "lucide-react";
 
 export function Footer() {
   return (
     <footer className="border-t border-border bg-surface">
-      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 md:grid-cols-4">
+      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-4">
         <div className="md:col-span-1">
-          <Link to="/" className="flex items-center gap-2.5">
-            <span className="grid size-9 place-items-center rounded-lg bg-[color:var(--brand-ink)] text-[color:var(--brand-mint)]">
-              <span className="block size-4 rotate-45 border-2 border-current" />
+          <Link to="/" className="flex items-center gap-2">
+            <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
+              <Heart className="size-4" strokeWidth={2.5} />
             </span>
-            <span className="font-display text-2xl tracking-tight">CareBridge</span>
+            <span className="text-base font-bold tracking-tight">CareBridge</span>
           </Link>
-          <p className="mt-5 max-w-xs text-sm leading-relaxed text-muted-foreground">
-            Connecting verified care institutions with donors, volunteers, and mentors who
-            make real, measurable impact.
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
+            Connecting verified care institutions with donors, volunteers, and mentors who make
+            real impact.
           </p>
         </div>
 
         <div>
-          <h5 className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+          <h5 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Platform
           </h5>
           <ul className="mt-5 space-y-3 text-sm">
-            <li><Link to="/explore" className="text-foreground/80 hover:text-[color:var(--brand-teal)]">Explore Needs</Link></li>
-            <li><Link to="/institutions" className="text-foreground/80 hover:text-[color:var(--brand-teal)]">Institutions</Link></li>
-            <li><Link to="/volunteer" className="text-foreground/80 hover:text-[color:var(--brand-teal)]">Volunteer</Link></li>
-            <li><Link to="/stories" className="text-foreground/80 hover:text-[color:var(--brand-teal)]">Success Stories</Link></li>
-            <li><Link to="/impact" className="text-foreground/80 hover:text-[color:var(--brand-teal)]">Our Impact</Link></li>
+            <li><Link to="/explore" className="text-foreground/80 hover:text-primary">Explore Needs</Link></li>
+            <li><Link to="/institutions" className="text-foreground/80 hover:text-primary">Institutions</Link></li>
+            <li><Link to="/volunteer" className="text-foreground/80 hover:text-primary">Volunteer</Link></li>
+            <li><Link to="/stories" className="text-foreground/80 hover:text-primary">Success Stories</Link></li>
           </ul>
         </div>
 
         <div>
-          <h5 className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+          <h5 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Organization
           </h5>
           <ul className="mt-5 space-y-3 text-sm">
-            <li><Link to="/about" className="text-foreground/80 hover:text-[color:var(--brand-teal)]">About</Link></li>
-            <li><Link to="/contact" className="text-foreground/80 hover:text-[color:var(--brand-teal)]">Contact</Link></li>
-            <li><Link to="/csr" className="text-foreground/80 hover:text-[color:var(--brand-teal)]">CSR Partnerships</Link></li>
-            <li><a href="#" className="text-foreground/80 hover:text-[color:var(--brand-teal)]">Verification</a></li>
+            <li><Link to="/about" className="text-foreground/80 hover:text-primary">About</Link></li>
+            <li><Link to="/contact" className="text-foreground/80 hover:text-primary">Contact</Link></li>
+            <li><a href="#" className="text-foreground/80 hover:text-primary">Verification</a></li>
+            <li><a href="#" className="text-foreground/80 hover:text-primary">Press</a></li>
           </ul>
         </div>
 
         <div>
-          <h5 className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-            Monthly impact letter
+          <h5 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+            Get updates
           </h5>
-          <p className="mt-5 text-sm text-muted-foreground">
-            One email a month with real stories and transparent numbers. No spam.
-          </p>
-          <form onSubmit={(e) => e.preventDefault()} className="mt-3 flex gap-2">
+          <p className="mt-5 text-sm text-muted-foreground">Monthly impact reports. No spam.</p>
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className="mt-3 flex gap-2"
+          >
             <input
               type="email"
               required
               placeholder="you@email.com"
-              className="min-w-0 flex-1 rounded-full border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-[color:var(--brand-teal)]"
+              className="min-w-0 flex-1 rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
             />
             <button
               type="submit"
-              className="rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:brightness-110"
+              className="rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground hover:brightness-110"
             >
               Join
             </button>
