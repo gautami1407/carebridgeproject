@@ -85,12 +85,29 @@ function NeedPublic() {
             <div className="flex items-baseline justify-between"><span className="text-3xl font-bold">{pct}%</span><span className="text-sm text-muted-foreground">₹{raised.toLocaleString()} / ₹{goal.toLocaleString()}</span></div>
             <div className="h-3 rounded-full bg-surface-strong"><div className="h-full rounded-full bg-support" style={{ width: `${pct}%` }} /></div>
             {done ? (
-              <div className="rounded-md bg-support/10 px-3 py-2 text-sm font-semibold text-support"><p>Thank you! Your donation has been recorded.</p><p className="mt-1 text-xs font-normal opacity-90">{impactStatement(amount, need.category)}</p></div>
+              <div className="space-y-2 rounded-md bg-support/10 p-4 text-sm text-support">
+                <p className="flex items-center gap-1.5 font-bold"><CheckCircle2 className="size-4" /> Donation confirmed</p>
+                <p className="text-xs opacity-90">{impactStatement(amount, need.category)}</p>
+                <Link to="/app/donor/donations" className="mt-2 inline-block rounded-md bg-support px-3 py-1.5 text-xs font-bold text-white hover:brightness-110">
+                  View certificate →
+                </Link>
+              </div>
             ) : (
               <>
                 <div className="grid grid-cols-4 gap-2">{suggestedAmounts(need.category).map((v) => (<button key={v} onClick={() => setAmount(v)} className={`rounded-md border px-2 py-2 text-xs font-semibold ${amount === v ? "border-primary bg-primary/5 text-primary" : "border-border"}`}>₹{v >= 1000 ? `${v / 1000}k` : v}</button>))}</div>
                 <label className="sr-only" htmlFor="custom-amount">Custom amount</label>
                 <input id="custom-amount" type="number" min={1} value={amount} onChange={(e) => setAmount(+e.target.value)} className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm" />
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value.slice(0, 280))}
+                  placeholder="Add a message of support (optional)"
+                  rows={2}
+                  className="w-full resize-none rounded-md border border-border bg-background px-3 py-2 text-sm"
+                />
+                <label className="flex cursor-pointer items-center gap-2 text-xs text-muted-foreground">
+                  <input type="checkbox" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} className="size-3.5 rounded border-border" />
+                  Donate anonymously
+                </label>
                 <ImpactCalculator amount={amount} category={need.category} />
                 <button
                   onClick={handleDonate}
