@@ -213,11 +213,32 @@ function HomePage() {
           </Link>
         </div>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {sampleNeeds.slice(0, 3).map((need) => (
-            <NeedCard key={need.title} need={need} />
-          ))}
-        </div>
+        {topNeeds.length === 0 ? (
+          <p className="mt-10 rounded-2xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
+            No active needs right now. Check back soon.
+          </p>
+        ) : (
+          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {topNeeds.map((need) => {
+              const goal = Number(need.goal_amount ?? 0);
+              const fulfilled = Number(need.raised_amount ?? 0);
+              const card: NeedCardShape = {
+                id: need.id,
+                title: need.title,
+                institution: need.institutions?.name ?? "",
+                location: [need.institutions?.city, need.institutions?.state].filter(Boolean).join(", "),
+                category: need.category ?? "",
+                urgency: urgencyLabel(need.urgency),
+                fulfilled,
+                goal: Math.max(goal, 1),
+                unit: "₹",
+                deadline: daysLeft(need.deadline),
+                impact: need.description ?? "",
+              };
+              return <NeedCard key={need.id} need={card} />;
+            })}
+          </div>
+        )}
       </section>
 
       {/* HOW IT WORKS */}
