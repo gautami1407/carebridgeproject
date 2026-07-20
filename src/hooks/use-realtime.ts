@@ -22,7 +22,10 @@ export function useRealtimeSync() {
   // Public channel — always on
   useEffect(() => {
     const invalidateNeeds = (id?: string) => {
-      if (id) qc.invalidateQueries({ queryKey: ["needs", id] });
+      if (id) {
+        qc.invalidateQueries({ queryKey: ["need", id] });
+        qc.invalidateQueries({ queryKey: ["needs", id] });
+      }
       qc.invalidateQueries({ queryKey: ["needs"] });
       qc.invalidateQueries({ queryKey: ["platform-stats"] });
     };
