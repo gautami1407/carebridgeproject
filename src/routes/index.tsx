@@ -74,11 +74,11 @@ function HomePage() {
   const { data: activeNeeds = [] } = useNeeds({ onlyActive: true });
   const { data: institutions = [] } = useInstitutions({ verified: true });
 
-  const verifiedCount = platform?.verifiedInstitutions ?? institutions.length;
-  const totalRaised = platform?.totalRaised ?? 0;
+  const verifiedCount = platform?.verifiedInsts ?? institutions.length;
+  const totalRaised = platform?.totalAmount ?? 0;
   const donations = platform?.donationsCount ?? 0;
-  const volunteers = platform?.volunteersCount ?? 0;
-  const lives = platform?.livesImpacted ?? 0;
+  const volunteers = platform?.volunteersActive ?? 0;
+  const lives = (platform?.childrenBenef ?? 0) + (platform?.seniorsBenef ?? 0);
 
   const stats = [
     { value: fmtCompact(totalRaised), label: "Raised" },
