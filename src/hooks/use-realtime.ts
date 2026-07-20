@@ -22,7 +22,10 @@ export function useRealtimeSync() {
   // Public channel — always on
   useEffect(() => {
     const invalidateNeeds = (id?: string) => {
-      if (id) qc.invalidateQueries({ queryKey: ["needs", id] });
+      if (id) {
+        qc.invalidateQueries({ queryKey: ["need", id] });
+        qc.invalidateQueries({ queryKey: ["needs", id] });
+      }
       qc.invalidateQueries({ queryKey: ["needs"] });
       qc.invalidateQueries({ queryKey: ["platform-stats"] });
     };
@@ -67,8 +70,10 @@ export function useRealtimeSync() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "event_registrations" },
-        () => {
+        (payload) => {
+          const row = (payload.new ?? payload.old) as { event_id?: string } | null;
           qc.invalidateQueries({ queryKey: ["events"] });
+          if (row?.event_id) qc.invalidateQueries({ queryKey: ["event", row.event_id] });
           qc.invalidateQueries({ queryKey: ["my-registrations"] });
         },
       )
