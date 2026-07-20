@@ -18,6 +18,7 @@ import { Route as QrTrackingRouteImport } from './routes/qr-tracking'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MentorAChildRouteImport } from './routes/mentor-a-child'
+import { Route as MapRouteImport } from './routes/map'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as InstitutionsRouteImport } from './routes/institutions'
 import { Route as ImpactRouteImport } from './routes/impact'
@@ -123,6 +124,11 @@ const NotificationsRoute = NotificationsRouteImport.update({
 const MentorAChildRoute = MentorAChildRouteImport.update({
   id: '/mentor-a-child',
   path: '/mentor-a-child',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapRoute = MapRouteImport.update({
+  id: '/map',
+  path: '/map',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -451,6 +457,7 @@ export interface FileRoutesByFullPath {
   '/impact': typeof ImpactRoute
   '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
+  '/map': typeof MapRoute
   '/mentor-a-child': typeof MentorAChildRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
@@ -520,6 +527,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/impact': typeof ImpactRoute
   '/login': typeof LoginRoute
+  '/map': typeof MapRoute
   '/mentor-a-child': typeof MentorAChildRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
@@ -586,6 +594,7 @@ export interface FileRoutesById {
   '/impact': typeof ImpactRoute
   '/institutions': typeof InstitutionsRouteWithChildren
   '/login': typeof LoginRoute
+  '/map': typeof MapRoute
   '/mentor-a-child': typeof MentorAChildRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
@@ -660,6 +669,7 @@ export interface FileRouteTypes {
     | '/impact'
     | '/institutions'
     | '/login'
+    | '/map'
     | '/mentor-a-child'
     | '/notifications'
     | '/profile'
@@ -729,6 +739,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/impact'
     | '/login'
+    | '/map'
     | '/mentor-a-child'
     | '/notifications'
     | '/profile'
@@ -794,6 +805,7 @@ export interface FileRouteTypes {
     | '/impact'
     | '/institutions'
     | '/login'
+    | '/map'
     | '/mentor-a-child'
     | '/notifications'
     | '/profile'
@@ -867,6 +879,7 @@ export interface RootRouteChildren {
   ImpactRoute: typeof ImpactRoute
   InstitutionsRoute: typeof InstitutionsRouteWithChildren
   LoginRoute: typeof LoginRoute
+  MapRoute: typeof MapRoute
   MentorAChildRoute: typeof MentorAChildRoute
   NotificationsRoute: typeof NotificationsRoute
   ProfileRoute: typeof ProfileRoute
@@ -947,6 +960,13 @@ declare module '@tanstack/react-router' {
       path: '/mentor-a-child'
       fullPath: '/mentor-a-child'
       preLoaderRoute: typeof MentorAChildRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/map': {
+      id: '/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof MapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -1572,6 +1592,7 @@ const rootRouteChildren: RootRouteChildren = {
   ImpactRoute: ImpactRoute,
   InstitutionsRoute: InstitutionsRouteWithChildren,
   LoginRoute: LoginRoute,
+  MapRoute: MapRoute,
   MentorAChildRoute: MentorAChildRoute,
   NotificationsRoute: NotificationsRoute,
   ProfileRoute: ProfileRoute,
