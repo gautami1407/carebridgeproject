@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ShieldCheck, Sparkles, HeartHandshake, LineChart, Users, Building2 } from "lucide-react";
+import { ArrowRight, ShieldCheck, Sparkles, HeartHandshake, LineChart, Users, Building2, MapPin } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
-import { NeedCard } from "@/components/site/NeedCard";
-import { sampleNeeds, sampleInstitutions } from "@/lib/sample-data";
+import { NeedCard, type Need as NeedCardShape } from "@/components/site/NeedCard";
+import { useNeeds, useInstitutions, usePlatformStats } from "@/lib/queries";
 import heroImage from "@/assets/hero-care.jpg";
 import storyEducation from "@/assets/story-education.jpg";
 import storyGarden from "@/assets/story-garden.jpg";
@@ -23,13 +23,28 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const stats = [
-  { value: "₹12.5L+", label: "Raised" },
-  { value: "3,450", label: "Donations" },
-  { value: "127", label: "Verified Institutions" },
-  { value: "980", label: "Active Volunteers" },
-  { value: "2,100", label: "Lives Impacted" },
-];
+function fmtCompact(n: number) {
+  if (n >= 100000) return `₹${(n / 100000).toFixed(1).replace(/\.0$/, "")}L+`;
+  if (n >= 1000) return `₹${(n / 1000).toFixed(1).replace(/\.0$/, "")}K+`;
+  return `₹${n}`;
+}
+
+function urgencyLabel(u: string | null): NeedCardShape["urgency"] {
+  const v = (u ?? "").toLowerCase();
+  if (v === "critical") return "Critical";
+  if (v === "high") return "High";
+  if (v === "medium") return "Medium";
+  return "Low";
+}
+
+function daysLeft(deadline: string | null): string {
+  if (!deadline) return "Ongoing";
+  const ms = new Date(deadline).getTime() - Date.now();
+  const d = Math.ceil(ms / 86_400_000);
+  if (d <= 0) return "Ending today";
+  if (d === 1) return "1 day left";
+  return `${d} days left`;
+}
 
 const howSteps = [
   {
