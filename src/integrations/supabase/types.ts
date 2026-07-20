@@ -384,7 +384,10 @@ export type Database = {
           cover_image: string | null
           created_at: string
           description: string | null
+          geocoded_at: string | null
           id: string
+          latitude: number | null
+          longitude: number | null
           mission: string | null
           name: string
           owner_id: string | null
@@ -401,7 +404,10 @@ export type Database = {
           cover_image?: string | null
           created_at?: string
           description?: string | null
+          geocoded_at?: string | null
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           mission?: string | null
           name: string
           owner_id?: string | null
@@ -418,7 +424,10 @@ export type Database = {
           cover_image?: string | null
           created_at?: string
           description?: string | null
+          geocoded_at?: string | null
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           mission?: string | null
           name?: string
           owner_id?: string | null

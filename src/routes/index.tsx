@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ShieldCheck, Sparkles, HeartHandshake, LineChart, Users, Building2 } from "lucide-react";
+import { ArrowRight, ShieldCheck, Sparkles, HeartHandshake, LineChart, Users, Building2, MapPin } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
-import { NeedCard } from "@/components/site/NeedCard";
-import { sampleNeeds, sampleInstitutions } from "@/lib/sample-data";
+import { NeedCard, type Need as NeedCardShape } from "@/components/site/NeedCard";
+import { useNeeds, useInstitutions, usePlatformStats } from "@/lib/queries";
 import heroImage from "@/assets/hero-care.jpg";
 import storyEducation from "@/assets/story-education.jpg";
 import storyGarden from "@/assets/story-garden.jpg";
@@ -23,13 +23,28 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
-const stats = [
-  { value: "₹12.5L+", label: "Raised" },
-  { value: "3,450", label: "Donations" },
-  { value: "127", label: "Verified Institutions" },
-  { value: "980", label: "Active Volunteers" },
-  { value: "2,100", label: "Lives Impacted" },
-];
+function fmtCompact(n: number) {
+  if (n >= 100000) return `₹${(n / 100000).toFixed(1).replace(/\.0$/, "")}L+`;
+  if (n >= 1000) return `₹${(n / 1000).toFixed(1).replace(/\.0$/, "")}K+`;
+  return `₹${n}`;
+}
+
+function urgencyLabel(u: string | null): NeedCardShape["urgency"] {
+  const v = (u ?? "").toLowerCase();
+  if (v === "critical") return "Critical";
+  if (v === "high") return "High";
+  if (v === "medium") return "Medium";
+  return "Low";
+}
+
+function daysLeft(deadline: string | null): string {
+  if (!deadline) return "Ongoing";
+  const ms = new Date(deadline).getTime() - Date.now();
+  const d = Math.ceil(ms / 86_400_000);
+  if (d <= 0) return "Ending today";
+  if (d === 1) return "1 day left";
+  return `${d} days left`;
+}
 
 const howSteps = [
   {
@@ -55,6 +70,34 @@ const howSteps = [
 ];
 
 function HomePage() {
+  const { data: platform } = usePlatformStats();
+  const { data: activeNeeds = [] } = useNeeds({ onlyActive: true });
+  const { data: institutions = [] } = useInstitutions({ verified: true });
+
+  const verifiedCount = platform?.verifiedInsts ?? institutions.length;
+  const totalRaised = platform?.totalAmount ?? 0;
+  const donations = platform?.donationsCount ?? 0;
+  const volunteers = platform?.volunteersActive ?? 0;
+  const lives = (platform?.childrenBenef ?? 0) + (platform?.seniorsBenef ?? 0);
+
+  const stats = [
+    { value: fmtCompact(totalRaised), label: "Raised" },
+    { value: donations.toLocaleString(), label: "Donations" },
+    { value: verifiedCount.toLocaleString(), label: "Verified Institutions" },
+    { value: volunteers.toLocaleString(), label: "Active Volunteers" },
+    { value: lives.toLocaleString(), label: "Lives Impacted" },
+  ];
+
+  const topNeeds = [...activeNeeds]
+    .sort((a, b) => {
+      const rank = { critical: 0, high: 1, medium: 2, low: 3 } as Record<string, number>;
+      const ua = rank[(a.urgency ?? "low").toLowerCase()] ?? 4;
+      const ub = rank[(b.urgency ?? "low").toLowerCase()] ?? 4;
+      if (ua !== ub) return ua - ub;
+      return new Date(a.deadline ?? "2999-01-01").getTime() - new Date(b.deadline ?? "2999-01-01").getTime();
+    })
+    .slice(0, 3);
+
   return (
     <SiteLayout>
       {/* HERO */}
@@ -66,7 +109,7 @@ function HomePage() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-support opacity-75" />
                 <span className="relative inline-flex size-2 rounded-full bg-support" />
               </span>
-              127 verified institutions active right now
+              {verifiedCount} verified institutions active right now
             </span>
 
             <h1 className="mt-6 text-4xl font-bold leading-[1.05] text-foreground text-balance sm:text-5xl md:text-6xl">
@@ -170,11 +213,32 @@ function HomePage() {
           </Link>
         </div>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {sampleNeeds.slice(0, 3).map((need) => (
-            <NeedCard key={need.title} need={need} />
-          ))}
-        </div>
+        {topNeeds.length === 0 ? (
+          <p className="mt-10 rounded-2xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
+            No active needs right now. Check back soon.
+          </p>
+        ) : (
+          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {topNeeds.map((need) => {
+              const goal = Number(need.goal_amount ?? 0);
+              const fulfilled = Number(need.raised_amount ?? 0);
+              const card: NeedCardShape = {
+                id: need.id,
+                title: need.title,
+                institution: need.institution?.name ?? "",
+                location: [need.institution?.city, need.institution?.state].filter(Boolean).join(", "),
+                category: need.category ?? "",
+                urgency: urgencyLabel(need.urgency),
+                fulfilled,
+                goal: Math.max(goal, 1),
+                unit: "₹",
+                deadline: daysLeft(need.deadline),
+                impact: need.description ?? "",
+              };
+              return <NeedCard key={need.id} need={card} />;
+            })}
+          </div>
+        )}
       </section>
 
       {/* HOW IT WORKS */}
@@ -227,52 +291,71 @@ function HomePage() {
           </Link>
         </div>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {sampleInstitutions.map((inst) => (
-            <article
-              key={inst.name}
-              className="group overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-lift"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden bg-surface">
-                <img
-                  src={inst.image}
-                  alt={inst.name}
-                  loading="lazy"
-                  width={800}
-                  height={600}
-                  className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-background/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-support">
-                  <ShieldCheck className="size-3" /> Verified
-                </span>
-              </div>
-              <div className="p-5">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                    {inst.type}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                    <Users className="size-3" /> {inst.residents} residents
-                  </span>
+        {institutions.length === 0 ? (
+          <p className="mt-10 rounded-2xl border border-dashed border-border bg-card p-10 text-center text-sm text-muted-foreground">
+            Verified institutions will appear here soon.
+          </p>
+        ) : (
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {institutions.slice(0, 3).map((inst) => (
+              <article
+                key={inst.id}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-soft transition-all hover:-translate-y-0.5 hover:shadow-lift"
+              >
+                <div className="relative aspect-[4/3] overflow-hidden bg-surface">
+                  {inst.cover_image ? (
+                    <img
+                      src={inst.cover_image}
+                      alt={inst.name}
+                      loading="lazy"
+                      width={800}
+                      height={600}
+                      className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="grid size-full place-items-center bg-primary/5 text-primary">
+                      <Building2 className="size-10" />
+                    </div>
+                  )}
+                  {inst.verification === "verified" && (
+                    <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-background/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-support">
+                      <ShieldCheck className="size-3" /> Verified
+                    </span>
+                  )}
                 </div>
-                <h3 className="mt-2 text-lg font-bold tracking-tight">{inst.name}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{inst.location}</p>
-                <p className="mt-3 text-sm text-muted-foreground">{inst.blurb}</p>
-                <div className="mt-5 flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center gap-1 rounded-md bg-urgent/10 px-2 py-1 text-xs font-semibold text-urgent">
-                    {inst.needs} active needs
-                  </span>
-                  <Link
-                    to="/institutions"
-                    className="text-sm font-semibold text-primary hover:underline"
-                  >
-                    View profile →
-                  </Link>
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      {inst.type?.replaceAll("_", " ")}
+                    </span>
+                    {inst.residents_count != null && (
+                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                        <Users className="size-3" /> {inst.residents_count} residents
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="mt-2 text-lg font-bold tracking-tight">{inst.name}</h3>
+                  <p className="mt-1 inline-flex items-center gap-1 text-sm text-muted-foreground">
+                    <MapPin className="size-3" />
+                    {[inst.city, inst.state].filter(Boolean).join(", ") || "Location pending"}
+                  </p>
+                  {inst.description && (
+                    <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{inst.description}</p>
+                  )}
+                  <div className="mt-auto flex items-center justify-end pt-4">
+                    <Link
+                      to="/institutions/$slug"
+                      params={{ slug: inst.slug }}
+                      className="text-sm font-semibold text-primary hover:underline"
+                    >
+                      View profile →
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
-        </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* SUCCESS STORIES */}
