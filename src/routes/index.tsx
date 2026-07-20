@@ -225,8 +225,8 @@ function HomePage() {
               const card: NeedCardShape = {
                 id: need.id,
                 title: need.title,
-                institution: need.institutions?.name ?? "",
-                location: [need.institutions?.city, need.institutions?.state].filter(Boolean).join(", "),
+                institution: need.institution?.name ?? "",
+                location: [need.institution?.city, need.institution?.state].filter(Boolean).join(", "),
                 category: need.category ?? "",
                 urgency: urgencyLabel(need.urgency),
                 fulfilled,
