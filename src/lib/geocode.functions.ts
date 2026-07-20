@@ -20,7 +20,7 @@ export const ensureInstitutionCoords = createServerFn({ method: "POST" })
 
     const { data: inst, error } = await supabaseAdmin
       .from("institutions")
-      .select("id, name, address, city, state, country, latitude, longitude")
+      .select("id, name, city, state, country, latitude, longitude")
       .eq("id", data.institutionId)
       .maybeSingle();
     if (error) throw new Error(error.message);
@@ -34,7 +34,7 @@ export const ensureInstitutionCoords = createServerFn({ method: "POST" })
     const gmKey = process.env.GOOGLE_MAPS_API_KEY;
     if (!lovableKey || !gmKey) throw new Error("Google Maps connector not configured");
 
-    const addr = [inst.address, inst.city, inst.state, inst.country ?? "India"]
+    const addr = [inst.name, inst.city, inst.state, inst.country ?? "India"]
       .filter(Boolean)
       .join(", ");
     if (!addr) throw new Error("Institution has no address to geocode");
