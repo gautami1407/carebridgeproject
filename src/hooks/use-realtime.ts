@@ -70,8 +70,10 @@ export function useRealtimeSync() {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "event_registrations" },
-        () => {
+        (payload) => {
+          const row = (payload.new ?? payload.old) as { event_id?: string } | null;
           qc.invalidateQueries({ queryKey: ["events"] });
+          if (row?.event_id) qc.invalidateQueries({ queryKey: ["event", row.event_id] });
           qc.invalidateQueries({ queryKey: ["my-registrations"] });
         },
       )
