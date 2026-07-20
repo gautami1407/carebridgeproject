@@ -70,6 +70,34 @@ const howSteps = [
 ];
 
 function HomePage() {
+  const { data: platform } = usePlatformStats();
+  const { data: activeNeeds = [] } = useNeeds({ onlyActive: true });
+  const { data: institutions = [] } = useInstitutions({ verified: true });
+
+  const verifiedCount = platform?.verifiedInstitutions ?? institutions.length;
+  const totalRaised = platform?.totalRaised ?? 0;
+  const donations = platform?.donationsCount ?? 0;
+  const volunteers = platform?.volunteersCount ?? 0;
+  const lives = platform?.livesImpacted ?? 0;
+
+  const stats = [
+    { value: fmtCompact(totalRaised), label: "Raised" },
+    { value: donations.toLocaleString(), label: "Donations" },
+    { value: verifiedCount.toLocaleString(), label: "Verified Institutions" },
+    { value: volunteers.toLocaleString(), label: "Active Volunteers" },
+    { value: lives.toLocaleString(), label: "Lives Impacted" },
+  ];
+
+  const topNeeds = [...activeNeeds]
+    .sort((a, b) => {
+      const rank = { critical: 0, high: 1, medium: 2, low: 3 } as Record<string, number>;
+      const ua = rank[(a.urgency ?? "low").toLowerCase()] ?? 4;
+      const ub = rank[(b.urgency ?? "low").toLowerCase()] ?? 4;
+      if (ua !== ub) return ua - ub;
+      return new Date(a.deadline ?? "2999-01-01").getTime() - new Date(b.deadline ?? "2999-01-01").getTime();
+    })
+    .slice(0, 3);
+
   return (
     <SiteLayout>
       {/* HERO */}
@@ -81,7 +109,7 @@ function HomePage() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-support opacity-75" />
                 <span className="relative inline-flex size-2 rounded-full bg-support" />
               </span>
-              127 verified institutions active right now
+              {verifiedCount} verified institutions active right now
             </span>
 
             <h1 className="mt-6 text-4xl font-bold leading-[1.05] text-foreground text-balance sm:text-5xl md:text-6xl">
