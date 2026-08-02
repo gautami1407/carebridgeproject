@@ -5,6 +5,7 @@ import { useStore } from "@/lib/store";
 import { Heart, Share2, Bookmark, Loader2 } from "lucide-react";
 import { LoadingState, ErrorState, EmptyState } from "@/components/app/states";
 import { useState } from "react";
+import { LiveActivityFeed } from "@/components/app/LiveActivityFeed";
 
 export const Route = createFileRoute("/feed")({
   head: () => ({ meta: [{ title: "Community Feed — CareBridge" }] }),
@@ -25,7 +26,8 @@ function FeedPage() {
 
   return (
     <SiteLayout>
-      <section className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
+      <section className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <div>
         <h1 className="text-3xl font-bold tracking-tight">Community feed</h1>
         <p className="mt-1 text-muted-foreground">Stories of impact, in real time.</p>
 
@@ -69,6 +71,10 @@ function FeedPage() {
               );
             })}
         </div>
+        </div>
+        <aside className="lg:sticky lg:top-24 lg:self-start">
+          <LiveActivityFeed limit={15} compact />
+        </aside>
       </section>
     </SiteLayout>
   );
