@@ -895,7 +895,7 @@ export function useDonationJourney(donationId: string) {
     queryFn: async () => {
       const { data: donation, error } = await supabase
         .from("donations")
-        .select("id, amount, created_at, is_anonymous, need_id, donor_id, need:needs(*, institution:institutions(*))")
+        .select("id, amount, message, created_at, is_anonymous, need_id, donor_id, need:needs(*, institution:institutions(*))")
         .eq("id", donationId)
         .maybeSingle();
       if (error) throw error;
@@ -903,7 +903,7 @@ export function useDonationJourney(donationId: string) {
 
       const need = donation.need as (NeedRow & { institution?: InstRow | null }) | null;
 
-      const [{ data: cert }, { data: reports }, { data: msg }] = await Promise.all([
+      const [{ data: cert }, { data: reports }] = await Promise.all([
         supabase.from("donation_certificates").select("certificate_no, issued_at").eq("donation_id", donationId).maybeSingle(),
         need
           ? supabase
@@ -913,7 +913,6 @@ export function useDonationJourney(donationId: string) {
               .order("created_at", { ascending: false })
               .limit(5)
           : Promise.resolve({ data: [] as never[] }),
-        supabase.rpc("get_donation_message", { _donation_id: donationId }),
       ]);
 
       const needReport = (reports ?? []).find((r) => r.is_published) ?? null;
@@ -985,7 +984,7 @@ export function useDonationJourney(donationId: string) {
         institution: need?.institution ?? null,
         certificateNo: cert?.certificate_no ?? null,
         certificateIssuedAt: cert?.issued_at ?? null,
-        donorMessage: (msg as string | null) ?? null,
+        donorMessage: (donation.message as string | null) ?? null,
         report: needReport,
         stages,
       };
