@@ -61,7 +61,7 @@ export function LiveActivityFeed({ limit = 12, compact = false }: { limit?: numb
                   <Icon className="size-3" />
                 </span>
                 {i.href ? (
-                  <Link to={i.href} className="block rounded-lg px-2 py-1 -mx-2 hover:bg-muted">{body}</Link>
+                  <Link to={i.href as never} className="block rounded-lg px-2 py-1 -mx-2 hover:bg-muted">{body}</Link>
                 ) : (
                   <div className="px-2 py-1 -mx-2">{body}</div>
                 )}
