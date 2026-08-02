@@ -80,6 +80,7 @@ import { Route as AppInstitutionEventsIndexRouteImport } from './routes/app.inst
 import { Route as AppInstitutionNeedsNewRouteImport } from './routes/app.institution.needs.new'
 import { Route as AppInstitutionNeedsIdRouteImport } from './routes/app.institution.needs.$id'
 import { Route as AppInstitutionEventsNewRouteImport } from './routes/app.institution.events.new'
+import { Route as AppDonorJourneyIdRouteImport } from './routes/app.donor.journey.$id'
 
 const VolunteerRoute = VolunteerRouteImport.update({
   id: '/volunteer',
@@ -442,6 +443,11 @@ const AppInstitutionEventsNewRoute = AppInstitutionEventsNewRouteImport.update({
   path: '/new',
   getParentRoute: () => AppInstitutionEventsRoute,
 } as any)
+const AppDonorJourneyIdRoute = AppDonorJourneyIdRouteImport.update({
+  id: '/journey/$id',
+  path: '/journey/$id',
+  getParentRoute: () => AppDonorRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -510,6 +516,7 @@ export interface FileRoutesByFullPath {
   '/app/institution/': typeof AppInstitutionIndexRoute
   '/app/mentor/': typeof AppMentorIndexRoute
   '/app/volunteer/': typeof AppVolunteerIndexRoute
+  '/app/donor/journey/$id': typeof AppDonorJourneyIdRoute
   '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
   '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
   '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
@@ -573,6 +580,7 @@ export interface FileRoutesByTo {
   '/app/institution': typeof AppInstitutionIndexRoute
   '/app/mentor': typeof AppMentorIndexRoute
   '/app/volunteer': typeof AppVolunteerIndexRoute
+  '/app/donor/journey/$id': typeof AppDonorJourneyIdRoute
   '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
   '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
   '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
@@ -647,6 +655,7 @@ export interface FileRoutesById {
   '/app/institution/': typeof AppInstitutionIndexRoute
   '/app/mentor/': typeof AppMentorIndexRoute
   '/app/volunteer/': typeof AppVolunteerIndexRoute
+  '/app/donor/journey/$id': typeof AppDonorJourneyIdRoute
   '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
   '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
   '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
@@ -722,6 +731,7 @@ export interface FileRouteTypes {
     | '/app/institution/'
     | '/app/mentor/'
     | '/app/volunteer/'
+    | '/app/donor/journey/$id'
     | '/app/institution/events/new'
     | '/app/institution/needs/$id'
     | '/app/institution/needs/new'
@@ -785,6 +795,7 @@ export interface FileRouteTypes {
     | '/app/institution'
     | '/app/mentor'
     | '/app/volunteer'
+    | '/app/donor/journey/$id'
     | '/app/institution/events/new'
     | '/app/institution/needs/$id'
     | '/app/institution/needs/new'
@@ -858,6 +869,7 @@ export interface FileRouteTypes {
     | '/app/institution/'
     | '/app/mentor/'
     | '/app/volunteer/'
+    | '/app/donor/journey/$id'
     | '/app/institution/events/new'
     | '/app/institution/needs/$id'
     | '/app/institution/needs/new'
@@ -1396,6 +1408,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInstitutionEventsNewRouteImport
       parentRoute: typeof AppInstitutionEventsRoute
     }
+    '/app/donor/journey/$id': {
+      id: '/app/donor/journey/$id'
+      path: '/journey/$id'
+      fullPath: '/app/donor/journey/$id'
+      preLoaderRoute: typeof AppDonorJourneyIdRouteImport
+      parentRoute: typeof AppDonorRoute
+    }
   }
 }
 
@@ -1429,6 +1448,7 @@ interface AppDonorRouteChildren {
   AppDonorImpactRoute: typeof AppDonorImpactRoute
   AppDonorSavedRoute: typeof AppDonorSavedRoute
   AppDonorIndexRoute: typeof AppDonorIndexRoute
+  AppDonorJourneyIdRoute: typeof AppDonorJourneyIdRoute
 }
 
 const AppDonorRouteChildren: AppDonorRouteChildren = {
@@ -1437,6 +1457,7 @@ const AppDonorRouteChildren: AppDonorRouteChildren = {
   AppDonorImpactRoute: AppDonorImpactRoute,
   AppDonorSavedRoute: AppDonorSavedRoute,
   AppDonorIndexRoute: AppDonorIndexRoute,
+  AppDonorJourneyIdRoute: AppDonorJourneyIdRoute,
 }
 
 const AppDonorRouteWithChildren = AppDonorRoute._addFileChildren(
