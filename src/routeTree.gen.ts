@@ -35,6 +35,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as InstitutionsIndexRouteImport } from './routes/institutions.index'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as TrustSlugRouteImport } from './routes/trust.$slug'
 import { Route as OnboardingRoleRouteImport } from './routes/onboarding.role'
 import { Route as OnboardingProfileRouteImport } from './routes/onboarding.profile'
 import { Route as NeedsIdRouteImport } from './routes/needs.$id'
@@ -211,6 +212,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const TrustSlugRoute = TrustSlugRouteImport.update({
+  id: '/trust/$slug',
+  path: '/trust/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoleRoute = OnboardingRoleRouteImport.update({
   id: '/onboarding/role',
@@ -486,6 +492,7 @@ export interface FileRoutesByFullPath {
   '/needs/$id': typeof NeedsIdRoute
   '/onboarding/profile': typeof OnboardingProfileRoute
   '/onboarding/role': typeof OnboardingRoleRoute
+  '/trust/$slug': typeof TrustSlugRoute
   '/app/': typeof AppIndexRoute
   '/events/': typeof EventsIndexRoute
   '/institutions/': typeof InstitutionsIndexRoute
@@ -552,6 +559,7 @@ export interface FileRoutesByTo {
   '/needs/$id': typeof NeedsIdRoute
   '/onboarding/profile': typeof OnboardingProfileRoute
   '/onboarding/role': typeof OnboardingRoleRoute
+  '/trust/$slug': typeof TrustSlugRoute
   '/app': typeof AppIndexRoute
   '/events': typeof EventsIndexRoute
   '/institutions': typeof InstitutionsIndexRoute
@@ -625,6 +633,7 @@ export interface FileRoutesById {
   '/needs/$id': typeof NeedsIdRoute
   '/onboarding/profile': typeof OnboardingProfileRoute
   '/onboarding/role': typeof OnboardingRoleRoute
+  '/trust/$slug': typeof TrustSlugRoute
   '/app/': typeof AppIndexRoute
   '/events/': typeof EventsIndexRoute
   '/institutions/': typeof InstitutionsIndexRoute
@@ -701,6 +710,7 @@ export interface FileRouteTypes {
     | '/needs/$id'
     | '/onboarding/profile'
     | '/onboarding/role'
+    | '/trust/$slug'
     | '/app/'
     | '/events/'
     | '/institutions/'
@@ -767,6 +777,7 @@ export interface FileRouteTypes {
     | '/needs/$id'
     | '/onboarding/profile'
     | '/onboarding/role'
+    | '/trust/$slug'
     | '/app'
     | '/events'
     | '/institutions'
@@ -839,6 +850,7 @@ export interface FileRouteTypes {
     | '/needs/$id'
     | '/onboarding/profile'
     | '/onboarding/role'
+    | '/trust/$slug'
     | '/app/'
     | '/events/'
     | '/institutions/'
@@ -907,6 +919,7 @@ export interface RootRouteChildren {
   NeedsIdRoute: typeof NeedsIdRoute
   OnboardingProfileRoute: typeof OnboardingProfileRoute
   OnboardingRoleRoute: typeof OnboardingRoleRoute
+  TrustSlugRoute: typeof TrustSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1092,6 +1105,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/trust/$slug': {
+      id: '/trust/$slug'
+      path: '/trust/$slug'
+      fullPath: '/trust/$slug'
+      preLoaderRoute: typeof TrustSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/onboarding/role': {
       id: '/onboarding/role'
@@ -1629,6 +1649,7 @@ const rootRouteChildren: RootRouteChildren = {
   NeedsIdRoute: NeedsIdRoute,
   OnboardingProfileRoute: OnboardingProfileRoute,
   OnboardingRoleRoute: OnboardingRoleRoute,
+  TrustSlugRoute: TrustSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

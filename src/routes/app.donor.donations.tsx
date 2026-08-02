@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, StatusBadge } from "@/components/app/AppShell";
 import { useMyCertificates } from "@/lib/queries";
 import { LoadingState, ErrorState, EmptyState } from "@/components/app/states";
@@ -45,6 +45,9 @@ function DonationsHistory() {
                       )}
                     </td>
                     <td className="px-4 py-3 text-right">
+                      <Link to="/app/donor/journey/$id" params={{ id: d.donationId }} className="mr-2 inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-semibold hover:bg-muted">
+                        Track journey
+                      </Link>
                       {d.certificateNo && (
                         <button
                           onClick={() =>

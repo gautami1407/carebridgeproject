@@ -28,6 +28,7 @@ export function useRealtimeSync() {
       }
       qc.invalidateQueries({ queryKey: ["needs"] });
       qc.invalidateQueries({ queryKey: ["platform-stats"] });
+      qc.invalidateQueries({ queryKey: ["live-activity"] });
     };
     const invalidateOpps = () => {
       qc.invalidateQueries({ queryKey: ["opportunities"] });
@@ -50,13 +51,18 @@ export function useRealtimeSync() {
         (payload) => {
           const row = (payload.new ?? payload.old) as { need_id?: string } | null;
           qc.invalidateQueries({ queryKey: ["donations"] });
+          qc.invalidateQueries({ queryKey: ["live-activity"] });
+          qc.invalidateQueries({ queryKey: ["donation-journey"] });
           invalidateNeeds(row?.need_id);
         },
       )
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "volunteer_opportunities" },
-        () => invalidateOpps(),
+        () => {
+          invalidateOpps();
+          qc.invalidateQueries({ queryKey: ["live-activity"] });
+        },
       )
       .on(
         "postgres_changes",
@@ -65,6 +71,8 @@ export function useRealtimeSync() {
           invalidateOpps();
           qc.invalidateQueries({ queryKey: ["my-applications"] });
           qc.invalidateQueries({ queryKey: ["applications"] });
+          qc.invalidateQueries({ queryKey: ["live-activity"] });
+          qc.invalidateQueries({ queryKey: ["institution-trust"] });
         },
       )
       .on(
@@ -75,6 +83,7 @@ export function useRealtimeSync() {
           qc.invalidateQueries({ queryKey: ["events"] });
           if (row?.event_id) qc.invalidateQueries({ queryKey: ["event", row.event_id] });
           qc.invalidateQueries({ queryKey: ["my-registrations"] });
+          qc.invalidateQueries({ queryKey: ["live-activity"] });
         },
       )
       .subscribe();
