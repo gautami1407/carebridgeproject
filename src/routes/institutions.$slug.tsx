@@ -57,6 +57,7 @@ function InstitutionPublic() {
                   <span className="inline-flex items-center gap-1 rounded-md bg-support/10 px-3 py-1.5 text-xs font-bold text-support">Verified</span>
                 )}
                 <TransparencyScore breakdown={trust} />
+                <Link to="/trust/$slug" params={{ slug: inst.slug }} className="inline-flex items-center gap-1 rounded-md border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10">Trust report</Link>
               </div>
             </div>
             {inst.description && <p className="mt-4 leading-relaxed text-foreground/80">{inst.description}</p>}

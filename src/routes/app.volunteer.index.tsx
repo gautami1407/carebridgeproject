@@ -4,6 +4,9 @@ import { MetricCard, PageHeader, StatusBadge } from "@/components/app/AppShell";
 import { useMyApplications, useEvents, useAllOpportunities, useUserBadges } from "@/lib/queries";
 import { recommendOpportunitiesForVolunteer } from "@/lib/recommend";
 import { iconFor, TIER_STYLES, type BadgeTier } from "@/lib/badges";
+import { CommandGreeting, UrgentPanel, MonthlySummary, UpNext, isThisMonth, type UrgentItem } from "@/components/app/CommandCenter";
+import { LiveActivityFeed } from "@/components/app/LiveActivityFeed";
+import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/app/volunteer/")({ component: VolunteerDashboard });
 
@@ -15,11 +18,44 @@ function VolunteerDashboard() {
   const hours = apps.reduce((a, b) => a + Number(b.hours_logged ?? 0), 0);
   const insts = new Set(apps.map((a) => (a.opportunity as { institution_id?: string } | null)?.institution_id).filter(Boolean)).size;
   const recommended = recommendOpportunitiesForVolunteer(opps as never[], {}, 3);
+  const volunteerName = useStore((st) => st.session?.name);
+  const monthApps = apps.filter((a) => isThisMonth(a.created_at));
+  const monthHours = monthApps.reduce((a, b) => a + Number(b.hours_logged ?? 0), 0);
+  const urgent: UrgentItem[] = [
+    ...apps.filter((a) => a.status === "accepted").map((a) => {
+      const o = a.opportunity as { title?: string; institution?: { name?: string } | null } | null;
+      return { id: `acc-${a.id}`, title: `Confirm your slot: ${o?.title ?? "Opportunity"}`, detail: `Accepted by ${o?.institution?.name ?? "the institution"} — log your hours after the session.`, href: "/app/volunteer/applications" };
+    }),
+    ...apps.filter((a) => a.status === "pending").slice(0, 3).map((a) => {
+      const o = a.opportunity as { title?: string } | null;
+      return { id: `pend-${a.id}`, title: `Awaiting decision: ${o?.title ?? "Opportunity"}`, detail: `Applied ${new Date(a.created_at).toLocaleDateString()}`, href: "/app/volunteer/applications" };
+    }),
+  ];
+  const upNext = events.slice(0, 5).map((e) => ({
+    id: e.id,
+    title: e.title,
+    when: new Date(e.starts_at).toLocaleString(),
+    href: `/events/${e.id}`,
+  }));
 
 
   return (
     <div className="mx-auto max-w-6xl">
-      <PageHeader title="Volunteer dashboard" subtitle="Your time, your skills, your impact." />
+      <CommandGreeting name={volunteerName} subtitle="Your time, your skills, your impact — all in one place." />
+
+      <div className="mb-8 grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2"><UrgentPanel items={urgent} emptyBody="Nothing pending. Browse opportunities to find your next session." /></div>
+        <MonthlySummary
+          items={[
+            { label: "Hours", value: monthHours },
+            { label: "Applications", value: monthApps.length },
+            { label: "Upcoming events", value: events.length },
+            { label: "Badges", value: myBadges.length },
+          ]}
+        />
+      </div>
+
+      <PageHeader title="Volunteer dashboard" subtitle="Applications, sessions and recommendations." />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Hours volunteered" value={hours} icon={Clock} accent="support" />
         <MetricCard label="Applications" value={apps.length} icon={Calendar} />
@@ -111,6 +147,11 @@ function VolunteerDashboard() {
           <Link to="/profile" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">View all badges <ArrowRight className="size-3" /></Link>
         </div>
       </div>
+      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+        <UpNext items={upNext} emptyBody="No upcoming events yet." />
+        <LiveActivityFeed limit={10} />
+      </div>
+
     </div>
   );
 }

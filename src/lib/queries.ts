@@ -756,3 +756,289 @@ export function useAllOpportunities() {
   });
 }
 
+
+/* ---------- Live activity stream (Phase 5) ---------- */
+
+export type LiveActivityItem = {
+  id: string;
+  at: string;
+  kind: "donation" | "registration" | "need_posted" | "need_funded" | "application" | "report";
+  title: string;
+  subtitle?: string;
+  href?: string;
+};
+
+export function useLiveActivity(limit = 25) {
+  return useQuery({
+    queryKey: ["live-activity", limit],
+    queryFn: async (): Promise<LiveActivityItem[]> => {
+      const [donations, needs, regs, apps, reports] = await Promise.all([
+        supabase
+          .from("donations")
+          .select("id, amount, created_at, is_anonymous, need:needs(id, title, institution:institutions(name))")
+          .order("created_at", { ascending: false })
+          .limit(limit),
+        supabase
+          .from("needs")
+          .select("id, title, status, created_at, updated_at, raised_amount, goal_amount, institution:institutions(name)")
+          .order("created_at", { ascending: false })
+          .limit(limit),
+        supabase
+          .from("event_registrations")
+          .select("id, created_at, event:events(id, title, institution:institutions(name))")
+          .order("created_at", { ascending: false })
+          .limit(limit),
+        supabase
+          .from("volunteer_applications")
+          .select("id, created_at, opportunity:volunteer_opportunities(title, institution:institutions(name))")
+          .order("created_at", { ascending: false })
+          .limit(limit),
+        supabase
+          .from("impact_reports")
+          .select("id, title, created_at, published_at, is_published, institution:institutions(name)")
+          .eq("is_published", true)
+          .order("created_at", { ascending: false })
+          .limit(limit),
+      ]);
+
+      const out: LiveActivityItem[] = [];
+      (donations.data ?? []).forEach((d) => {
+        const need = d.need as { id?: string; title?: string; institution?: { name?: string } | null } | null;
+        out.push({
+          id: `d-${d.id}`,
+          at: d.created_at,
+          kind: "donation",
+          title: `₹${Number(d.amount).toLocaleString()} donated${d.is_anonymous ? " anonymously" : ""}`,
+          subtitle: [need?.title, need?.institution?.name].filter(Boolean).join(" · "),
+          href: need?.id ? `/needs/${need.id}` : undefined,
+        });
+      });
+      (needs.data ?? []).forEach((n) => {
+        const inst = n.institution as { name?: string } | null;
+        out.push({
+          id: `n-${n.id}`,
+          at: n.created_at,
+          kind: "need_posted",
+          title: `New need posted`,
+          subtitle: [n.title, inst?.name].filter(Boolean).join(" · "),
+          href: `/needs/${n.id}`,
+        });
+        if (n.status === "fulfilled") {
+          out.push({
+            id: `nf-${n.id}`,
+            at: n.updated_at ?? n.created_at,
+            kind: "need_funded",
+            title: `Need fully funded`,
+            subtitle: [n.title, inst?.name].filter(Boolean).join(" · "),
+            href: `/needs/${n.id}`,
+          });
+        }
+      });
+      (regs.data ?? []).forEach((r) => {
+        const e = r.event as { id?: string; title?: string; institution?: { name?: string } | null } | null;
+        out.push({
+          id: `r-${r.id}`,
+          at: r.created_at,
+          kind: "registration",
+          title: `Someone registered for an event`,
+          subtitle: [e?.title, e?.institution?.name].filter(Boolean).join(" · "),
+          href: e?.id ? `/events/${e.id}` : undefined,
+        });
+      });
+      (apps.data ?? []).forEach((a) => {
+        const o = a.opportunity as { title?: string; institution?: { name?: string } | null } | null;
+        out.push({
+          id: `a-${a.id}`,
+          at: a.created_at,
+          kind: "application",
+          title: `New volunteer application`,
+          subtitle: [o?.title, o?.institution?.name].filter(Boolean).join(" · "),
+          href: "/volunteer",
+        });
+      });
+      (reports.data ?? []).forEach((r) => {
+        const inst = r.institution as { name?: string } | null;
+        out.push({
+          id: `ir-${r.id}`,
+          at: r.published_at ?? r.created_at,
+          kind: "report",
+          title: `Impact report published`,
+          subtitle: [r.title, inst?.name].filter(Boolean).join(" · "),
+          href: `/impact-reports/${r.id}`,
+        });
+      });
+
+      return out
+        .filter((i) => !!i.at)
+        .sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime())
+        .slice(0, limit);
+    },
+  });
+}
+
+/* ---------- Donation journey (need posted → thank-you) ---------- */
+
+export type JourneyStage = {
+  key: "need_posted" | "donation_made" | "funds_allocated" | "impact_delivered" | "impact_report" | "thank_you";
+  label: string;
+  detail: string;
+  at?: string | null;
+  state: "done" | "current" | "pending";
+  href?: string;
+};
+
+export function useDonationJourney(donationId: string) {
+  const uid = useStore((s) => s.session?.id);
+  return useQuery({
+    queryKey: ["donation-journey", donationId],
+    enabled: !!donationId,
+    queryFn: async () => {
+      const { data: donation, error } = await supabase
+        .from("donations")
+        .select("id, amount, message, created_at, is_anonymous, need_id, donor_id, need:needs(*, institution:institutions(*))")
+        .eq("id", donationId)
+        .maybeSingle();
+      if (error) throw error;
+      if (!donation) return null;
+
+      const need = donation.need as (NeedRow & { institution?: InstRow | null }) | null;
+
+      const [{ data: cert }, { data: reports }] = await Promise.all([
+        supabase.from("donation_certificates").select("certificate_no, issued_at").eq("donation_id", donationId).maybeSingle(),
+        need
+          ? supabase
+              .from("impact_reports")
+              .select("id, title, summary, outcomes, beneficiaries, photos, published_at, is_published")
+              .eq("institution_id", need.institution_id)
+              .order("created_at", { ascending: false })
+              .limit(5)
+          : Promise.resolve({ data: [] as never[] }),
+      ]);
+
+      const needReport = (reports ?? []).find((r) => r.is_published) ?? null;
+      const raised = Number(need?.raised_amount ?? 0);
+      const goal = Math.max(1, Number(need?.goal_amount ?? 1));
+      const funded = raised >= goal;
+      const fulfilled = need?.status === "fulfilled";
+
+      const stages: JourneyStage[] = [
+        {
+          key: "need_posted",
+          label: "Need posted",
+          detail: need ? `${need.institution?.name ?? "The institution"} published “${need.title}”.` : "Need published.",
+          at: need?.created_at,
+          state: "done",
+          href: need ? `/needs/${need.id}` : undefined,
+        },
+        {
+          key: "donation_made",
+          label: "Your donation received",
+          detail: `₹${Number(donation.amount).toLocaleString()} contributed${donation.is_anonymous ? " anonymously" : ""}.`,
+          at: donation.created_at,
+          state: "done",
+        },
+        {
+          key: "funds_allocated",
+          label: "Funds allocated",
+          detail: funded
+            ? `Goal reached — ₹${raised.toLocaleString()} of ₹${goal.toLocaleString()} raised.`
+            : `₹${raised.toLocaleString()} of ₹${goal.toLocaleString()} raised so far (${Math.round((raised / goal) * 100)}%).`,
+          at: funded ? need?.updated_at : null,
+          state: funded ? "done" : "current",
+        },
+        {
+          key: "impact_delivered",
+          label: "Impact delivered",
+          detail: fulfilled
+            ? `${need?.institution?.name ?? "The institution"} confirmed delivery to ${need?.beneficiaries_count ?? need?.beneficiaries ?? "the"} beneficiaries.`
+            : "The institution will confirm delivery once the need is fulfilled.",
+          at: fulfilled ? need?.updated_at : null,
+          state: fulfilled ? "done" : funded ? "current" : "pending",
+        },
+        {
+          key: "impact_report",
+          label: "Impact report",
+          detail: needReport
+            ? needReport.summary ?? needReport.title
+            : "An impact report with photos and outcomes will be published here.",
+          at: needReport?.published_at ?? null,
+          state: needReport ? "done" : fulfilled ? "current" : "pending",
+          href: needReport ? `/impact-reports/${needReport.id}` : undefined,
+        },
+        {
+          key: "thank_you",
+          label: "Thank-you message",
+          detail: needReport?.outcomes
+            ? needReport.outcomes
+            : fulfilled
+              ? `Thank you for making this possible. Your gift reached ${need?.institution?.name ?? "the institution"}.`
+              : "A personal thank-you from the institution arrives after delivery.",
+          at: needReport?.published_at ?? null,
+          state: fulfilled || needReport ? "done" : "pending",
+        },
+      ];
+
+      return {
+        donation: { id: donation.id, amount: Number(donation.amount), createdAt: donation.created_at, isMine: donation.donor_id === uid },
+        need,
+        institution: need?.institution ?? null,
+        certificateNo: cert?.certificate_no ?? null,
+        certificateIssuedAt: cert?.issued_at ?? null,
+        donorMessage: (donation.message as string | null) ?? null,
+        report: needReport,
+        stages,
+      };
+    },
+  });
+}
+
+/* ---------- Institution trust stats ---------- */
+
+export function useInstitutionTrustStats(institutionId?: string) {
+  return useQuery({
+    queryKey: ["institution-trust", institutionId ?? "none"],
+    enabled: !!institutionId,
+    queryFn: async () => {
+      const [needs, reports, evts, apps] = await Promise.all([
+        supabase.from("needs").select("id, title, status, created_at, updated_at, raised_amount, goal_amount, cover_image").eq("institution_id", institutionId!),
+        supabase.from("impact_reports").select("id, title, photos, published_at, is_published, beneficiaries").eq("institution_id", institutionId!),
+        supabase.from("events").select("id, banner_url, starts_at").eq("institution_id", institutionId!),
+        supabase.from("volunteer_applications").select("id, status, created_at, updated_at, opportunity:volunteer_opportunities!inner(institution_id)").eq("opportunity.institution_id", institutionId!),
+      ]);
+
+      const nds = needs.data ?? [];
+      const reps = (reports.data ?? []).filter((r) => r.is_published);
+      const applications = apps.data ?? [];
+
+      // Response time = median days between application created and decided
+      const decided = applications.filter((a) => a.status !== "pending" && a.updated_at);
+      const deltas = decided
+        .map((a) => (new Date(a.updated_at!).getTime() - new Date(a.created_at).getTime()) / 86400000)
+        .filter((d) => d >= 0)
+        .sort((a, b) => a - b);
+      const responseDays = deltas.length ? deltas[Math.floor(deltas.length / 2)] : null;
+
+      const fulfilled = nds.filter((n) => n.status === "fulfilled");
+      const fulfilmentRate = nds.length ? Math.round((fulfilled.length / nds.length) * 100) : 0;
+
+      const photos: { url: string; caption: string }[] = [];
+      reps.forEach((r) => (r.photos ?? []).forEach((p: string) => photos.push({ url: p, caption: r.title })));
+      nds.forEach((n) => n.cover_image && photos.push({ url: n.cover_image, caption: n.title }));
+      (evts.data ?? []).forEach((e) => e.banner_url && photos.push({ url: e.banner_url, caption: "Event" }));
+
+      return {
+        needsCount: nds.length,
+        completedNeedsCount: fulfilled.length,
+        fulfilmentRate,
+        reportsCount: reps.length,
+        totalRaised: nds.reduce((s, n) => s + Number(n.raised_amount ?? 0), 0),
+        totalGoal: nds.reduce((s, n) => s + Number(n.goal_amount ?? 0), 0),
+        beneficiaries: reps.reduce((s, r) => s + Number(r.beneficiaries ?? 0), 0),
+        responseDays,
+        applicationsCount: applications.length,
+        acceptedCount: applications.filter((a) => a.status === "accepted" || a.status === "completed").length,
+        photos: photos.slice(0, 12),
+      };
+    },
+  });
+}

@@ -3,6 +3,8 @@ import { ListChecks, HeartHandshake, Users, Calendar, Plus, ArrowRight } from "l
 import { MetricCard, PageHeader, StatusBadge } from "@/components/app/AppShell";
 import { useMyInstitution, useNeeds, useInstitutionDonations, useEvents } from "@/lib/queries";
 import { LoadingState, EmptyState } from "@/components/app/states";
+import { CommandGreeting, UrgentPanel, MonthlySummary, UpNext, isThisMonth, type UrgentItem } from "@/components/app/CommandCenter";
+import { LiveActivityFeed } from "@/components/app/LiveActivityFeed";
 
 export const Route = createFileRoute("/app/institution/")({ component: InstitutionDashboard });
 
@@ -12,6 +14,24 @@ function InstitutionDashboard() {
   const { data: donations = [] } = useInstitutionDonations(inst?.id);
   const { data: events = [] } = useEvents({ institutionId: inst?.id, upcomingOnly: true });
   const total = donations.reduce((a, b) => a + Number(b.amount), 0);
+  const monthDonations = donations.filter((d) => isThisMonth(d.created_at));
+  const monthTotal = monthDonations.reduce((a, b) => a + Number(b.amount), 0);
+  const urgent: UrgentItem[] = [
+    ...needs
+      .filter((n) => n.status === "active" && (n.urgency === "critical" || n.urgency === "high"))
+      .slice(0, 4)
+      .map((n) => ({
+        id: `need-${n.id}`,
+        title: `Underfunded: ${n.title}`,
+        detail: `${Math.round((Number(n.raised_amount) / Math.max(1, Number(n.goal_amount))) * 100)}% funded · ${n.urgency} urgency`,
+        href: `/app/institution/needs/${n.id}`,
+      })),
+    ...needs
+      .filter((n) => n.status === "draft")
+      .slice(0, 2)
+      .map((n) => ({ id: `draft-${n.id}`, title: `Draft not published: ${n.title}`, detail: "Publish it so donors can see and fund this need.", href: `/app/institution/needs/${n.id}` })),
+  ];
+  const upNext = events.slice(0, 5).map((e) => ({ id: e.id, title: e.title, when: new Date(e.starts_at).toLocaleString(), href: `/events/${e.id}` }));
 
   if (instLoading) return <LoadingState label="Loading your institution…" />;
   if (!inst) {
@@ -27,6 +47,20 @@ function InstitutionDashboard() {
 
   return (
     <div className="mx-auto max-w-6xl">
+      <CommandGreeting name={inst.name} subtitle="Your home, your needs and your community — at a glance." />
+
+      <div className="mb-8 grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2"><UrgentPanel items={urgent} emptyBody="Nothing urgent. All active needs are on track." /></div>
+        <MonthlySummary
+          items={[
+            { label: "Raised", value: `₹${monthTotal.toLocaleString()}` },
+            { label: "Donations", value: monthDonations.length },
+            { label: "Active needs", value: needs.filter((n) => n.status === "active").length },
+            { label: "Upcoming events", value: events.length },
+          ]}
+        />
+      </div>
+
       <PageHeader
         title={inst.name}
         subtitle="Manage your home, your needs and your community."
@@ -85,6 +119,11 @@ function InstitutionDashboard() {
           )}
         </div>
       </div>
+      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+        <UpNext items={upNext} emptyBody="No upcoming events scheduled." />
+        <LiveActivityFeed limit={10} />
+      </div>
+
     </div>
   );
 }

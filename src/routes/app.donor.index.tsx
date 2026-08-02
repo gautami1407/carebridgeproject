@@ -5,6 +5,9 @@ import { useMyDonations, useNeeds, useUserBadges } from "@/lib/queries";
 import { LoadingState } from "@/components/app/states";
 import { recommendNeedsForDonor } from "@/lib/recommend";
 import { iconFor, TIER_STYLES, type BadgeTier } from "@/lib/badges";
+import { CommandGreeting, UrgentPanel, MonthlySummary, isThisMonth, type UrgentItem } from "@/components/app/CommandCenter";
+import { LiveActivityFeed } from "@/components/app/LiveActivityFeed";
+import { useStore } from "@/lib/store";
 
 
 export const Route = createFileRoute("/app/donor/")({ component: DonorDashboard });
@@ -25,10 +28,42 @@ function DonorDashboard() {
     .filter((c): c is string => !!c);
   const recommended = recommendNeedsForDonor(openNeeds, pastCategories, 3);
 
+  const donorName = useStore((st) => st.session?.name);
+  const monthDonations = donations.filter((d) => isThisMonth(d.created_at));
+  const monthTotal = monthDonations.reduce((a, b) => a + Number(b.amount), 0);
+  const urgent: UrgentItem[] = openNeeds
+    .filter((n) => n.urgency === "critical" || n.urgency === "high")
+    .sort((a, b) => (a.urgency === "critical" ? -1 : 1) - (b.urgency === "critical" ? -1 : 1))
+    .slice(0, 5)
+    .map((n) => {
+      const pct = Math.round((Number(n.raised_amount) / Math.max(1, Number(n.goal_amount))) * 100);
+      return {
+        id: n.id,
+        title: n.title,
+        detail: `${n.urgency === "critical" ? "Critical" : "High"} urgency · ${pct}% funded · ${n.institution?.name ?? "Verified institution"}`,
+        href: `/needs/${n.id}`,
+      };
+    });
+
 
   return (
     <div className="mx-auto max-w-6xl">
-      <PageHeader title="Your impact dashboard" subtitle="Every donation traced from your wallet to a real beneficiary." />
+      <CommandGreeting name={donorName} subtitle="Every donation traced from your wallet to a real beneficiary." />
+
+      <div className="mb-8 grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2"><UrgentPanel items={urgent} emptyBody="No critical needs right now — thank you for keeping the queue clear." /></div>
+        <MonthlySummary
+          items={[
+            { label: "Donated", value: `₹${monthTotal.toLocaleString()}` },
+            { label: "Gifts", value: monthDonations.length },
+            { label: "Causes", value: new Set(monthDonations.map((d) => d.need_id)).size },
+            { label: "Badges", value: myBadges.length },
+          ]}
+          note="Your monthly giving summary updates in realtime."
+        />
+      </div>
+
+      <PageHeader title="Your impact dashboard" subtitle="Track each contribution end to end." />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Total donated" value={`₹${total.toLocaleString()}`} icon={HeartHandshake} accent="support" />
         <MetricCard label="Causes supported" value={causes} icon={Heart} />
@@ -57,6 +92,7 @@ function DonorDashboard() {
                     <div className="flex items-center gap-3">
                       <StatusBadge status="Confirmed" />
                       <span className="font-bold">₹{Number(d.amount).toLocaleString()}</span>
+                      <Link to="/app/donor/journey/$id" params={{ id: d.id }} className="text-xs font-semibold text-primary hover:underline">Track</Link>
                     </div>
                   </li>
                 );
@@ -86,6 +122,8 @@ function DonorDashboard() {
           )}
         </div>
       </div>
+
+      <div className="mt-8"><LiveActivityFeed limit={12} /></div>
 
       <div className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-soft">
         <div className="flex items-center justify-between">

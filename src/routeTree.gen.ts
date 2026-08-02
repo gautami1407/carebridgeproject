@@ -35,6 +35,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as InstitutionsIndexRouteImport } from './routes/institutions.index'
 import { Route as EventsIndexRouteImport } from './routes/events.index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as TrustSlugRouteImport } from './routes/trust.$slug'
 import { Route as OnboardingRoleRouteImport } from './routes/onboarding.role'
 import { Route as OnboardingProfileRouteImport } from './routes/onboarding.profile'
 import { Route as NeedsIdRouteImport } from './routes/needs.$id'
@@ -80,6 +81,7 @@ import { Route as AppInstitutionEventsIndexRouteImport } from './routes/app.inst
 import { Route as AppInstitutionNeedsNewRouteImport } from './routes/app.institution.needs.new'
 import { Route as AppInstitutionNeedsIdRouteImport } from './routes/app.institution.needs.$id'
 import { Route as AppInstitutionEventsNewRouteImport } from './routes/app.institution.events.new'
+import { Route as AppDonorJourneyIdRouteImport } from './routes/app.donor.journey.$id'
 
 const VolunteerRoute = VolunteerRouteImport.update({
   id: '/volunteer',
@@ -210,6 +212,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const TrustSlugRoute = TrustSlugRouteImport.update({
+  id: '/trust/$slug',
+  path: '/trust/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoleRoute = OnboardingRoleRouteImport.update({
   id: '/onboarding/role',
@@ -442,6 +449,11 @@ const AppInstitutionEventsNewRoute = AppInstitutionEventsNewRouteImport.update({
   path: '/new',
   getParentRoute: () => AppInstitutionEventsRoute,
 } as any)
+const AppDonorJourneyIdRoute = AppDonorJourneyIdRouteImport.update({
+  id: '/journey/$id',
+  path: '/journey/$id',
+  getParentRoute: () => AppDonorRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -480,6 +492,7 @@ export interface FileRoutesByFullPath {
   '/needs/$id': typeof NeedsIdRoute
   '/onboarding/profile': typeof OnboardingProfileRoute
   '/onboarding/role': typeof OnboardingRoleRoute
+  '/trust/$slug': typeof TrustSlugRoute
   '/app/': typeof AppIndexRoute
   '/events/': typeof EventsIndexRoute
   '/institutions/': typeof InstitutionsIndexRoute
@@ -510,6 +523,7 @@ export interface FileRoutesByFullPath {
   '/app/institution/': typeof AppInstitutionIndexRoute
   '/app/mentor/': typeof AppMentorIndexRoute
   '/app/volunteer/': typeof AppVolunteerIndexRoute
+  '/app/donor/journey/$id': typeof AppDonorJourneyIdRoute
   '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
   '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
   '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
@@ -545,6 +559,7 @@ export interface FileRoutesByTo {
   '/needs/$id': typeof NeedsIdRoute
   '/onboarding/profile': typeof OnboardingProfileRoute
   '/onboarding/role': typeof OnboardingRoleRoute
+  '/trust/$slug': typeof TrustSlugRoute
   '/app': typeof AppIndexRoute
   '/events': typeof EventsIndexRoute
   '/institutions': typeof InstitutionsIndexRoute
@@ -573,6 +588,7 @@ export interface FileRoutesByTo {
   '/app/institution': typeof AppInstitutionIndexRoute
   '/app/mentor': typeof AppMentorIndexRoute
   '/app/volunteer': typeof AppVolunteerIndexRoute
+  '/app/donor/journey/$id': typeof AppDonorJourneyIdRoute
   '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
   '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
   '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
@@ -617,6 +633,7 @@ export interface FileRoutesById {
   '/needs/$id': typeof NeedsIdRoute
   '/onboarding/profile': typeof OnboardingProfileRoute
   '/onboarding/role': typeof OnboardingRoleRoute
+  '/trust/$slug': typeof TrustSlugRoute
   '/app/': typeof AppIndexRoute
   '/events/': typeof EventsIndexRoute
   '/institutions/': typeof InstitutionsIndexRoute
@@ -647,6 +664,7 @@ export interface FileRoutesById {
   '/app/institution/': typeof AppInstitutionIndexRoute
   '/app/mentor/': typeof AppMentorIndexRoute
   '/app/volunteer/': typeof AppVolunteerIndexRoute
+  '/app/donor/journey/$id': typeof AppDonorJourneyIdRoute
   '/app/institution/events/new': typeof AppInstitutionEventsNewRoute
   '/app/institution/needs/$id': typeof AppInstitutionNeedsIdRoute
   '/app/institution/needs/new': typeof AppInstitutionNeedsNewRoute
@@ -692,6 +710,7 @@ export interface FileRouteTypes {
     | '/needs/$id'
     | '/onboarding/profile'
     | '/onboarding/role'
+    | '/trust/$slug'
     | '/app/'
     | '/events/'
     | '/institutions/'
@@ -722,6 +741,7 @@ export interface FileRouteTypes {
     | '/app/institution/'
     | '/app/mentor/'
     | '/app/volunteer/'
+    | '/app/donor/journey/$id'
     | '/app/institution/events/new'
     | '/app/institution/needs/$id'
     | '/app/institution/needs/new'
@@ -757,6 +777,7 @@ export interface FileRouteTypes {
     | '/needs/$id'
     | '/onboarding/profile'
     | '/onboarding/role'
+    | '/trust/$slug'
     | '/app'
     | '/events'
     | '/institutions'
@@ -785,6 +806,7 @@ export interface FileRouteTypes {
     | '/app/institution'
     | '/app/mentor'
     | '/app/volunteer'
+    | '/app/donor/journey/$id'
     | '/app/institution/events/new'
     | '/app/institution/needs/$id'
     | '/app/institution/needs/new'
@@ -828,6 +850,7 @@ export interface FileRouteTypes {
     | '/needs/$id'
     | '/onboarding/profile'
     | '/onboarding/role'
+    | '/trust/$slug'
     | '/app/'
     | '/events/'
     | '/institutions/'
@@ -858,6 +881,7 @@ export interface FileRouteTypes {
     | '/app/institution/'
     | '/app/mentor/'
     | '/app/volunteer/'
+    | '/app/donor/journey/$id'
     | '/app/institution/events/new'
     | '/app/institution/needs/$id'
     | '/app/institution/needs/new'
@@ -895,6 +919,7 @@ export interface RootRouteChildren {
   NeedsIdRoute: typeof NeedsIdRoute
   OnboardingProfileRoute: typeof OnboardingProfileRoute
   OnboardingRoleRoute: typeof OnboardingRoleRoute
+  TrustSlugRoute: typeof TrustSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1080,6 +1105,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/trust/$slug': {
+      id: '/trust/$slug'
+      path: '/trust/$slug'
+      fullPath: '/trust/$slug'
+      preLoaderRoute: typeof TrustSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/onboarding/role': {
       id: '/onboarding/role'
@@ -1396,6 +1428,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInstitutionEventsNewRouteImport
       parentRoute: typeof AppInstitutionEventsRoute
     }
+    '/app/donor/journey/$id': {
+      id: '/app/donor/journey/$id'
+      path: '/journey/$id'
+      fullPath: '/app/donor/journey/$id'
+      preLoaderRoute: typeof AppDonorJourneyIdRouteImport
+      parentRoute: typeof AppDonorRoute
+    }
   }
 }
 
@@ -1429,6 +1468,7 @@ interface AppDonorRouteChildren {
   AppDonorImpactRoute: typeof AppDonorImpactRoute
   AppDonorSavedRoute: typeof AppDonorSavedRoute
   AppDonorIndexRoute: typeof AppDonorIndexRoute
+  AppDonorJourneyIdRoute: typeof AppDonorJourneyIdRoute
 }
 
 const AppDonorRouteChildren: AppDonorRouteChildren = {
@@ -1437,6 +1477,7 @@ const AppDonorRouteChildren: AppDonorRouteChildren = {
   AppDonorImpactRoute: AppDonorImpactRoute,
   AppDonorSavedRoute: AppDonorSavedRoute,
   AppDonorIndexRoute: AppDonorIndexRoute,
+  AppDonorJourneyIdRoute: AppDonorJourneyIdRoute,
 }
 
 const AppDonorRouteWithChildren = AppDonorRoute._addFileChildren(
@@ -1608,17 +1649,8 @@ const rootRouteChildren: RootRouteChildren = {
   NeedsIdRoute: NeedsIdRoute,
   OnboardingProfileRoute: OnboardingProfileRoute,
   OnboardingRoleRoute: OnboardingRoleRoute,
+  TrustSlugRoute: TrustSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
