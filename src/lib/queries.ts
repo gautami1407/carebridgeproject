@@ -1042,3 +1042,73 @@ export function useInstitutionTrustStats(institutionId?: string) {
     },
   });
 }
+
+/* ---------- Mentorship (real data) ---------- */
+
+export function useMentorApplications() {
+  const uid = useStore((s) => s.session?.id);
+  return useQuery({
+    queryKey: ["mentor-applications", uid ?? "anon"],
+    enabled: !!uid,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("volunteer_applications")
+        .select(
+          "*, opportunity:volunteer_opportunities(id, title, description, category, location, starts_at, ends_at, skills, institution_id, institution:institutions(name, slug, city, state))",
+        )
+        .eq("user_id", uid!)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []).filter((a) => a.opportunity?.category === "mentorship" || a.opportunity?.category === "teaching");
+    },
+  });
+}
+
+export function useOpenMentorships(limit = 12) {
+  return useQuery({
+    queryKey: ["open-mentorships", limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("volunteer_opportunities")
+        .select("*, institution:institutions(name, slug, city, state)")
+        .in("category", ["mentorship", "teaching"])
+        .eq("is_open", true)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+/* ---------- Admin moderation queue ---------- */
+
+export function useModerationQueue() {
+  return useQuery({
+    queryKey: ["moderation-queue"],
+    queryFn: async () => {
+      const [posts, reports, needs] = await Promise.all([
+        supabase
+          .from("feed_posts")
+          .select("id, body, kind, created_at, is_public, institution:institutions(name, slug)")
+          .order("created_at", { ascending: false })
+          .limit(20),
+        supabase
+          .from("impact_reports")
+          .select("id, title, summary, created_at, is_published, institution:institutions(name, slug)")
+          .order("created_at", { ascending: false })
+          .limit(20),
+        supabase
+          .from("needs")
+          .select("id, title, description, status, urgency, created_at, institution:institutions(name, slug)")
+          .order("created_at", { ascending: false })
+          .limit(20),
+      ]);
+      return {
+        posts: posts.data ?? [],
+        reports: reports.data ?? [],
+        needs: needs.data ?? [],
+      };
+    },
+  });
+}
